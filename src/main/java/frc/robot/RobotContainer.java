@@ -6,6 +6,7 @@ package frc.robot;
 
 import java.lang.invoke.MethodHandles;
 
+import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Flywheel;
 
@@ -31,11 +32,13 @@ public class RobotContainer
     private boolean useFullRobot = false;
     private boolean useExampleSubsystem = false;
     private boolean useFlywheel = false;
+    private boolean useAgitator = false;
 
 
     // Robot components
     private ExampleSubsystem exampleSubsystem = null;
     private Flywheel flywheel = null;
+    private Agitator agitator = null;
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -47,6 +50,9 @@ public class RobotContainer
 
         if(useFullRobot || useFlywheel)
             flywheel = new Flywheel();
+
+        if(useFullRobot || useAgitator)
+            agitator = new Agitator();
     }
 
     public ExampleSubsystem getExampleSubsystem()
@@ -57,5 +63,10 @@ public class RobotContainer
     public Flywheel getFlywheel()
     {
         return flywheel;
+    }
+
+    public Agitator getAgitator()
+    {
+        return agitator;
     }
 }
