@@ -7,6 +7,7 @@ package frc.robot;
 import java.lang.invoke.MethodHandles;
 
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Flywheel;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -29,10 +30,12 @@ public class RobotContainer
     // Select the robot components to use
     private boolean useFullRobot = false;
     private boolean useExampleSubsystem = false;
+    private boolean useFlywheel = false;
 
 
     // Robot components
     private ExampleSubsystem exampleSubsystem = null;
+    private Flywheel flywheel = null;
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -41,10 +44,18 @@ public class RobotContainer
         // Instantiate ONLY the components selected above
         if(useFullRobot || useExampleSubsystem)
             exampleSubsystem = new ExampleSubsystem();
+
+        if(useFullRobot || useFlywheel)
+            flywheel = new Flywheel();
     }
 
     public ExampleSubsystem getExampleSubsystem()
     {
         return exampleSubsystem;
+    }
+
+    public Flywheel getFlywheel()
+    {
+        return flywheel;
     }
 }

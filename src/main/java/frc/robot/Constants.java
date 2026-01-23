@@ -45,6 +45,13 @@ public final class Constants
         public static final int MOTOR1 = 1;
         public static final int MOTOR2 = 2;
     }
+    public static class Flywheel
+    {
+        public static final int LEADMOTOR                   = 10473;
+        public static final int FOLLOWMOTOR                 = 10473;
+
+        public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
+    }
 
     /**
      * This class contains the port numbers of the controllers
