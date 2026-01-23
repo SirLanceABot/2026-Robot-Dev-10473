@@ -9,6 +9,7 @@ import java.lang.invoke.MethodHandles;
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -33,12 +34,14 @@ public class RobotContainer
     private boolean useExampleSubsystem = false;
     private boolean useFlywheel = false;
     private boolean useAgitator = false;
+    private boolean useIntake = false;
 
 
     // Robot components
     private ExampleSubsystem exampleSubsystem = null;
     private Flywheel flywheel = null;
     private Agitator agitator = null;
+    private Intake intake = null;
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -53,6 +56,9 @@ public class RobotContainer
 
         if(useFullRobot || useAgitator)
             agitator = new Agitator();
+
+        if(useFullRobot || useIntake)
+            intake = new Intake();
     }
 
     public ExampleSubsystem getExampleSubsystem()
@@ -68,5 +74,10 @@ public class RobotContainer
     public Agitator getAgitator()
     {
         return agitator;
+    }
+
+    public Intake getIntake()
+    {
+        return intake;
     }
 }
