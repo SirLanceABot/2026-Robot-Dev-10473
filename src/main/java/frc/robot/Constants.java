@@ -53,6 +53,14 @@ public final class Constants
         public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
     }
 
+    public static class Agitator
+    {
+        public static final int MOTOR                       = 10473;
+
+
+        public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
+    }
+
     /**
      * This class contains the port numbers of the controllers
      */
