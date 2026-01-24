@@ -42,17 +42,21 @@ public class SparkMaxLance extends MotorControllerLance
     }
 
     private final SparkMax motor;
+    private final String motorControllerName;
+
     private final RelativeEncoder encoder;
     private SparkAbsoluteEncoder sparkAbsoluteEncoder = null;
     private SparkLimitSwitch forwardLimitSwitch = null;
     private SparkLimitSwitch reverseLimitSwitch = null;
     private SparkClosedLoopController sparkPIDController = null;
-    private final String motorControllerName;
+    private boolean useMaxMotion = false;
+
     private final ResetMode resetMode = ResetMode.kNoResetSafeParameters;
     private final PersistMode persistMode = PersistMode.kNoPersistParameters;
 
     private final int SETUP_ATTEMPT_LIMIT = 5;
     private int setupErrorCount = 0;
+    private int stickyFaultCount = 0;
 
     /**
      * Creates a CANSparkMax on the CANbus with a brushless motor (Neo550 or Neo1650).
@@ -131,6 +135,7 @@ public class SparkMaxLance extends MotorControllerLance
     public void clearStickyFaults()
     {
         setup(() -> motor.clearFaults(), "Clear Sticky Faults");
+        stickyFaultCount = 0;
     }
 
     /**
@@ -383,6 +388,35 @@ public class SparkMaxLance extends MotorControllerLance
         }
     }
 
+    @SuppressWarnings("removal")
+    /**
+     * Set the PID controls for the motor.
+     * @param slotId The PID slot (0-3)
+     * @param kP The Proportional gain constant
+     * @param kI The Integral gain constant
+     * @param kD The Derivative gain constant
+     * @param kF The Velocity feedforward value
+     */
+    public void setupPIDController(int slotId, double kP, double kI, double kD, double kF)
+    {
+        if(isValidSlotId(slotId))
+        {
+            SparkMaxConfig motorConfig = new SparkMaxConfig();
+            ClosedLoopSlot closedLoopSlot = ClosedLoopSlot.kSlot0;
+            if(slotId == 0)
+                closedLoopSlot = ClosedLoopSlot.kSlot0;
+            else if(slotId == 1)
+                closedLoopSlot = ClosedLoopSlot.kSlot1;
+            else if(slotId == 2)
+                closedLoopSlot = ClosedLoopSlot.kSlot2;
+            else if(slotId == 3)
+                closedLoopSlot = ClosedLoopSlot.kSlot3;
+
+            motorConfig.closedLoop.pidf(kP, kI, kD, kF, closedLoopSlot);
+            setup(() -> motor.configure(motorConfig, resetMode, persistMode), "Setup PID Controller");
+        }
+    }
+
     /**
      * Set the PID controls for the motor.
      * @param slotId The PID slot (0-3)
@@ -392,9 +426,8 @@ public class SparkMaxLance extends MotorControllerLance
      * @param kS Static feedforward gain
      * @param kV Velocity feedforward gain
      * @param kA Acceleration feedforward gain
-     * @param kG Gravity feedforward/feedback gain
      */
-    public void setupPIDController(int slotId, double kP, double kI, double kD, double kS, double kV, double kA, double kG)
+    public void setupPIDController(int slotId, double kP, double kI, double kD, double kS, double kV, double kA)
     {
         if(isValidSlotId(slotId))
         {
@@ -411,8 +444,42 @@ public class SparkMaxLance extends MotorControllerLance
                 closedLoopSlot = ClosedLoopSlot.kSlot3;
 
             motorConfig.closedLoop.pid(kP, kI, kD, closedLoopSlot)
-                .feedForward.svag(kS, kV, kA, kG, closedLoopSlot);    
+                .feedForward.sva(kS, kV, kA, closedLoopSlot);    
             setup(() -> motor.configure(motorConfig, resetMode, persistMode), "Setup PID Controller");
+        }
+    }
+
+    /**
+     * Set the Motion Magic controls for the motor.
+     * @param slotId The PID slot (0-3)
+     * @param velocity The target cruise velocity (rpm)
+     * @param acceleration The target acceleration (rpm / sec)
+     * @param error The allowable error (rotations)
+     */
+    public void setupMaxMotion(double velocity, double acceleration, double error, int slotId)
+    {
+        if(isValidSlotId(slotId))
+        {
+            SparkMaxConfig motorConfig = new SparkMaxConfig();
+            ClosedLoopSlot closedLoopSlot = ClosedLoopSlot.kSlot0;
+
+            if(slotId == 0)
+                closedLoopSlot = ClosedLoopSlot.kSlot0;
+            else if(slotId == 1)
+                closedLoopSlot = ClosedLoopSlot.kSlot1;
+            else if(slotId == 2)
+                closedLoopSlot = ClosedLoopSlot.kSlot2;
+            else if(slotId == 3)
+                closedLoopSlot = ClosedLoopSlot.kSlot3;
+
+            motorConfig.closedLoop.maxMotion
+                .cruiseVelocity(velocity)
+                .maxAcceleration(acceleration)
+                .allowedProfileError(error, closedLoopSlot);
+
+            useMaxMotion = true;
+
+            setup(() -> motor.configure(motorConfig, resetMode, persistMode), "Setup Max Motion");
         }
     }
 
@@ -474,12 +541,20 @@ public class SparkMaxLance extends MotorControllerLance
         return reverseLimitSwitch.isPressed();
     }
 
+    private void checkFault(boolean check, String msg)
+    {
+        if(check)
+        {
+            motorSetupPublisher.set(motorControllerName + " : " + msg);
+            stickyFaultCount++;
+        }
+    }
+
     /**
      * Logs and then clears the sticky faults
      */
     public void logStickyFaults()
     {
-        int faultsCount = 0;
         Faults faults = motor.getStickyFaults();
         Warnings warnings = motor.getStickyWarnings();
 
@@ -488,44 +563,61 @@ public class SparkMaxLance extends MotorControllerLance
             motorSetupPublisher.set(motorControllerName + " : " + setupErrorCount + " setup errors");
         }
 
-        if(faults.can)
-        {
-            motorFaultsPublisher.set(motorControllerName + " : Fault - CAN");
-            faultsCount++;
-        }
-        if(faults.sensor)
-        {
-            motorFaultsPublisher.set(motorControllerName + " : Fault - Sensor");
-            faultsCount++;
-        }
-        if(faults.temperature)
-        {
-            motorFaultsPublisher.set(motorControllerName + " : Fault - Temperature");
-            faultsCount++;
-        }
+        checkFault(faults.can, "Fault - CAN");
+        checkFault(faults.escEeprom, "Fault - Esc Eeprom");
+        checkFault(faults.firmware, "Fault - Firmware");
+        checkFault(faults.gateDriver, "Fault - Gate Driver");
+        checkFault(faults.motorType, "Fault - Motor Type");
+        checkFault(faults.other, "Fault - Other");
+        checkFault(faults.sensor, "Fault - Sensor");
+        checkFault(faults.temperature, "Fault - Temperature");
+        checkFault(warnings.brownout, "Warning - Brownout");
+        checkFault(warnings.escEeprom, "Warning - Esc Eeprom");
+        checkFault(warnings.extEeprom, "Warning - Ext Eeprom");
+        checkFault(warnings.hasReset, "Warning - Has Reset");
+        checkFault(warnings.other, "Warning - Other");
+        checkFault(warnings.overcurrent, "Warning - Overcurrent");
+        checkFault(warnings.sensor, "Warning - Sensor");
+        checkFault(warnings.stall, "Warning - Stall");
 
-        if(warnings.brownout)
-        {
-            motorFaultsPublisher.set(motorControllerName + " : Warning - Brownout");
-            faultsCount++;
-        }
-        if(warnings.hasReset)
-        {
-            motorFaultsPublisher.set(motorControllerName + " : Warning - Has Reset");
-            faultsCount++;
-        }
-        if(warnings.overcurrent)
-        {
-            motorFaultsPublisher.set(motorControllerName + " : Warning - Overcurrent");
-            faultsCount++;
-        }
-        if(warnings.stall)
-        {
-            motorFaultsPublisher.set(motorControllerName + " : Warning - Stall");
-            faultsCount++;
-        }
+        // if(faults.can)
+        // {
+        //     motorFaultsPublisher.set(motorControllerName + " : Fault - CAN");
+        //     faultsCount++;
+        // }
+        // if(faults.sensor)
+        // {
+        //     motorFaultsPublisher.set(motorControllerName + " : Fault - Sensor");
+        //     faultsCount++;
+        // }
+        // if(faults.temperature)
+        // {
+        //     motorFaultsPublisher.set(motorControllerName + " : Fault - Temperature");
+        //     faultsCount++;
+        // }
 
-        if(faultsCount == 0)
+        // if(warnings.brownout)
+        // {
+        //     motorFaultsPublisher.set(motorControllerName + " : Warning - Brownout");
+        //     faultsCount++;
+        // }
+        // if(warnings.hasReset)
+        // {
+        //     motorFaultsPublisher.set(motorControllerName + " : Warning - Has Reset");
+        //     faultsCount++;
+        // }
+        // if(warnings.overcurrent)
+        // {
+        //     motorFaultsPublisher.set(motorControllerName + " : Warning - Overcurrent");
+        //     faultsCount++;
+        // }
+        // if(warnings.stall)
+        // {
+        //     motorFaultsPublisher.set(motorControllerName + " : Warning - Stall");
+        //     faultsCount++;
+        // }
+
+        if(stickyFaultCount == 0)
         {
             motorFaultsPublisher.set(motorControllerName + " : No Sticky Faults");
         }
@@ -565,7 +657,10 @@ public class SparkMaxLance extends MotorControllerLance
             else if(slotId == 3)
                 closedLoopSlot = ClosedLoopSlot.kSlot3;
 
-            sparkPIDController.setSetpoint(position, ControlType.kPosition, closedLoopSlot);
+            if(!useMaxMotion)
+                sparkPIDController.setSetpoint(position, ControlType.kPosition, closedLoopSlot);
+            else
+                sparkPIDController.setSetpoint(position, ControlType.kMAXMotionPositionControl, closedLoopSlot);
         }
     }
 
@@ -601,7 +696,10 @@ public class SparkMaxLance extends MotorControllerLance
             else if(slotId == 3)
                 closedLoopSlot = ClosedLoopSlot.kSlot3;
 
-            sparkPIDController.setSetpoint(velocity, ControlType.kVelocity, closedLoopSlot);
+            if(!useMaxMotion)
+                sparkPIDController.setSetpoint(velocity, ControlType.kVelocity, closedLoopSlot);
+            else
+                sparkPIDController.setSetpoint(velocity, ControlType.kMAXMotionVelocityControl, closedLoopSlot);
         }
     }
 

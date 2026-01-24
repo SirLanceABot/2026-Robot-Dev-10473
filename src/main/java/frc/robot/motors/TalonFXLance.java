@@ -5,22 +5,18 @@ import java.lang.invoke.MethodHandles;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.FeedbackConfigs;
-import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.SlotConfigs;
-import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.VoltageConfigs;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
@@ -59,9 +55,18 @@ public class TalonFXLance extends MotorControllerLance
     }
 
     private final TalonFX motor;
+    private final TalonFXConfiguration motorConfigs;
+    private final String motorControllerName;
+
     private final PositionVoltage positionVoltage;
     private final VelocityVoltage velocityVoltage;
-    private final String motorControllerName;
+    private final MotionMagicVoltage motionMagicVoltage;
+    private final MotionMagicVelocityVoltage motionMagicVelocityVoltage;
+    private final DutyCycleOut dutyCycleOut;
+    private final VoltageOut voltageOut;
+    private boolean useMotionMagic = false;
+    private double kF = 0.0;
+
     private DigitalInput forwardHardLimit = null;
     private DigitalInput reverseHardLimit = null;
 
@@ -86,8 +91,13 @@ public class TalonFXLance extends MotorControllerLance
 
         // motor = new TalonFX(deviceId, canbus);           // 2025 version
         motor = new TalonFX(deviceId, new CANBus(canbus));
+        motorConfigs = new TalonFXConfiguration();
         positionVoltage = new PositionVoltage(0.0);
-        velocityVoltage = new VelocityVoltage(0);
+        velocityVoltage = new VelocityVoltage(0.0);
+        motionMagicVoltage = new MotionMagicVoltage(0.0);
+        motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(0.0);
+        dutyCycleOut = new DutyCycleOut(0.0);
+        voltageOut = new VoltageOut(0.0);
 
         clearStickyFaults();
         setupFactoryDefaults();
@@ -145,10 +155,13 @@ public class TalonFXLance extends MotorControllerLance
      */
     private void setupFeedbackSensor()
     {
-        FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
-        setup(() -> motor.getConfigurator().refresh(feedbackConfigs), "");
-        feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-        setup(() -> motor.getConfigurator().apply(feedbackConfigs), "Setup Feedback Sensor");
+        // FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
+        // setup(() -> motor.getConfigurator().refresh(feedbackConfigs), "");
+        // feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+        // setup(() -> motor.getConfigurator().apply(feedbackConfigs), "Setup Feedback Sensor");
+
+        motorConfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+        setup(() -> motor.getConfigurator().apply(motorConfigs.Feedback), "Setup Feedback Sensor");
     }
 
     /**
@@ -166,16 +179,29 @@ public class TalonFXLance extends MotorControllerLance
     public void setupFactoryDefaults()
     {
         setup(() -> motor.getConfigurator().apply(new TalonFXConfiguration()), "Setup Factory Defaults");
+
+        // Create a new TalonFXS Configuration, which contains factory defaults
+        TalonFXConfiguration factoryConfigs = new TalonFXConfiguration();
+
+        // Apply a new configuration to the motor to reset to factory defaults
+        setup(() -> motor.getConfigurator().apply(factoryConfigs), "Setup Factory Defaults");
+
+        // Update the motorConfigs with the new motor configuration (factory defaults)
+        setup(() -> motor.getConfigurator().refresh(motorConfigs), "");
     }
 
     public void setupRemoteCANCoder(int remoteSensorId)
     {
-        FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
-        setup(() -> motor.getConfigurator().refresh(feedbackConfigs), "");
+        // FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
+        // setup(() -> motor.getConfigurator().refresh(feedbackConfigs), "");
     
-        feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-        feedbackConfigs.FeedbackRemoteSensorID = remoteSensorId;
-        setup(() -> motor.getConfigurator().apply(feedbackConfigs), "Setup Remote CANCoder");
+        // feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+        // feedbackConfigs.FeedbackRemoteSensorID = remoteSensorId;
+        // setup(() -> motor.getConfigurator().apply(feedbackConfigs), "Setup Remote CANCoder");
+
+        motorConfigs.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+        motorConfigs.Feedback.FeedbackRemoteSensorID = remoteSensorId;
+        setup(() -> motor.getConfigurator().apply(motorConfigs.Feedback), "Setup Remote CANCoder");
     }
 
     /**
@@ -194,15 +220,22 @@ public class TalonFXLance extends MotorControllerLance
      */
     public void setupInverted(boolean isInverted)
     {
-        MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
-        setup(() -> motor.getConfigurator().refresh(motorOutputConfigs), "");
+        // MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
+        // setup(() -> motor.getConfigurator().refresh(motorOutputConfigs), "");
+
+        // if(isInverted)
+        //     motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+        // else
+        //     motorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+
+        // setup(() -> motor.getConfigurator().apply(motorOutputConfigs), "Setup Inverted");
 
         if(isInverted)
-            motorOutputConfigs.Inverted = InvertedValue.Clockwise_Positive;
+            motorConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         else
-            motorOutputConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+            motorConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-        setup(() -> motor.getConfigurator().apply(motorOutputConfigs), "Setup Inverted");
+        setup(() -> motor.getConfigurator().apply(motorConfigs.MotorOutput), "Setup Inverted");
     }
 
     /**
@@ -210,11 +243,14 @@ public class TalonFXLance extends MotorControllerLance
      */
     public void setupBrakeMode()
     {
-        MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
-        setup(() -> motor.getConfigurator().refresh(motorOutputConfigs), "");
+        // MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
+        // setup(() -> motor.getConfigurator().refresh(motorOutputConfigs), "");
         
-        motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
-        setup(() -> motor.getConfigurator().apply(motorOutputConfigs), "Setup Brake Mode");
+        // motorOutputConfigs.NeutralMode = NeutralModeValue.Brake;
+        // setup(() -> motor.getConfigurator().apply(motorOutputConfigs), "Setup Brake Mode");
+
+        motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        setup(() -> motor.getConfigurator().apply(motorConfigs.MotorOutput), "Setup Brake Mode");
     }
 
     /**
@@ -222,11 +258,14 @@ public class TalonFXLance extends MotorControllerLance
      */
     public void setupCoastMode()
     {
-        MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
-        setup(() -> motor.getConfigurator().refresh(motorOutputConfigs), "");
+        // MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
+        // setup(() -> motor.getConfigurator().refresh(motorOutputConfigs), "");
 
-        motorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
-        setup(() -> motor.getConfigurator().apply(motorOutputConfigs), "Setup Coast Mode");
+        // motorOutputConfigs.NeutralMode = NeutralModeValue.Coast;
+        // setup(() -> motor.getConfigurator().apply(motorOutputConfigs), "Setup Coast Mode");
+
+        motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        setup(() -> motor.getConfigurator().apply(motorConfigs.MotorOutput), "Setup Coast Mode");
     }
 
     /**
@@ -236,12 +275,16 @@ public class TalonFXLance extends MotorControllerLance
      */
     public void setupForwardSoftLimit(double limit, boolean isEnabled)
     {
-        SoftwareLimitSwitchConfigs softLimitSwitchConfigs = new SoftwareLimitSwitchConfigs();
-        setup(() -> motor.getConfigurator().refresh(softLimitSwitchConfigs), "");
+        // SoftwareLimitSwitchConfigs softLimitSwitchConfigs = new SoftwareLimitSwitchConfigs();
+        // setup(() -> motor.getConfigurator().refresh(softLimitSwitchConfigs), "");
 
-        softLimitSwitchConfigs.ForwardSoftLimitThreshold = limit;
-        softLimitSwitchConfigs.ForwardSoftLimitEnable = isEnabled;
-        setup(() -> motor.getConfigurator().apply(softLimitSwitchConfigs), "Setup Forward Soft Limit");
+        // softLimitSwitchConfigs.ForwardSoftLimitThreshold = limit;
+        // softLimitSwitchConfigs.ForwardSoftLimitEnable = isEnabled;
+        // setup(() -> motor.getConfigurator().apply(softLimitSwitchConfigs), "Setup Forward Soft Limit");
+        
+        motorConfigs.SoftwareLimitSwitch.ForwardSoftLimitThreshold = limit;
+        motorConfigs.SoftwareLimitSwitch.ForwardSoftLimitEnable = isEnabled;
+        setup(() -> motor.getConfigurator().apply(motorConfigs.SoftwareLimitSwitch), "Setup Forward Soft Limit");
     }
 
     /**
@@ -251,12 +294,16 @@ public class TalonFXLance extends MotorControllerLance
      */
     public void setupReverseSoftLimit(double limit, boolean isEnabled)
     {
-        SoftwareLimitSwitchConfigs softLimitSwitchConfigs = new SoftwareLimitSwitchConfigs();
-        setup(() -> motor.getConfigurator().refresh(softLimitSwitchConfigs), "");
+        // SoftwareLimitSwitchConfigs softLimitSwitchConfigs = new SoftwareLimitSwitchConfigs();
+        // setup(() -> motor.getConfigurator().refresh(softLimitSwitchConfigs), "");
 
-        softLimitSwitchConfigs.ReverseSoftLimitThreshold = limit;
-        softLimitSwitchConfigs.ReverseSoftLimitEnable = isEnabled;
-        setup(() -> motor.getConfigurator().apply(softLimitSwitchConfigs), "Setup Reverse Soft Limit");
+        // softLimitSwitchConfigs.ReverseSoftLimitThreshold = limit;
+        // softLimitSwitchConfigs.ReverseSoftLimitEnable = isEnabled;
+        // setup(() -> motor.getConfigurator().apply(softLimitSwitchConfigs), "Setup Reverse Soft Limit");
+        
+        motorConfigs.SoftwareLimitSwitch.ReverseSoftLimitThreshold = limit;
+        motorConfigs.SoftwareLimitSwitch.ReverseSoftLimitEnable = isEnabled;
+        setup(() -> motor.getConfigurator().apply(motorConfigs.SoftwareLimitSwitch), "Setup Reverse Soft Limit");
     }
 
     /**
@@ -266,16 +313,25 @@ public class TalonFXLance extends MotorControllerLance
      */
     public void setupForwardHardLimitSwitch(boolean isEnabled, boolean isNormallyOpen)
     {
-        HardwareLimitSwitchConfigs hardwareLimitSwitchConfigs = new HardwareLimitSwitchConfigs();
-        setup(() -> motor.getConfigurator().refresh(hardwareLimitSwitchConfigs), "");
+        // HardwareLimitSwitchConfigs hardwareLimitSwitchConfigs = new HardwareLimitSwitchConfigs();
+        // setup(() -> motor.getConfigurator().refresh(hardwareLimitSwitchConfigs), "");
 
-        hardwareLimitSwitchConfigs.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
+        // hardwareLimitSwitchConfigs.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
+        // if(isNormallyOpen)
+        //     hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyOpen;
+        // else
+        //     hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyClosed;
+        // hardwareLimitSwitchConfigs.ForwardLimitEnable = isEnabled;
+        // setup(() -> motor.getConfigurator().apply(hardwareLimitSwitchConfigs), "Setup Forward Hard Limit");
+    
+
+        motorConfigs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
         if(isNormallyOpen)
-            hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyOpen;
+            motorConfigs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue.NormallyOpen;
         else
-            hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyClosed;
-        hardwareLimitSwitchConfigs.ForwardLimitEnable = isEnabled;
-        setup(() -> motor.getConfigurator().apply(hardwareLimitSwitchConfigs), "Setup Forward Hard Limit");
+            motorConfigs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue.NormallyClosed;
+        motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = isEnabled;
+        setup(() -> motor.getConfigurator().apply(motorConfigs.HardwareLimitSwitch), "Setup Forward Hard Limit");
     }
 
     /**
@@ -288,17 +344,28 @@ public class TalonFXLance extends MotorControllerLance
         forwardHardLimit = new DigitalInput(roboRIOPort);
         positionVoltage.LimitForwardMotion = true;
         velocityVoltage.LimitForwardMotion = true;
+        dutyCycleOut.LimitForwardMotion = true;
+        voltageOut.LimitForwardMotion = true;
 
-        HardwareLimitSwitchConfigs hardwareLimitSwitchConfigs = new HardwareLimitSwitchConfigs();
-        setup(() -> motor.getConfigurator().refresh(hardwareLimitSwitchConfigs), "");
+        // HardwareLimitSwitchConfigs hardwareLimitSwitchConfigs = new HardwareLimitSwitchConfigs();
+        // setup(() -> motor.getConfigurator().refresh(hardwareLimitSwitchConfigs), "");
 
-        hardwareLimitSwitchConfigs.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
+        // hardwareLimitSwitchConfigs.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
+        // if(isNormallyOpen)
+        //     hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyOpen;
+        // else
+        //     hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyClosed;
+        // hardwareLimitSwitchConfigs.ForwardLimitEnable = isEnabled;
+        // setup(() -> motor.getConfigurator().apply(hardwareLimitSwitchConfigs), "Setup Forward Hard Limit");
+        
+        // motorConfigs.HardwareLimitSwitch.ForwardLimitSource = ForwardLimitSourceValue.LimitSwitchPin;
         if(isNormallyOpen)
-            hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyOpen;
+            motorConfigs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue.NormallyOpen;
         else
-            hardwareLimitSwitchConfigs.ForwardLimitType = ForwardLimitTypeValue.NormallyClosed;
-        hardwareLimitSwitchConfigs.ForwardLimitEnable = isEnabled;
-        setup(() -> motor.getConfigurator().apply(hardwareLimitSwitchConfigs), "Setup Forward Hard Limit");
+            motorConfigs.HardwareLimitSwitch.ForwardLimitType = ForwardLimitTypeValue.NormallyClosed;
+        motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = isEnabled;
+        setup(() -> motor.getConfigurator().apply(motorConfigs.HardwareLimitSwitch), "Setup Forward Hard Limit");
+
     }
 
     /**
@@ -308,16 +375,25 @@ public class TalonFXLance extends MotorControllerLance
      */
     public void setupReverseHardLimitSwitch(boolean isEnabled, boolean isNormallyOpen)
     {
-        HardwareLimitSwitchConfigs hardwareLimitSwitchConfigs = new HardwareLimitSwitchConfigs();
-        setup(() -> motor.getConfigurator().refresh(hardwareLimitSwitchConfigs), "");
+        // HardwareLimitSwitchConfigs hardwareLimitSwitchConfigs = new HardwareLimitSwitchConfigs();
+        // setup(() -> motor.getConfigurator().refresh(hardwareLimitSwitchConfigs), "");
 
-        hardwareLimitSwitchConfigs.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
+        // hardwareLimitSwitchConfigs.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
+        // if(isNormallyOpen)
+        //     hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
+        // else
+        //     hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyClosed;
+        // hardwareLimitSwitchConfigs.ReverseLimitEnable = isEnabled;
+        // setup(() -> motor.getConfigurator().apply(hardwareLimitSwitchConfigs), "Setup Reverse Hard Limit");
+        
+        motorConfigs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
         if(isNormallyOpen)
-            hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
+            motorConfigs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
         else
-            hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyClosed;
-        hardwareLimitSwitchConfigs.ReverseLimitEnable = isEnabled;
-        setup(() -> motor.getConfigurator().apply(hardwareLimitSwitchConfigs), "Setup Reverse Hard Limit");
+            motorConfigs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue.NormallyClosed;
+        motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = isEnabled;
+        setup(() -> motor.getConfigurator().apply(motorConfigs.HardwareLimitSwitch), "Setup Reverse Hard Limit");
+
     }
 
     /**
@@ -330,17 +406,27 @@ public class TalonFXLance extends MotorControllerLance
         reverseHardLimit = new DigitalInput(roboRIOPort);
         positionVoltage.LimitReverseMotion = true;
         velocityVoltage.LimitReverseMotion = true;
+        dutyCycleOut.LimitForwardMotion = true;
+        voltageOut.LimitForwardMotion = true;
 
-        HardwareLimitSwitchConfigs hardwareLimitSwitchConfigs = new HardwareLimitSwitchConfigs();
-        setup(() -> motor.getConfigurator().refresh(hardwareLimitSwitchConfigs), "");
+        // HardwareLimitSwitchConfigs hardwareLimitSwitchConfigs = new HardwareLimitSwitchConfigs();
+        // setup(() -> motor.getConfigurator().refresh(hardwareLimitSwitchConfigs), "");
 
-        hardwareLimitSwitchConfigs.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
+        // hardwareLimitSwitchConfigs.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
+        // if(isNormallyOpen)
+        //     hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
+        // else
+        //     hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyClosed;
+        // hardwareLimitSwitchConfigs.ReverseLimitEnable = isEnabled;
+        // setup(() -> motor.getConfigurator().apply(hardwareLimitSwitchConfigs), "Setup Reverse Hard Limit");
+    
+        // motorConfigs.HardwareLimitSwitch.ReverseLimitSource = ReverseLimitSourceValue.LimitSwitchPin;
         if(isNormallyOpen)
-            hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
+            motorConfigs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue.NormallyOpen;
         else
-            hardwareLimitSwitchConfigs.ReverseLimitType = ReverseLimitTypeValue.NormallyClosed;
-        hardwareLimitSwitchConfigs.ReverseLimitEnable = isEnabled;
-        setup(() -> motor.getConfigurator().apply(hardwareLimitSwitchConfigs), "Setup Reverse Hard Limit");
+            motorConfigs.HardwareLimitSwitch.ReverseLimitType = ReverseLimitTypeValue.NormallyClosed;
+        motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = isEnabled;
+        setup(() -> motor.getConfigurator().apply(motorConfigs.HardwareLimitSwitch), "Setup Reverse Hard Limit");
     }
 
     /**
@@ -351,16 +437,21 @@ public class TalonFXLance extends MotorControllerLance
      */
     public void setupCurrentLimit(double currentLimit, double currentThreshold, double timeThreshold)
     {
-        CurrentLimitsConfigs currentLimitsConfigs = new CurrentLimitsConfigs();
-        setup(() -> motor.getConfigurator().refresh(currentLimitsConfigs), "");
+        // CurrentLimitsConfigs currentLimitsConfigs = new CurrentLimitsConfigs();
+        // setup(() -> motor.getConfigurator().refresh(currentLimitsConfigs), "");
 
-        currentLimitsConfigs.SupplyCurrentLimit = currentThreshold;
-        // currentLimitsConfigs.SupplyCurrentThreshold = currentThreshold;          // 2024 version
-        currentLimitsConfigs.SupplyCurrentLowerLimit = currentLimit;
-        // currentLimitsConfigs.SupplyTimeThreshold = timeThreshold;                // 2024 version
-        currentLimitsConfigs.SupplyCurrentLowerTime = timeThreshold;
-        currentLimitsConfigs.SupplyCurrentLimitEnable = true;
-        setup(() -> motor.getConfigurator().apply(currentLimitsConfigs), "Setup Current Limit");
+        // currentLimitsConfigs.SupplyCurrentLimit = currentThreshold;
+        // currentLimitsConfigs.SupplyCurrentLowerLimit = currentLimit;
+        // currentLimitsConfigs.SupplyCurrentLowerTime = timeThreshold;
+        // currentLimitsConfigs.SupplyCurrentLimitEnable = true;
+        // setup(() -> motor.getConfigurator().apply(currentLimitsConfigs), "Setup Current Limit");
+    
+        motorConfigs.CurrentLimits.SupplyCurrentLimit = currentThreshold;
+        motorConfigs.CurrentLimits.SupplyCurrentLowerLimit = currentLimit;
+        motorConfigs.CurrentLimits.SupplyCurrentLowerTime = timeThreshold;
+        motorConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
+        setup(() -> motor.getConfigurator().apply(motorConfigs.CurrentLimits), "Setup Current Limit");
+
     }
 
     public double getCurrentAmps()
@@ -374,11 +465,14 @@ public class TalonFXLance extends MotorControllerLance
      */
     public void setupOpenLoopRampRate(double rampRateSeconds)
     {
-        OpenLoopRampsConfigs openLoopRampsConfigs = new OpenLoopRampsConfigs();
-        setup(() -> motor.getConfigurator().refresh(openLoopRampsConfigs), "");
+        // OpenLoopRampsConfigs openLoopRampsConfigs = new OpenLoopRampsConfigs();
+        // setup(() -> motor.getConfigurator().refresh(openLoopRampsConfigs), "");
 
-        openLoopRampsConfigs.DutyCycleOpenLoopRampPeriod = rampRateSeconds;
-        setup(() -> motor.getConfigurator().apply(openLoopRampsConfigs), "Setup Open Loop Ramp Rate");
+        // openLoopRampsConfigs.DutyCycleOpenLoopRampPeriod = rampRateSeconds;
+        // setup(() -> motor.getConfigurator().apply(openLoopRampsConfigs), "Setup Open Loop Ramp Rate");
+        
+        motorConfigs.OpenLoopRamps.DutyCycleOpenLoopRampPeriod = rampRateSeconds;
+        setup(() -> motor.getConfigurator().apply(motorConfigs.OpenLoopRamps), "Setup Open Loop Ramp Rate");
     }
 
     /**
@@ -387,11 +481,14 @@ public class TalonFXLance extends MotorControllerLance
      */
     public void setupClosedLoopRampRate(double rampRateSeconds)
     {
-        ClosedLoopRampsConfigs closedLoopRampsConfigs = new ClosedLoopRampsConfigs();
-        setup(() -> motor.getConfigurator().refresh(closedLoopRampsConfigs), "");
+        // ClosedLoopRampsConfigs closedLoopRampsConfigs = new ClosedLoopRampsConfigs();
+        // setup(() -> motor.getConfigurator().refresh(closedLoopRampsConfigs), "");
 
-        closedLoopRampsConfigs.DutyCycleClosedLoopRampPeriod = rampRateSeconds;
-        setup(() -> motor.getConfigurator().apply(closedLoopRampsConfigs), "Setup Closed Loop Ramp Rate");
+        // closedLoopRampsConfigs.DutyCycleClosedLoopRampPeriod = rampRateSeconds;
+        // setup(() -> motor.getConfigurator().apply(closedLoopRampsConfigs), "Setup Closed Loop Ramp Rate");
+    
+        motorConfigs.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = rampRateSeconds;
+        setup(() -> motor.getConfigurator().apply(motorConfigs.ClosedLoopRamps), "Setup Closed Loop Ramp Rate");
     }
 
     /**
@@ -400,12 +497,16 @@ public class TalonFXLance extends MotorControllerLance
      */
     public void setupVoltageCompensation(double voltageCompensation)
     {
-        VoltageConfigs voltageConfigs = new VoltageConfigs();
-        setup(() -> motor.getConfigurator().refresh(voltageConfigs), "");
+        // VoltageConfigs voltageConfigs = new VoltageConfigs();
+        // setup(() -> motor.getConfigurator().refresh(voltageConfigs), "");
 
-        voltageConfigs.PeakForwardVoltage = voltageCompensation;
-        voltageConfigs.PeakReverseVoltage = -voltageCompensation;
-        setup(() -> motor.getConfigurator().apply(voltageConfigs), "Setup Voltage Compensation");
+        // voltageConfigs.PeakForwardVoltage = voltageCompensation;
+        // voltageConfigs.PeakReverseVoltage = -voltageCompensation;
+        // setup(() -> motor.getConfigurator().apply(voltageConfigs), "Setup Voltage Compensation");
+    
+        motorConfigs.Voltage.PeakForwardVoltage = voltageCompensation;
+        motorConfigs.Voltage.PeakReverseVoltage = -voltageCompensation;
+        setup(() -> motor.getConfigurator().apply(motorConfigs.Voltage), "Setup Voltage Compensation");
     }
 
     /**
@@ -414,11 +515,14 @@ public class TalonFXLance extends MotorControllerLance
      */
     public void setupPositionConversionFactor(double factor)
     {
-        FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
-        setup(() -> motor.getConfigurator().refresh(feedbackConfigs), "");
+        // FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
+        // setup(() -> motor.getConfigurator().refresh(feedbackConfigs), "");
 
-        feedbackConfigs.SensorToMechanismRatio = factor;
-        setup(() -> motor.getConfigurator().apply(feedbackConfigs), "Setup Position Conversion Factor");
+        // feedbackConfigs.SensorToMechanismRatio = factor;
+        // setup(() -> motor.getConfigurator().apply(feedbackConfigs), "Setup Position Conversion Factor");
+    
+        motorConfigs.Feedback.SensorToMechanismRatio = factor;
+        setup(() -> motor.getConfigurator().apply(motorConfigs.Feedback), "Setup Position Conversion Factor");
     }
 
     /**
@@ -427,11 +531,14 @@ public class TalonFXLance extends MotorControllerLance
      */
     public void setupVelocityConversionFactor(double factor)
     {
-        FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
-        setup(() -> motor.getConfigurator().refresh(feedbackConfigs), "");
+        // FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
+        // setup(() -> motor.getConfigurator().refresh(feedbackConfigs), "");
 
-        feedbackConfigs.SensorToMechanismRatio = factor;
-        setup(() -> motor.getConfigurator().apply(feedbackConfigs), "Setup Velocity Conversion Factor");
+        // feedbackConfigs.SensorToMechanismRatio = factor;
+        // setup(() -> motor.getConfigurator().apply(feedbackConfigs), "Setup Velocity Conversion Factor");
+    
+        motorConfigs.Feedback.SensorToMechanismRatio = factor;
+        setup(() -> motor.getConfigurator().apply(motorConfigs.Feedback), "Setup Velocity Conversion Factor");
     }
 
     /**
@@ -455,13 +562,80 @@ public class TalonFXLance extends MotorControllerLance
     {
         if(isValidSlotId(slotId))
         {
+            // SlotConfigs slotConfigs = new SlotConfigs();
+            // setup(() -> motor.getConfigurator().refresh(slotConfigs), "");
+
+            // slotConfigs.SlotNumber = slotId;
+            // slotConfigs.kP = kP;
+            // slotConfigs.kI = kI;
+            // slotConfigs.kD = kD;
+            // setup(() -> motor.getConfigurator().apply(slotConfigs), "Setup PID Controller"); 
+
             SlotConfigs slotConfigs = new SlotConfigs();
-            setup(() -> motor.getConfigurator().refresh(slotConfigs), "");
 
             slotConfigs.SlotNumber = slotId;
             slotConfigs.kP = kP;
             slotConfigs.kI = kI;
             slotConfigs.kD = kD;
+
+            switch(slotId)
+            {
+                case 0:
+                    motorConfigs.Slot0 = Slot0Configs.from(slotConfigs);
+                    break;
+                case 1:
+                    motorConfigs.Slot1 = Slot1Configs.from(slotConfigs);
+                    break;
+                case 2:
+                    motorConfigs.Slot2 = Slot2Configs.from(slotConfigs);
+                    break;
+            }
+            setup(() -> motor.getConfigurator().apply(slotConfigs), "Setup PID Controller"); 
+        }
+    }
+
+    /**
+     * Set the PID controls for the motor.
+     * @param slotId The PID slot (0-3)
+     * @param kP The Proportional gain constant
+     * @param kI The Integral gain constant
+     * @param kD The Derivative gain constant
+     * @param kF The Feedforward value
+     */
+    public void setupPIDController(int slotId, double kP, double kI, double kD, double kF)
+    {
+        if(isValidSlotId(slotId))
+        {
+            // SlotConfigs slotConfigs = new SlotConfigs();
+            // setup(() -> motor.getConfigurator().refresh(slotConfigs), "");
+
+            // slotConfigs.SlotNumber = slotId;
+            // slotConfigs.kP = kP;
+            // slotConfigs.kI = kI;
+            // slotConfigs.kD = kD;
+            // this.kF = kF;
+            // setup(() -> motor.getConfigurator().apply(slotConfigs), "Setup PID Controller"); 
+
+            SlotConfigs slotConfigs = new SlotConfigs();
+
+            slotConfigs.SlotNumber = slotId;
+            slotConfigs.kP = kP;
+            slotConfigs.kI = kI;
+            slotConfigs.kD = kD;
+            this.kF = kF;
+
+            switch(slotId)
+            {
+                case 0:
+                    motorConfigs.Slot0 = Slot0Configs.from(slotConfigs);
+                    break;
+                case 1:
+                    motorConfigs.Slot1 = Slot1Configs.from(slotConfigs);
+                    break;
+                case 2:
+                    motorConfigs.Slot2 = Slot2Configs.from(slotConfigs);
+                    break;
+            }
             setup(() -> motor.getConfigurator().apply(slotConfigs), "Setup PID Controller"); 
         }
     }
@@ -475,14 +649,24 @@ public class TalonFXLance extends MotorControllerLance
      * @param kS Static feedforward gain
      * @param kV Velocity feedforward gain
      * @param kA Acceleration feedforward gain
-     * @param kG Gravity feedforward/feedback gain
      */
-    public void setupPIDController(int slotId, double kP, double kI, double kD, double kS, double kV, double kA, double kG)
+    public void setupPIDController(int slotId, double kP, double kI, double kD, double kS, double kV, double kA)
     {
         if(isValidSlotId(slotId))
         {
+            // SlotConfigs slotConfigs = new SlotConfigs();
+            // setup(() -> motor.getConfigurator().refresh(slotConfigs), "");
+
+            // slotConfigs.SlotNumber = slotId;
+            // slotConfigs.kP = kP;
+            // slotConfigs.kI = kI;
+            // slotConfigs.kD = kD;
+            // slotConfigs.kS = kS;
+            // slotConfigs.kV = kV;
+            // slotConfigs.kA = kA;
+            // setup(() -> motor.getConfigurator().apply(slotConfigs), "Setup PID Controller");
+
             SlotConfigs slotConfigs = new SlotConfigs();
-            setup(() -> motor.getConfigurator().refresh(slotConfigs), "");
 
             slotConfigs.SlotNumber = slotId;
             slotConfigs.kP = kP;
@@ -491,9 +675,49 @@ public class TalonFXLance extends MotorControllerLance
             slotConfigs.kS = kS;
             slotConfigs.kV = kV;
             slotConfigs.kA = kA;
-            slotConfigs.kG = kG;
+
+            switch(slotId)
+            {
+                case 0:
+                    motorConfigs.Slot0 = Slot0Configs.from(slotConfigs);
+                    break;
+                case 1:
+                    motorConfigs.Slot1 = Slot1Configs.from(slotConfigs);
+                    break;
+                case 2:
+                    motorConfigs.Slot2 = Slot2Configs.from(slotConfigs);
+                    break;
+            }
             setup(() -> motor.getConfigurator().apply(slotConfigs), "Setup PID Controller");
         }
+    }
+
+    /**
+     * Set the Motion Magic controls for the motor.
+     * @param velocity The target cruise velocity (rotations per second)
+     * @param acceleration The target acceleration (rotations per second^2)
+     * @param jerk The target jerk (rotations per second^3)
+     */
+    public void setupMotionMagic(double velocity, double acceleration, double jerk)
+    {
+        // MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs();
+        // setup(() -> motor.getConfigurator().refresh(motionMagicConfigs), "");
+
+        // motionMagicConfigs.MotionMagicCruiseVelocity = velocity;
+        // motionMagicConfigs.MotionMagicAcceleration = acceleration;
+        // motionMagicConfigs.MotionMagicJerk = jerk;
+
+        // useMotionMagic = true;
+
+        // setup(() -> motor.getConfigurator().apply(motionMagicConfigs), "Setup Motion Magic");
+
+        motorConfigs.MotionMagic.MotionMagicCruiseVelocity = velocity;
+        motorConfigs.MotionMagic.MotionMagicAcceleration = acceleration;
+        motorConfigs.MotionMagic.MotionMagicJerk = jerk;
+
+        useMotionMagic = true;
+
+        setup(() -> motor.getConfigurator().apply(motorConfigs.MotionMagic), "Setup Motion Magic");
     }
 
     /**
@@ -506,23 +730,42 @@ public class TalonFXLance extends MotorControllerLance
         double[] pid = {0.0, 0.0, 0.0};
         if(isValidSlotId(slotId))
         {
-            SlotConfigs slotConfigs = new SlotConfigs();
+            // SlotConfigs slotConfigs = new SlotConfigs();
+            // switch(slotId)
+            // {
+            //     case 0:
+            //         setup(() -> motor.getConfigurator().refresh(Slot0Configs.from(slotConfigs)), "");
+            //         break;
+            //     case 1:
+            //         setup(() -> motor.getConfigurator().refresh(Slot1Configs.from(slotConfigs)), "");
+            //         break;
+            //     case 2:
+            //         setup(() -> motor.getConfigurator().refresh(Slot2Configs.from(slotConfigs)), "");
+            //         break;
+            // }     
+                
+            // pid[0] = slotConfigs.kP;
+            // pid[1] = slotConfigs.kI;
+            // pid[2] = slotConfigs.kD;
+
             switch(slotId)
             {
                 case 0:
-                    setup(() -> motor.getConfigurator().refresh(Slot0Configs.from(slotConfigs)), "");
+                    pid[0] = motorConfigs.Slot0.kP;
+                    pid[1] = motorConfigs.Slot0.kI;
+                    pid[2] = motorConfigs.Slot0.kD;
                     break;
                 case 1:
-                    setup(() -> motor.getConfigurator().refresh(Slot1Configs.from(slotConfigs)), "");
+                    pid[0] = motorConfigs.Slot1.kP;
+                    pid[1] = motorConfigs.Slot1.kI;
+                    pid[2] = motorConfigs.Slot1.kD;
                     break;
                 case 2:
-                    setup(() -> motor.getConfigurator().refresh(Slot2Configs.from(slotConfigs)), "");
+                    pid[0] = motorConfigs.Slot2.kP;
+                    pid[1] = motorConfigs.Slot2.kI;
+                    pid[2] = motorConfigs.Slot2.kD;
                     break;
-            }     
-                
-            pid[0] = slotConfigs.kP;
-            pid[1] = slotConfigs.kI;
-            pid[2] = slotConfigs.kD;
+            }
         }
         return pid;
     }
@@ -734,29 +977,59 @@ public class TalonFXLance extends MotorControllerLance
     {
         if(isValidSlotId(slotId))
         {
-            if(forwardHardLimit == null && reverseHardLimit == null)
+            if(!useMotionMagic)
             {
-                motor.setControl(positionVoltage.withPosition(position).withSlot(slotId));
+                positionVoltage.Slot = slotId;
+                positionVoltage.Position = position;
+                positionVoltage.FeedForward = kF;
+                positionVoltage.LimitForwardMotion = (forwardHardLimit != null) ? !forwardHardLimit.get() : false;
+                positionVoltage.LimitReverseMotion = (reverseHardLimit != null) ? !reverseHardLimit.get() : false;
+
+                motor.setControl(positionVoltage);
             }
-            else if(forwardHardLimit != null && reverseHardLimit != null)
+            else
             {
-                motor.setControl(positionVoltage.withPosition(position).withSlot(slotId)
-                    .withLimitForwardMotion(!forwardHardLimit.get())
-                    .withLimitReverseMotion(!reverseHardLimit.get()));
+                motionMagicVoltage.Slot = slotId;
+                motionMagicVoltage.Position = position;
+                motionMagicVoltage.FeedForward = kF;
+                motionMagicVoltage.LimitForwardMotion = (forwardHardLimit != null) ? !forwardHardLimit.get() : false;
+                motionMagicVoltage.LimitReverseMotion = (reverseHardLimit != null) ? !reverseHardLimit.get() : false;
+
+                motor.setControl(motionMagicVoltage);
             }
-            else if(forwardHardLimit != null && reverseHardLimit == null)
-            {
-                motor.setControl(positionVoltage.withPosition(position).withSlot(slotId)
-                    .withLimitForwardMotion(!forwardHardLimit.get()));
-            }
-            else if(forwardHardLimit == null && reverseHardLimit != null)
-            {
-                motor.setControl(positionVoltage.withPosition(position).withSlot(slotId)
-                    .withLimitReverseMotion(!reverseHardLimit.get()));
-            }
+
+
+
+            // if(forwardHardLimit == null && reverseHardLimit == null)
+            // {
+            //     motor.setControl(positionVoltage.withSlot(slotId)
+            //         .withPosition(position)
+            //         .withFeedForward(kF));
+            // }
+            // else if(forwardHardLimit != null && reverseHardLimit != null)
+            // {
+            //     motor.setControl(positionVoltage.withSlot(slotId)
+            //         .withPosition(position)
+            //         .withLimitForwardMotion(!forwardHardLimit.get())
+            //         .withLimitReverseMotion(!reverseHardLimit.get())
+            //         .withFeedForward(kF));
+            // }
+            // else if(forwardHardLimit != null && reverseHardLimit == null)
+            // {
+            //     motor.setControl(positionVoltage.withSlot(slotId)
+            //         .withPosition(position)
+            //         .withLimitForwardMotion(!forwardHardLimit.get())
+            //         .withFeedForward(kF));
+            // }
+            // else if(forwardHardLimit == null && reverseHardLimit != null)
+            // {
+            //     motor.setControl(positionVoltage.withSlot(slotId)
+            //         .withPosition(position)
+            //         .withLimitReverseMotion(!reverseHardLimit.get())
+            //         .withFeedForward(kF));
+            // }
         }
     }
-
 
     /**
      * Spin the motor to a velocity using PID control.
@@ -765,7 +1038,8 @@ public class TalonFXLance extends MotorControllerLance
      */
     public void setControlVelocity(double velocity)
     {
-        motor.setControl(velocityVoltage.withVelocity(velocity));
+        // motor.setControl(velocityVoltage.withVelocity(velocity));
+        setControlVelocity(velocity, 0);
     }
 
     /**
@@ -778,26 +1052,55 @@ public class TalonFXLance extends MotorControllerLance
     {
         if(isValidSlotId(slotId))
         {
-            if(forwardHardLimit == null && reverseHardLimit == null)
+            if(!useMotionMagic)
             {
-                motor.setControl(velocityVoltage.withVelocity(velocity).withSlot(slotId));
+                velocityVoltage.Slot = slotId;
+                velocityVoltage.Velocity = velocity;
+                velocityVoltage.FeedForward = kF;
+                velocityVoltage.LimitForwardMotion = (forwardHardLimit != null) ? !forwardHardLimit.get() : false;
+                velocityVoltage.LimitReverseMotion = (reverseHardLimit != null) ? !reverseHardLimit.get() : false;
+                
+                motor.setControl(velocityVoltage);
             }
-            else if(forwardHardLimit != null && reverseHardLimit != null)
+            else
             {
-                motor.setControl(velocityVoltage.withVelocity(velocity).withSlot(slotId)
-                    .withLimitForwardMotion(!forwardHardLimit.get())
-                    .withLimitReverseMotion(!reverseHardLimit.get()));
+                motionMagicVelocityVoltage.Slot = slotId;
+                motionMagicVelocityVoltage.Velocity = velocity;
+                motionMagicVelocityVoltage.FeedForward = kF;
+                motionMagicVelocityVoltage.LimitForwardMotion = (forwardHardLimit != null) ? !forwardHardLimit.get() : false;
+                motionMagicVelocityVoltage.LimitReverseMotion = (reverseHardLimit != null) ? !reverseHardLimit.get() : false;
+                
+                motor.setControl(motionMagicVelocityVoltage);
             }
-            else if(forwardHardLimit != null && reverseHardLimit == null)
-            {
-                motor.setControl(velocityVoltage.withVelocity(velocity).withSlot(slotId)
-                    .withLimitForwardMotion(!forwardHardLimit.get()));
-            }
-            else if(forwardHardLimit == null && reverseHardLimit != null)
-            {
-                motor.setControl(velocityVoltage.withVelocity(velocity).withSlot(slotId)
-                    .withLimitReverseMotion(!reverseHardLimit.get()));
-            }
+
+            // if(forwardHardLimit == null && reverseHardLimit == null)
+            // {
+            //     motor.setControl(velocityVoltage.withSlot(slotId)
+            //         .withVelocity(velocity)
+            //         .withFeedForward(kF));
+            // }
+            // else if(forwardHardLimit != null && reverseHardLimit != null)
+            // {
+            //     motor.setControl(velocityVoltage.withSlot(slotId)
+            //         .withVelocity(velocity)
+            //         .withLimitForwardMotion(!forwardHardLimit.get())
+            //         .withLimitReverseMotion(!reverseHardLimit.get())
+            //         .withFeedForward(kF));
+            // }
+            // else if(forwardHardLimit != null && reverseHardLimit == null)
+            // {
+            //     motor.setControl(velocityVoltage.withSlot(slotId)
+            //         .withVelocity(velocity)
+            //         .withLimitForwardMotion(!forwardHardLimit.get())
+            //         .withFeedForward(kF));
+            // }
+            // else if(forwardHardLimit == null && reverseHardLimit != null)
+            // {
+            //     motor.setControl(velocityVoltage.withSlot(slotId)
+            //         .withVelocity(velocity)
+            //         .withLimitReverseMotion(!reverseHardLimit.get())
+            //         .withFeedForward(kF));
+            // }
         }
     }
 
@@ -864,14 +1167,28 @@ public class TalonFXLance extends MotorControllerLance
     @Override
     public void set(double speed)
     {
-        motor.set(speed);
+        // motor.set(speed);
+        // feed();
+        
+        dutyCycleOut.Output = speed;
+        dutyCycleOut.LimitForwardMotion = (forwardHardLimit != null) ? !forwardHardLimit.get() : false;
+        dutyCycleOut.LimitReverseMotion = (reverseHardLimit != null) ? !reverseHardLimit.get() : false;
+
+        motor.setControl(dutyCycleOut);
         feed();
     }
 
     @Override
     public void setVoltage(double outputVolts) 
     {
-        motor.setVoltage(outputVolts);
+        // motor.setVoltage(outputVolts);
+        // feed();
+
+        voltageOut.Output = outputVolts;
+        voltageOut.LimitForwardMotion = (forwardHardLimit != null) ? !forwardHardLimit.get() : false;
+        voltageOut.LimitReverseMotion = (reverseHardLimit != null) ? !reverseHardLimit.get() : false;
+
+        motor.setControl(voltageOut);
         feed();
     }
 
@@ -884,9 +1201,11 @@ public class TalonFXLance extends MotorControllerLance
     @Override
     public boolean getInverted()
     {
-        MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
-        motor.getConfigurator().refresh(motorOutputConfigs);
-        return motorOutputConfigs.Inverted == InvertedValue.Clockwise_Positive;
+        // MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs();
+        // motor.getConfigurator().refresh(motorOutputConfigs);
+        // return motorOutputConfigs.Inverted == InvertedValue.Clockwise_Positive;
+
+        return motorConfigs.MotorOutput.Inverted == InvertedValue.Clockwise_Positive;
     }
 
     @Override

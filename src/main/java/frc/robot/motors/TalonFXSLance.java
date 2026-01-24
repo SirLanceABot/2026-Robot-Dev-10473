@@ -10,9 +10,13 @@ import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.ExternalFeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.ForwardLimitSourceValue;
@@ -52,9 +56,16 @@ public class TalonFXSLance extends MotorControllerLance
 
     private final TalonFXS motor;
     private final TalonFXSConfiguration motorConfigs;
+    private final String motorControllerName;
+
     private final PositionVoltage positionVoltage;
     private final VelocityVoltage velocityVoltage;
-    private final String motorControllerName;
+    private final MotionMagicVoltage motionMagicVoltage;
+    private final MotionMagicVelocityVoltage motionMagicVelocityVoltage;
+    private final DutyCycleOut dutyCycleOut;
+    private final VoltageOut voltageOut;
+    private boolean useMotionMagic = false;
+    private double kF = 0.0;
 
     private final int SETUP_ATTEMPT_LIMIT = 5;
     private int setupErrorCount = 0;
@@ -78,7 +89,11 @@ public class TalonFXSLance extends MotorControllerLance
         motor = new TalonFXS(deviceId, new CANBus(canbus));
         motorConfigs = new TalonFXSConfiguration();
         positionVoltage = new PositionVoltage(0.0);
-        velocityVoltage = new VelocityVoltage(0);
+        velocityVoltage = new VelocityVoltage(0.0);
+        motionMagicVoltage = new MotionMagicVoltage(0.0);
+        motionMagicVelocityVoltage = new MotionMagicVelocityVoltage(0.0);
+        dutyCycleOut = new DutyCycleOut(0.0);
+        voltageOut = new VoltageOut(0.0);
 
         clearStickyFaults();
         setupFactoryDefaults();
@@ -358,22 +373,6 @@ public class TalonFXSLance extends MotorControllerLance
      */
     public void setupPIDController(int slotId, double kP, double kI, double kD)
     {
-        setupPIDController(slotId, kP, kI, kD, 0.0, 0.0, 0.0, 0.0);
-    }
-
-    /**
-     * Set the PID controls for the motor.
-     * @param slotId The PID slot (0-2)
-     * @param kP The Proportional constant
-     * @param kI The Integral constant
-     * @param kD The Derivative constant
-     * @param kS Static feedforward gain
-     * @param kV Velocity feedforward gain
-     * @param kA Acceleration feedforward gain
-     * @param kG Gravity feedforward/feedback gain
-     */
-    public void setupPIDController(int slotId, double kP, double kI, double kD, double kS, double kV, double kA, double kG)
-    {
         if(isValidSlotId(slotId))
         {
             SlotConfigs slotConfigs = new SlotConfigs();
@@ -382,10 +381,6 @@ public class TalonFXSLance extends MotorControllerLance
             slotConfigs.kP = kP;
             slotConfigs.kI = kI;
             slotConfigs.kD = kD;
-            slotConfigs.kS = kS;
-            slotConfigs.kV = kV;
-            slotConfigs.kA = kA;
-            slotConfigs.kG = kG;
 
             switch(slotId)
             {
@@ -401,6 +396,99 @@ public class TalonFXSLance extends MotorControllerLance
             }
             setup(() -> motor.getConfigurator().apply(slotConfigs), "Setup PID Controller");
         }
+    }
+
+    /**
+     * Set the PID controls for the motor.
+     * @param slotId The PID slot (0-2)
+     * @param kP The Proportional constant
+     * @param kI The Integral constant
+     * @param kD The Derivative constant
+     * @param kF The Feedforward value
+     */
+    public void setupPIDController(int slotId, double kP, double kI, double kD, double kF)
+    {
+        if(isValidSlotId(slotId))
+        {
+            SlotConfigs slotConfigs = new SlotConfigs();
+
+            slotConfigs.SlotNumber = slotId;
+            slotConfigs.kP = kP;
+            slotConfigs.kI = kI;
+            slotConfigs.kD = kD;
+            this.kF = kF;
+
+            switch(slotId)
+            {
+                case 0:
+                    motorConfigs.Slot0 = Slot0Configs.from(slotConfigs);
+                    break;
+                case 1:
+                    motorConfigs.Slot1 = Slot1Configs.from(slotConfigs);
+                    break;
+                case 2:
+                    motorConfigs.Slot2 = Slot2Configs.from(slotConfigs);
+                    break;
+            }
+            setup(() -> motor.getConfigurator().apply(slotConfigs), "Setup PID Controller");
+        }
+    }
+
+    /**
+     * Set the PID controls for the motor.
+     * @param slotId The PID slot (0-2)
+     * @param kP The Proportional constant
+     * @param kI The Integral constant
+     * @param kD The Derivative constant
+     * @param kS Static feedforward gain
+     * @param kV Velocity feedforward gain
+     * @param kA Acceleration feedforward gain
+     */
+    public void setupPIDController(int slotId, double kP, double kI, double kD, double kS, double kV, double kA)
+    {
+        if(isValidSlotId(slotId))
+        {
+            SlotConfigs slotConfigs = new SlotConfigs();
+
+            slotConfigs.SlotNumber = slotId;
+            slotConfigs.kP = kP;
+            slotConfigs.kI = kI;
+            slotConfigs.kD = kD;
+            slotConfigs.kS = kS;
+            slotConfigs.kV = kV;
+            slotConfigs.kA = kA;
+
+            switch(slotId)
+            {
+                case 0:
+                    motorConfigs.Slot0 = Slot0Configs.from(slotConfigs);
+                    break;
+                case 1:
+                    motorConfigs.Slot1 = Slot1Configs.from(slotConfigs);
+                    break;
+                case 2:
+                    motorConfigs.Slot2 = Slot2Configs.from(slotConfigs);
+                    break;
+            }
+            setup(() -> motor.getConfigurator().apply(slotConfigs), "Setup PID Controller");
+        }
+    }
+
+    /**
+     * Set the Motion Magic controls for the motor.
+     * @param velocity The target cruise velocity (rotations per second)
+     * @param acceleration The target acceleration (rotations per second^2)
+     * @param jerk The target jerk (rotations per second^3)
+     */
+    public void setupMotionMagic(double velocity, double acceleration, double jerk)
+    {
+        motorConfigs.MotionMagic.MotionMagicCruiseVelocity = velocity;
+        motorConfigs.MotionMagic.MotionMagicAcceleration = acceleration;
+        motorConfigs.MotionMagic.MotionMagicJerk = jerk;
+
+        useMotionMagic = true;
+
+        setup(() -> motor.getConfigurator().apply(motorConfigs.MotionMagic), "Setup Motion Magic");
     }
 
     /**
@@ -684,10 +772,22 @@ public class TalonFXSLance extends MotorControllerLance
     {
         if(isValidSlotId(slotId))
         {
-            positionVoltage.Slot = slotId;
-            positionVoltage.Position = position;
-            
-            motor.setControl(positionVoltage);
+            if(!useMotionMagic)
+            {
+                positionVoltage.Slot = slotId;
+                positionVoltage.Position = position;
+                positionVoltage.FeedForward = kF;
+                
+                motor.setControl(positionVoltage);
+            }
+            else
+            {
+                motionMagicVoltage.Slot = slotId;
+                motionMagicVoltage.Position = position;
+                motionMagicVoltage.FeedForward = kF;
+
+                motor.setControl(motionMagicVoltage);
+            }
         }
     }
 
@@ -712,10 +812,22 @@ public class TalonFXSLance extends MotorControllerLance
     {
         if(isValidSlotId(slotId))
         {
-            velocityVoltage.Slot = slotId;
-            velocityVoltage.Velocity = velocity;
+            if(!useMotionMagic)
+            {
+                velocityVoltage.Slot = slotId;
+                velocityVoltage.Velocity = velocity;
+                velocityVoltage.FeedForward = kF;
 
-            motor.setControl(velocityVoltage);
+                motor.setControl(velocityVoltage);
+            }
+            else
+            {
+                motionMagicVelocityVoltage.Slot = slotId;
+                motionMagicVelocityVoltage.Velocity = velocity;
+                motionMagicVelocityVoltage.FeedForward = kF;
+
+                motor.setControl(motionMagicVelocityVoltage);
+            }
         }
     }
 
@@ -782,14 +894,22 @@ public class TalonFXSLance extends MotorControllerLance
     @Override
     public void set(double speed)
     {
-        motor.set(speed);
+        // motor.set(speed);
+        // feed();
+
+        dutyCycleOut.Output = speed;
+        motor.setControl(dutyCycleOut);
         feed();
     }
 
     @Override
     public void setVoltage(double outputVolts) 
     {
-        motor.setVoltage(outputVolts);
+        // motor.setVoltage(outputVolts);
+        // feed();
+
+        voltageOut.Output = outputVolts;
+        motor.setControl(voltageOut);
         feed();
     }
 
