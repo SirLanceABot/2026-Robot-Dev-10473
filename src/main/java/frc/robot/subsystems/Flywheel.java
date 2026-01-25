@@ -3,9 +3,9 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.Flywheel.*;
 
 import java.lang.invoke.MethodHandles;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.motors.TalonFXLance;
@@ -62,6 +62,14 @@ public class Flywheel extends SubsystemBase
     {
         leadMotor.setupFactoryDefaults();
         followMotor.setupFactoryDefaults();
+
+        followMotor.setupFollower(LEADMOTOR, false);
+
+        leadMotor.setSafetyEnabled(true);
+        followMotor.setSafetyEnabled(true);
+
+        leadMotor.setupBrakeMode();
+        followMotor.setupBrakeMode();
     }
 
     /**
@@ -71,29 +79,44 @@ public class Flywheel extends SubsystemBase
     private void set(double speed)
     {
         leadMotor.set(speed);
-        followMotor.set(speed);
     }
 
-    public void stop()
+    private void stop()
     {
         set(0.0);
     }
 
-    public Command onCommand()
+    private void shoot(double speed)
     {
-        return run( () -> set(0.25) );
+        leadMotor.setControlVelocity(speed);
     }
 
-    public Command setCommand(DoubleSupplier speed)
+    public double getVelocity()
     {
-        return run( () -> set(MathUtil.clamp(speed.getAsDouble(), 0.0, 0.5)) );
+        return leadMotor.getVelocity();
     }
 
-    // Use a method reference instead of this method
+    public BooleanSupplier isAtSetSpeed(double targetSpeed, double tolerance)
+    {
+        double currentSpeed = leadMotor.getVelocity();
+
+        return () ->
+        {
+            if((currentSpeed + tolerance > targetSpeed) && (currentSpeed - tolerance < targetSpeed))
+                return true;
+            else
+                return false;
+        };
+    }
+
     public Command stopCommand()
     {
-        // return run( () -> stop() );
-        return run(this::stop);
+        return run( () -> stop() );
+    }
+
+    public Command shootCommand(DoubleSupplier speed)
+    {
+        return run( () -> shoot(speed.getAsDouble()) );
     }
 
 
