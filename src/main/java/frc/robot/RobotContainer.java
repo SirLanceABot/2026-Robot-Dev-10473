@@ -6,7 +6,9 @@ package frc.robot;
 
 import java.lang.invoke.MethodHandles;
 
+import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Agitator;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Intake;
@@ -31,10 +33,12 @@ public class RobotContainer
 
     // Select the robot components to use
     private boolean useFullRobot = false;
+
     private boolean useExampleSubsystem = false;
     private boolean useFlywheel = false;
     private boolean useAgitator = false;
     private boolean useIntake = false;
+    private boolean useDrivetrain = true;
 
 
     // Robot components
@@ -42,6 +46,7 @@ public class RobotContainer
     private Flywheel flywheel = null;
     private Agitator agitator = null;
     private Intake intake = null;
+    private Drivetrain drivetrain = null;
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -59,6 +64,9 @@ public class RobotContainer
 
         if(useFullRobot || useIntake)
             intake = new Intake();
+
+        if(useFullRobot || useDrivetrain)
+            drivetrain = TunerConstants.createDrivetrain();
     }
 
     public ExampleSubsystem getExampleSubsystem()
@@ -79,5 +87,10 @@ public class RobotContainer
     public Intake getIntake()
     {
         return intake;
+    }
+
+    public Drivetrain getDrivetrain()
+    {
+        return drivetrain;
     }
 }

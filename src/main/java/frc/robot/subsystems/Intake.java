@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.ExampleSubsystem.*;
+import static frc.robot.Constants.Intake.*;
 
 import java.lang.invoke.MethodHandles;
 import java.util.function.DoubleSupplier;
@@ -33,8 +33,8 @@ public class Intake extends SubsystemBase
     
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
-    private final TalonFXLance motor1 = new TalonFXLance(MOTOR1, MOTOR_CAN_BUS, "Motor 1");
-    private final TalonFXLance motor2 = new TalonFXLance(MOTOR2, MOTOR_CAN_BUS, "Motor 2");
+    private final TalonFXLance motor1 = new TalonFXLance(MOTOR, MOTOR_CAN_BUS, "Intake Motor");
+    // private final TalonFXLance motor2 = new TalonFXLance(MOTOR2, MOTOR_CAN_BUS, "Motor 2");
 
 
     // *** CLASS CONSTRUCTORS ***
@@ -45,7 +45,7 @@ public class Intake extends SubsystemBase
      */
     public Intake()
     {
-        super("Example Subsystem");
+        super("Intake");
         System.out.println("  Constructor Started:  " + fullClassName);
 
         configMotors();
@@ -60,7 +60,7 @@ public class Intake extends SubsystemBase
     private void configMotors()
     {
         motor1.setupFactoryDefaults();
-        motor2.setupFactoryDefaults();
+        // motor2.setupFactoryDefaults();
     }
 
     /**
@@ -70,7 +70,7 @@ public class Intake extends SubsystemBase
     private void set(double speed)
     {
         motor1.set(speed);
-        motor2.set(speed);
+        // motor2.set(speed);
     }
 
     public void stop()
@@ -94,6 +94,18 @@ public class Intake extends SubsystemBase
     {
         // return run( () -> stop() );
         return run(this::stop);
+    }
+
+    public Command intakeFuelCommand()
+    {
+        return runOnce( () -> set(0.2))
+        .withName("Intake Fuel");
+    }
+
+    public Command ejectFuelCommand()
+    {
+        return runOnce( () -> set(-0.1))
+        .withName("Eject Fuel");
     }
 
 

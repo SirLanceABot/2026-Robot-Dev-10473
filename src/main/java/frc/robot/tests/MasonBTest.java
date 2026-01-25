@@ -2,7 +2,9 @@ package frc.robot.tests;
 
 import java.lang.invoke.MethodHandles;
 
+import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.Drivetrain;
 
 @SuppressWarnings("unused")
 public class MasonBTest implements Test
@@ -26,10 +28,13 @@ public class MasonBTest implements Test
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
+    private final Drivetrain drivetrain;
+    private final Joystick joystick = new Joystick(0);
 
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
+
 
     /**
      * Use this class to test your code using Test mode
@@ -41,6 +46,7 @@ public class MasonBTest implements Test
         System.out.println("  Constructor Started:  " + fullClassName);
 
         this.robotContainer = robotContainer;
+        drivetrain = robotContainer.getDrivetrain();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -64,7 +70,9 @@ public class MasonBTest implements Test
      * This method runs periodically (every 20ms).
      */
     public void periodic()
-    {}
+    {
+        drivetrain.driveCommand(() -> -joystick.getRawAxis(1), () -> -joystick.getRawAxis(0), () -> joystick.getRawAxis(4), () -> 0.5).schedule();
+    }
     
     /**
      * This method runs one time after the periodic() method.
