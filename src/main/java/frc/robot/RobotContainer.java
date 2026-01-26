@@ -38,7 +38,7 @@ public class RobotContainer
     private boolean useFlywheel = false;
     private boolean useAgitator = false;
     private boolean useIntake = false;
-    private boolean useDrivetrain = true;
+    private boolean useDrivetrain = false;
 
 
     // Robot components

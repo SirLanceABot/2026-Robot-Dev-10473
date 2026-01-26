@@ -1,8 +1,11 @@
 package frc.robot.tests;
 
 import java.lang.invoke.MethodHandles;
+import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.Flywheel;
 
 @SuppressWarnings("unused")
 public class JacksonDTest implements Test
@@ -26,6 +29,8 @@ public class JacksonDTest implements Test
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
+    private final Flywheel flywheel;
+    private final CommandXboxController controller = new CommandXboxController(0);
 
 
     // *** CLASS CONSTRUCTORS ***
@@ -41,6 +46,8 @@ public class JacksonDTest implements Test
         System.out.println("  Constructor Started:  " + fullClassName);
 
         this.robotContainer = robotContainer;
+        
+        flywheel = robotContainer.getFlywheel();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -48,7 +55,7 @@ public class JacksonDTest implements Test
 
     // *** CLASS METHODS & INSTANCE METHODS ***
     // Put all class methods and instance methods here
-
+    
         
 
     // *** OVERRIDDEN METHODS ***
@@ -58,13 +65,24 @@ public class JacksonDTest implements Test
      * This method runs one time before the periodic() method.
      */
     public void init()
-    {}
+    {
+
+        controller.a().onTrue(flywheel.shootCommand(() -> 2.0));
+        controller.b().onTrue(flywheel.stopCommand());
+
+    }
 
     /**
      * This method runs periodically (every 20ms).
      */
     public void periodic()
-    {}
+    {
+        // if(flywheel.getVelocity() > 0)
+            // System.out.println(flywheel.getVelocity());
+
+        // if(flywheel.isAtSetSpeed(2, 0.1).getAsBoolean())
+            // System.out.println("At speed");
+    }
     
     /**
      * This method runs one time after the periodic() method.

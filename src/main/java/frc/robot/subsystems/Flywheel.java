@@ -37,6 +37,14 @@ public class Flywheel extends SubsystemBase
     private final TalonFXLance leadMotor = new TalonFXLance(LEADMOTOR, MOTOR_CAN_BUS, "Flywheel Lead Motor");
     private final TalonFXLance followMotor = new TalonFXLance(FOLLOWMOTOR, MOTOR_CAN_BUS, "Flywheel Follow Motor");
 
+    // PID constants
+    private final double kP = 0.401;
+    private final double kI = 0.0;
+    private final double kD = 0.0;
+    private final double kS = 0.0;
+    private final double kV = 0.2;
+    private final double kA = 0.0;
+
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
@@ -63,13 +71,15 @@ public class Flywheel extends SubsystemBase
         leadMotor.setupFactoryDefaults();
         followMotor.setupFactoryDefaults();
 
-        followMotor.setupFollower(LEADMOTOR, false);
-
         leadMotor.setSafetyEnabled(true);
         followMotor.setSafetyEnabled(true);
 
-        leadMotor.setupBrakeMode();
-        followMotor.setupBrakeMode();
+        leadMotor.setupCoastMode();
+        followMotor.setupCoastMode();
+
+        leadMotor.setupPIDController(0, kP, kI, kD, kS, kV, kA);
+
+        followMotor.setupFollower(LEADMOTOR, false);
     }
 
     /**
@@ -99,7 +109,6 @@ public class Flywheel extends SubsystemBase
     public BooleanSupplier isAtSetSpeed(double targetSpeed, double tolerance)
     {
         double currentSpeed = leadMotor.getVelocity();
-
         return () ->
         {
             if((currentSpeed + tolerance > targetSpeed) && (currentSpeed - tolerance < targetSpeed))
@@ -117,6 +126,11 @@ public class Flywheel extends SubsystemBase
     public Command shootCommand(DoubleSupplier speed)
     {
         return run( () -> shoot(speed.getAsDouble()) );
+    }
+
+    public Command onCommand()
+    {
+        return run( () -> leadMotor.set(0.1));
     }
 
 
