@@ -57,13 +57,20 @@ public final class Constants
     {
         public static final int MOTOR                       = 10473;
 
-
         public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
     }
 
     public static class Intake
     {
         public static final int MOTOR                       = 10473;
+
+        public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
+    }
+
+    public static class Pivot
+    {
+        public static final int LEADMOTOR                  = 10473;
+        public static final int FOLLOWMOTOR                = 10473;
 
         public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
     }

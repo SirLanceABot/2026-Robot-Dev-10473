@@ -12,6 +12,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Pivot;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -38,6 +39,7 @@ public class RobotContainer
     private boolean useFlywheel = false;
     private boolean useAgitator = false;
     private boolean useIntake = false;
+    private boolean usePivot = false;
     private boolean useDrivetrain = false;
 
 
@@ -46,6 +48,7 @@ public class RobotContainer
     private Flywheel flywheel = null;
     private Agitator agitator = null;
     private Intake intake = null;
+    private Pivot pivot = null;
     private Drivetrain drivetrain = null;
 
 
@@ -64,6 +67,9 @@ public class RobotContainer
 
         if(useFullRobot || useIntake)
             intake = new Intake();
+        
+        if(useFullRobot || usePivot)
+            pivot = new Pivot();
 
         if(useFullRobot || useDrivetrain)
             drivetrain = TunerConstants.createDrivetrain();
@@ -87,6 +93,11 @@ public class RobotContainer
     public Intake getIntake()
     {
         return intake;
+    }
+
+    public Pivot getPivot()
+    {
+        return pivot;
     }
 
     public Drivetrain getDrivetrain()

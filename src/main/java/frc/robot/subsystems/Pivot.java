@@ -1,20 +1,19 @@
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.Flywheel.*;
+import static frc.robot.Constants.Pivot.*;
 
 import java.lang.invoke.MethodHandles;
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.motors.TalonFXLance;
 
-
 /**
- * Shooter subsystem
+ * Intake pivot arm subsystem
  */
-public class Flywheel extends SubsystemBase
+public class Pivot extends SubsystemBase
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -30,31 +29,25 @@ public class Flywheel extends SubsystemBase
     // *** INNER ENUMS and INNER CLASSES ***
     // Put all inner enums and inner classes here
 
-
     
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
-    private final TalonFXLance leadMotor = new TalonFXLance(LEADMOTOR, MOTOR_CAN_BUS, "Flywheel Lead Motor");
-    private final TalonFXLance followMotor = new TalonFXLance(FOLLOWMOTOR, MOTOR_CAN_BUS, "Flywheel Follow Motor");
+    private final TalonFXLance leadMotor = new TalonFXLance(LEADMOTOR, MOTOR_CAN_BUS, "Pivot Lead Motor");
+    private final TalonFXLance followMotor = new TalonFXLance(FOLLOWMOTOR, MOTOR_CAN_BUS, "Pivot Follow Motor");
 
-    // PID constants
-    private final double kP = 0.401;
-    private final double kI = 0.0;
-    private final double kD = 0.0;
-    private final double kS = 0.0;
-    private final double kV = 0.2;
-    private final double kA = 0.0;
+    private final double RETRACTED = 0.0;
+    private final double EXTENDED = 10473.0;
 
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
 
     /** 
-     * Creates a new flywheel. 
+     * Creates a new Pivot. 
      */
-    public Flywheel()
+    public Pivot()
     {
-        super("Flywheel");
+        super("Pivot");
         System.out.println("  Constructor Started:  " + fullClassName);
 
         configMotors();
@@ -74,10 +67,8 @@ public class Flywheel extends SubsystemBase
         leadMotor.setSafetyEnabled(true);
         followMotor.setSafetyEnabled(true);
 
-        leadMotor.setupCoastMode();
-        followMotor.setupCoastMode();
-
-        leadMotor.setupPIDController(0, kP, kI, kD, kS, kV, kA);
+        leadMotor.setupBrakeMode();
+        followMotor.setupBrakeMode();
 
         followMotor.setupFollower(LEADMOTOR, false);
     }
@@ -91,46 +82,20 @@ public class Flywheel extends SubsystemBase
         leadMotor.set(speed);
     }
 
-    private void stop()
+    public void stop()
     {
         set(0.0);
     }
 
-    private void shoot(double speed)
+    public Command onCommand()
     {
-        leadMotor.setControlVelocity(speed);
+        return run( () -> set(0.25) );
     }
 
-    public double getVelocity()
-    {
-        return leadMotor.getVelocity();
-    }
-
-    public BooleanSupplier isAtSetSpeed(double targetSpeed, double tolerance)
-    {
-        double currentSpeed = leadMotor.getVelocity();
-        return () ->
-        {
-            if((currentSpeed + tolerance > targetSpeed) && (currentSpeed - tolerance < targetSpeed))
-                return true;
-            else
-                return false;
-        };
-    }
 
     public Command stopCommand()
     {
-        return run( () -> stop() );
-    }
-
-    public Command shootCommand(DoubleSupplier speed)
-    {
-        return run( () -> shoot(speed.getAsDouble()) );
-    }
-
-    public Command onCommand()
-    {
-        return run( () -> leadMotor.set(0.1));
+        return run(this::stop);
     }
 
 
