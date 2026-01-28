@@ -13,6 +13,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Shroud;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -41,6 +42,7 @@ public class RobotContainer
     private boolean useIntake = false;
     private boolean usePivot = false;
     private boolean useDrivetrain = false;
+    private boolean useShroud = false;
 
 
     // Robot components
@@ -50,6 +52,7 @@ public class RobotContainer
     private Intake intake = null;
     private Pivot pivot = null;
     private Drivetrain drivetrain = null;
+    private Shroud shroud = null;
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -70,6 +73,9 @@ public class RobotContainer
         
         if(useFullRobot || usePivot)
             pivot = new Pivot();
+
+        if(useFullRobot || useShroud)
+            shroud = new Shroud();
 
         if(useFullRobot || useDrivetrain)
             drivetrain = TunerConstants.createDrivetrain();
@@ -103,5 +109,10 @@ public class RobotContainer
     public Drivetrain getDrivetrain()
     {
         return drivetrain;
+    }
+
+    public Shroud getShroud()
+    {
+        return shroud;
     }
 }

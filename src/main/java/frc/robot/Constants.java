@@ -74,6 +74,13 @@ public final class Constants
 
         public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
     }
+    public static class Shroud
+    {
+        public static final int ANGLE_MOTOR = 4;
+        public static final double ANGLE_MOTOR_SPEED = 0.1;
+        
+        public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
+    }
 
     /**
      * This class contains the port numbers of the controllers
