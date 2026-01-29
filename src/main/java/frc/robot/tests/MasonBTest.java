@@ -3,8 +3,10 @@ package frc.robot.tests;
 import java.lang.invoke.MethodHandles;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Intake;
 
 @SuppressWarnings("unused")
 public class MasonBTest implements Test
@@ -29,7 +31,9 @@ public class MasonBTest implements Test
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
     private final Drivetrain drivetrain;
+    private final Intake intake;
     private final Joystick joystick = new Joystick(0);
+    private final CommandXboxController controller = new CommandXboxController(0);
 
 
     // *** CLASS CONSTRUCTORS ***
@@ -47,6 +51,7 @@ public class MasonBTest implements Test
 
         this.robotContainer = robotContainer;
         drivetrain = robotContainer.getDrivetrain();
+        intake = robotContainer.getIntake();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -71,7 +76,9 @@ public class MasonBTest implements Test
      */
     public void periodic()
     {
-        drivetrain.driveCommand(() -> -joystick.getRawAxis(1), () -> -joystick.getRawAxis(0), () -> joystick.getRawAxis(4), () -> 0.5).schedule();
+        // drivetrain.driveCommand(() -> -joystick.getRawAxis(1), () -> -joystick.getRawAxis(0), () -> joystick.getRawAxis(4), () -> 0.5).schedule();
+        controller.a().onTrue(intake.intakeFuelCommand());
+        controller.b().onTrue(intake.reverseCommand());
     }
     
     /**

@@ -102,10 +102,10 @@ public class Intake extends SubsystemBase
         .withName("Intake Fuel");
     }
 
-    public Command ejectFuelCommand()
+    public Command reverseCommand()
     {
         return runOnce( () -> set(-0.1))
-        .withName("Eject Fuel");
+        .withName("Reverse Roller");
     }
 
 
