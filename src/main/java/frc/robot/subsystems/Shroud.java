@@ -67,9 +67,6 @@ public class Shroud extends SubsystemBase
         angleMotor.setupFactoryDefaults();
         angleMotor.setPosition(0.0);
         
-        angleMotor.setupForwardHardLimitSwitch(true, true, MOTOR);
-        angleMotor.setupReverseHardLimitSwitch(true, true, MOTOR);
-
         angleMotor.setupPIDController(0, kP, kI, kD);
     }
 

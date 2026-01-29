@@ -59,10 +59,11 @@ public class MukulKTest implements Test
      */
     public void init()
     {
-        controller.a().onTrue(shroud.goToCommand(12.5)); // Should be at lowest position.
-        controller.b().onTrue(shroud.goToCommand(38.0)); // Should be at 1/3 position.
-        controller.x().onTrue(shroud.goToCommand(76.0)); // Should be at 2/3 position.
-        controller.y().onTrue(shroud.goToCommand(90.0)); // Should be straight up.
+        // TODO: FIX TESTS
+        controller.a().onTrue(this.shroud.goToCommand(12.5)); // Should be at lowest position.
+        controller.b().onTrue(this.shroud.goToCommand(38.0)); // Should be at 1/3 position.
+        controller.x().onTrue(this.shroud.goToCommand(76.0)); // Should be at 2/3 position.
+        controller.y().onTrue(this.shroud.goToCommand(90.0)); // Should be straight up.
 
         System.out.println("A button moves shroud to lowest position");
         System.out.println("B button moves shroud to 1/3 position");
@@ -75,7 +76,7 @@ public class MukulKTest implements Test
      */
     public void periodic()
     {
-        double velocity = shroud.getVelocity();
+        double velocity = this.shroud.getVelocity();
         if (velocity > 0.0)
             System.out.println("Velocity: " + velocity);
     }
