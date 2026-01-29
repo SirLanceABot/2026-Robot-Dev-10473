@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.Intake.*;
+import static frc.robot.Constants.Roller.*;
 
 import java.lang.invoke.MethodHandles;
 import java.util.function.DoubleSupplier;
@@ -13,7 +13,7 @@ import frc.robot.motors.TalonFXLance;
 /**
  * This is an example of what a subsystem should look like.
  */
-public class Intake extends SubsystemBase
+public class Roller extends SubsystemBase
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -33,7 +33,7 @@ public class Intake extends SubsystemBase
     
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
-    private final TalonFXLance motor1 = new TalonFXLance(MOTOR, MOTOR_CAN_BUS, "Intake Motor");
+    private final TalonFXLance motor1 = new TalonFXLance(MOTOR, MOTOR_CAN_BUS, "Roller Motor");
     // private final TalonFXLance motor2 = new TalonFXLance(MOTOR2, MOTOR_CAN_BUS, "Motor 2");
 
 
@@ -43,9 +43,9 @@ public class Intake extends SubsystemBase
     /** 
      * Creates a new ExampleSubsystem. 
      */
-    public Intake()
+    public Roller()
     {
-        super("Intake");
+        super("Roller");
         System.out.println("  Constructor Started:  " + fullClassName);
 
         configMotors();

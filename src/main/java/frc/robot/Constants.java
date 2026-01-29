@@ -60,7 +60,7 @@ public final class Constants
         public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
     }
 
-    public static class Intake
+    public static class Roller
     {
         public static final int MOTOR                       = 10473;
 

@@ -11,7 +11,7 @@ import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Flywheel;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Roller;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shroud;
 
@@ -39,7 +39,7 @@ public class RobotContainer
     private boolean useExampleSubsystem = false;
     private boolean useFlywheel = false;
     private boolean useAgitator = false;
-    private boolean useIntake = false;
+    private boolean useRoller = false;
     private boolean usePivot = false;
     private boolean useDrivetrain = false;
     private boolean useShroud = false;
@@ -49,7 +49,7 @@ public class RobotContainer
     private ExampleSubsystem exampleSubsystem = null;
     private Flywheel flywheel = null;
     private Agitator agitator = null;
-    private Intake intake = null;
+    private Roller roller = null;
     private Pivot pivot = null;
     private Drivetrain drivetrain = null;
     private Shroud shroud = null;
@@ -68,8 +68,8 @@ public class RobotContainer
         if(useFullRobot || useAgitator)
             agitator = new Agitator();
 
-        if(useFullRobot || useIntake)
-            intake = new Intake();
+        if(useFullRobot || useRoller)
+            roller = new Roller();
         
         if(useFullRobot || usePivot)
             pivot = new Pivot();
@@ -96,9 +96,9 @@ public class RobotContainer
         return agitator;
     }
 
-    public Intake getIntake()
+    public Roller getRoller()
     {
-        return intake;
+        return roller;
     }
 
     public Pivot getPivot()
