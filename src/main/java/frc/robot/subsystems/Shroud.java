@@ -3,7 +3,9 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.Shroud.*;
 
 import java.lang.invoke.MethodHandles;
+import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.motors.TalonFXLance;
@@ -32,7 +34,7 @@ public class Shroud extends SubsystemBase
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
 
-    private final TalonFXLance angle_motor = new TalonFXLance(ANGLE_MOTOR, MOTOR_CAN_BUS, "angleMotor");
+    private final TalonFXLance angle_motor = new TalonFXLance(MOTOR, MOTOR_CAN_BUS, "angleMotor");
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
@@ -53,41 +55,42 @@ public class Shroud extends SubsystemBase
     // *** CLASS METHODS & INSTANCE METHODS ***
     // Put all class methods and instance methods here
 
+    /**
+     * This method resets the motor to factory defaults.
+     */
     private void configMotors()
     {
         angle_motor.setupFactoryDefaults();
+        angle_motor.setPosition(0.0);
+        // TODO: Set PID (Check A bot's Climb Code for example).
     }
 
     /**
-     * This method starts the motor.
+     * Helper method to convert degrees to the encoder position.
+     * @param degrees
      */
-    private void start()
+    private double degreesToPosition(double degrees)
     {
-        angle_motor.set(ANGLE_MOTOR_SPEED);
+        // TODO: Implement
+        return 0.0;
     }
 
     /**
-     * This method stops the motor.
+     * This method moves the shroud to the specified degrees.
+     * @param degrees The degrees the shroud should be set to
      */
-    private void stop()
+    private void goTo(double degrees)
     {
-        angle_motor.set(0.0);
+        angle_motor.setControlPosition(degreesToPosition(degrees));
     }
 
-    /*
-     * This command starts the motor.
+    /**
+     * This command moves the shroud to the specified degrees.
+     * @param degrees The degrees the shroud should be set to (clamped between 12.5 and 90.0 degrees)
      */
-    public Command startCommand()
+    public Command goToCommand(DoubleSupplier degrees)
     {
-        return runOnce(this::start);
-    }
-
-    /*
-     * This command stops the motor.
-     */
-    public Command stopCommand()
-    {
-        return runOnce(this::stop);
+        return run(() -> goTo(MathUtil.clamp(degrees.getAsDouble(), 12.5, 90.0))); // Shround's lowest possible position is ~12.5 degrees.
     }
 
     // *** OVERRIDEN METHODS ***

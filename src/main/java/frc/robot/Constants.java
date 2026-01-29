@@ -76,9 +76,9 @@ public final class Constants
     }
     public static class Shroud
     {
-        public static final int ANGLE_MOTOR = 4;
-        public static final double ANGLE_MOTOR_SPEED = 0.1;
-        
+        public static final int MOTOR                      = 10473;
+        public static final double MOTOR_SPEED             = 0.1;
+
         public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
     }
 
