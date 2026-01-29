@@ -108,7 +108,7 @@ public class Flywheel extends SubsystemBase
 
     public BooleanSupplier isAtSetSpeed(double targetSpeed, double tolerance)
     {
-        double currentSpeed = leadMotor.getVelocity();
+        double currentSpeed = getVelocity();
         return () ->
         {
             if((currentSpeed + tolerance > targetSpeed) && (currentSpeed - tolerance < targetSpeed))

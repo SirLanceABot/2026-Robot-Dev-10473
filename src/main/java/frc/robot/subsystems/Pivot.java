@@ -3,9 +3,7 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.Pivot.*;
 
 import java.lang.invoke.MethodHandles;
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.math.MathUtil;
+import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.motors.TalonFXLance;
@@ -35,8 +33,13 @@ public class Pivot extends SubsystemBase
     private final TalonFXLance leadMotor = new TalonFXLance(LEADMOTOR, MOTOR_CAN_BUS, "Pivot Lead Motor");
     private final TalonFXLance followMotor = new TalonFXLance(FOLLOWMOTOR, MOTOR_CAN_BUS, "Pivot Follow Motor");
 
-    private final double RETRACTED = 0.0;
-    private final double EXTENDED = 10473.0;
+    private static final double RETRACTED = 0.0;
+    private static final double EXTENDED = 10.0;
+    private static final double TOLERANCE = 0.2;
+
+    private static final double kP = 3.5;
+    private static final double kI = 0.0;
+    private static final double kD = 0.0;
 
 
     // *** CLASS CONSTRUCTORS ***
@@ -64,11 +67,13 @@ public class Pivot extends SubsystemBase
         leadMotor.setupFactoryDefaults();
         followMotor.setupFactoryDefaults();
 
-        leadMotor.setSafetyEnabled(true);
-        followMotor.setSafetyEnabled(true);
-
         leadMotor.setupBrakeMode();
         followMotor.setupBrakeMode();
+
+        leadMotor.setPosition(0.0);
+        followMotor.setPosition(0.0);
+
+        leadMotor.setupPIDController(0, kP, kI, kD);
 
         followMotor.setupFollower(LEADMOTOR, false);
     }
@@ -85,6 +90,47 @@ public class Pivot extends SubsystemBase
     public void stop()
     {
         set(0.0);
+    }
+
+    public double getPosition()
+    {
+        return leadMotor.getPosition();
+    }
+
+    public BooleanSupplier isAtSetPosition(double targetPosition)
+    {
+        double currentPosition = getPosition();
+
+        return () ->
+        {
+            if((currentPosition + TOLERANCE > targetPosition) && (currentPosition - TOLERANCE < targetPosition))
+                return true;
+            else
+                return false;
+
+        };
+    }
+
+    private void retract()
+    {
+        leadMotor.setControlPosition(RETRACTED);
+    }
+
+    private void extend()
+    {
+        leadMotor.setControlPosition(EXTENDED);
+    }
+
+    public Command retractCommand()
+    {
+        return run(() -> retract()).until(() -> isAtSetPosition(RETRACTED).getAsBoolean())
+                .andThen(stopCommand());
+    }
+
+    public Command extendCommand()
+    {
+        return run(() -> extend()).until(() -> isAtSetPosition(EXTENDED).getAsBoolean())
+                .andThen(stopCommand());
     }
 
     public Command onCommand()
