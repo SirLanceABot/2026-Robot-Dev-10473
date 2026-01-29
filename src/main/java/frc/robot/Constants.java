@@ -78,6 +78,8 @@ public final class Constants
     {
         public static final int MOTOR                      = 10473;
         public static final double MOTOR_SPEED             = 0.1;
+        public static final double MIN_ANGLE               = 12.5;
+        public static final double MAX_ANGLE               = 90.0;
 
         public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
     }

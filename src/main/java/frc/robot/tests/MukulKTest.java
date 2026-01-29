@@ -2,7 +2,9 @@ package frc.robot.tests;
 
 import java.lang.invoke.MethodHandles;
 
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.Shroud;
 
 @SuppressWarnings("unused")
 public class MukulKTest implements Test
@@ -12,21 +14,20 @@ public class MukulKTest implements Test
 
     // *** STATIC INITIALIZATION BLOCK ***
     // This block of code is run first when the class is loaded
+
     static
     {
         System.out.println("Loading: " + fullClassName);
     }
 
-
     // *** INNER ENUMS and INNER CLASSES ***
     // Put all inner enums and inner classes here
-
-
 
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
-
+    private final Shroud shroud;
+    private final CommandXboxController controller = new CommandXboxController(0);
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
@@ -41,6 +42,7 @@ public class MukulKTest implements Test
         System.out.println("  Constructor Started:  " + fullClassName);
 
         this.robotContainer = robotContainer;
+        this.shroud = robotContainer.getShroud();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -49,8 +51,6 @@ public class MukulKTest implements Test
     // *** CLASS METHODS & INSTANCE METHODS ***
     // Put all class methods and instance methods here
 
-        
-
     // *** OVERRIDDEN METHODS ***
     // Put all methods that are Overridden here
 
@@ -58,13 +58,27 @@ public class MukulKTest implements Test
      * This method runs one time before the periodic() method.
      */
     public void init()
-    {}
+    {
+        controller.a().onTrue(shroud.goToCommand(12.5)); // Should be at lowest position.
+        controller.b().onTrue(shroud.goToCommand(38.0)); // Should be at 1/3 position.
+        controller.x().onTrue(shroud.goToCommand(76.0)); // Should be at 2/3 position.
+        controller.y().onTrue(shroud.goToCommand(90.0)); // Should be straight up.
+
+        System.out.println("A button moves shroud to lowest position");
+        System.out.println("B button moves shroud to 1/3 position");
+        System.out.println("X button moves shroud to 2/3 position");
+        System.out.println("Y button moves shroud to be straight up");
+    }
 
     /**
      * This method runs periodically (every 20ms).
      */
     public void periodic()
-    {}
+    {
+        double velocity = shroud.getVelocity();
+        if (velocity > 0.0)
+            System.out.println("Velocity: " + velocity);
+    }
     
     /**
      * This method runs one time after the periodic() method.
