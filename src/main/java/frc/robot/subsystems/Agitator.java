@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.ExampleSubsystem.*;
+import static frc.robot.Constants.Agitator.*;
 
 import java.lang.invoke.MethodHandles;
 import java.util.function.DoubleSupplier;
@@ -33,8 +33,11 @@ public class Agitator extends SubsystemBase
     
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
-    private final TalonFXLance motor1 = new TalonFXLance(MOTOR1, MOTOR_CAN_BUS, "Motor 1");
-    private final TalonFXLance motor2 = new TalonFXLance(MOTOR2, MOTOR_CAN_BUS, "Motor 2");
+    private final TalonFXLance motor = new TalonFXLance(MOTOR, MOTOR_CAN_BUS, "Agitator Motor");
+    
+    private final double kP = 0.1;
+    private final double kI = 0.0;
+    private final double kD = 0.0;
 
 
     // *** CLASS CONSTRUCTORS ***
@@ -59,35 +62,39 @@ public class Agitator extends SubsystemBase
 
     private void configMotors()
     {
-        motor1.setupFactoryDefaults();
-        motor2.setupFactoryDefaults();
+        motor.setupFactoryDefaults();
+        motor.setupPIDController(0,kP,kI,kD);
+        motor.setupCoastMode();
+        //motor1.setupFactoryDefaults();
+        //motor2.setupFactoryDefaults();
     }
 
     /**
      * This sets the speed of the motors.
      * @param speed The motor speed (-1.0 to 1.0)
      */
-    private void set(double speed)
+    private void setVelocity(double speed)
     {
-        motor1.set(speed);
-        motor2.set(speed);
+        motor.setControlVelocity(speed);
+        //motor1.set(speed);
+        //motor2.set(speed);
     }
 
     public void stop()
     {
-        set(0.0);
-        set(0.0);
+        setVelocity(0.0);
     }
 
-    public Command onCommand()
+    public Command forwardCommand()
     {
-        return run( () -> set(0.25) );
+        return run( () -> setVelocity(7) );
     }
 
-    public Command setCommand(DoubleSupplier speed)
+    public Command reverseCommand()
     {
-        return run( () -> set(MathUtil.clamp(speed.getAsDouble(), 0.0, 0.5)) );
+        return run( () -> setVelocity(-7) );
     }
+
 
     // Use a method reference instead of this method
     public Command stopCommand()
