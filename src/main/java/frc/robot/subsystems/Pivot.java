@@ -3,7 +3,8 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.Pivot.*;
 
 import java.lang.invoke.MethodHandles;
-import java.util.function.BooleanSupplier;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.motors.TalonFXLance;
@@ -97,18 +98,26 @@ public class Pivot extends SubsystemBase
         return leadMotor.getPosition();
     }
 
-    public BooleanSupplier isAtSetPosition(double targetPosition)
+    // public BooleanSupplier isAtSetPosition(double targetPosition)
+    // {
+    //     double currentPosition = getPosition();
+
+    //     return () ->
+    //     {
+    //         if((currentPosition + TOLERANCE > targetPosition) && (currentPosition - TOLERANCE < targetPosition))
+    //             return true;
+    //         else
+    //             return false;
+
+    //     };
+    // }
+
+    public boolean isAtSetPosition(double targetPosition)
     {
-        double currentPosition = getPosition();
-
-        return () ->
-        {
-            if((currentPosition + TOLERANCE > targetPosition) && (currentPosition - TOLERANCE < targetPosition))
-                return true;
-            else
-                return false;
-
-        };
+        if(MathUtil.isNear(targetPosition, getPosition(), TOLERANCE))
+            return true;
+        else
+            return false;
     }
 
     private void retract()
@@ -123,13 +132,17 @@ public class Pivot extends SubsystemBase
 
     public Command retractCommand()
     {
-        return run(() -> retract()).until(() -> isAtSetPosition(RETRACTED).getAsBoolean())
+        // return run(() -> retract()).until(() -> isAtSetPosition(RETRACTED).getAsBoolean())
+        //         .andThen(stopCommand());
+        return run(() -> retract()).until(() -> isAtSetPosition(RETRACTED))
                 .andThen(stopCommand());
     }
 
     public Command extendCommand()
     {
-        return run(() -> extend()).until(() -> isAtSetPosition(EXTENDED).getAsBoolean())
+        // return run(() -> extend()).until(() -> isAtSetPosition(EXTENDED).getAsBoolean())
+        //         .andThen(stopCommand());
+        return run(() -> extend()).until(() -> isAtSetPosition(EXTENDED))
                 .andThen(stopCommand());
     }
 

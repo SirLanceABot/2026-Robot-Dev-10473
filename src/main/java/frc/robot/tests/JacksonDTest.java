@@ -94,8 +94,8 @@ public class JacksonDTest implements Test
         if(pivot.getPosition() > 0.0)
             System.out.println(pivot.getPosition());
 
-        System.out.println(pivot.isAtSetPosition(10.0).getAsBoolean());
-        System.out.println(pivot.isAtSetPosition(0.0).getAsBoolean());
+        // System.out.println(pivot.isAtSetPosition(10.0).getAsBoolean());
+        // System.out.println(pivot.isAtSetPosition(0.0).getAsBoolean());
 
 
     }
