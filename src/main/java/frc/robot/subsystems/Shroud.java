@@ -4,7 +4,6 @@ import static frc.robot.Constants.Shroud.*;
 
 import java.lang.invoke.MethodHandles;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.motors.TalonFXLance;
@@ -35,7 +34,7 @@ public class Shroud extends SubsystemBase
 
     private final TalonFXLance angleMotor = new TalonFXLance(MOTOR, MOTOR_CAN_BUS, "angleMotor");
 
-    // TODO: Tune values (idk what these mean).
+    // TODO: Tune later.
     private static final double kP = 0.1;
     private static final double kI = 0.0;
     private static final double kD = 0.0;
@@ -76,7 +75,8 @@ public class Shroud extends SubsystemBase
      */
     private double degreesToPosition(double degrees)
     {
-        return (degrees - MIN_ANGLE) / 360.0;
+        // TODO: Tune later.
+        return degrees;
     }
 
     /**
@@ -90,20 +90,20 @@ public class Shroud extends SubsystemBase
 
     /**
      * This command moves the shroud to the specified degrees.
-     * @param degrees The degrees the shroud should be set to (clamped between 12.5 and 90.0 degrees).
+     * @param degrees The degrees the shroud should be set to.
      */
     public Command goToCommand(double degrees)
     {
-        return runOnce(() -> goTo(MathUtil.clamp(degrees, MIN_ANGLE, MAX_ANGLE))); // Shround's lowest possible position is ~12.5 degrees.
+        return runOnce(() -> goTo(degrees));
     }
 
     /**
-     * Returns the velocity of the motor.
+     * Returns the position of the motor.
      * @return
      */
-    public double getVelocity()
+    public double getPosition()
     {
-        return angleMotor.getVelocity();
+        return angleMotor.getPosition();
     }
 
     // *** OVERRIDEN METHODS ***
