@@ -7,6 +7,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.motors.TalonFXLance;
 
@@ -87,12 +88,18 @@ public class Agitator extends SubsystemBase
 
     public Command forwardCommand()
     {
-        return run( () -> setVelocity(7) );
+        return run( () -> setVelocity(5) );
     }
 
     public Command reverseCommand()
     {
-        return run( () -> setVelocity(-7) );
+        return run( () -> setVelocity(-5) );
+    }
+
+    public Command jitterCommand()
+    {
+        return Commands.race(forwardCommand(), Commands.waitSeconds(0.1))
+        .andThen(Commands.race(reverseCommand(), Commands.waitSeconds(0.1)));
     }
 
 

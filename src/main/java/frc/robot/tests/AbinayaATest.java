@@ -2,6 +2,7 @@ package frc.robot.tests;
 
 import java.lang.invoke.MethodHandles;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Agitator;
@@ -72,6 +73,9 @@ public class AbinayaATest implements Test
         //controller.b().onFalse(agitator.stopCommand());
 
         controller.x().onTrue(agitator.stopCommand());
+
+        controller.y().whileTrue(Commands.repeatingSequence(agitator.jitterCommand()));
+        controller.y().whileFalse(agitator.stopCommand());
     }
 
     /**
