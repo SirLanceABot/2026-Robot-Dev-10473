@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.Pivot.*;
 
 import java.lang.invoke.MethodHandles;
+import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -112,12 +113,15 @@ public class Pivot extends SubsystemBase
     //     };
     // }
 
-    public boolean isAtSetPosition(double targetPosition)
+    public BooleanSupplier isAtSetPosition(double targetPosition)
     {
-        if(MathUtil.isNear(targetPosition, getPosition(), TOLERANCE))
-            return true;
-        else
-            return false;
+        return () -> 
+        {
+            if(MathUtil.isNear(targetPosition, getPosition(), TOLERANCE))
+                return true;
+            else
+                return false;
+        };
     }
 
     private void retract()
@@ -134,7 +138,7 @@ public class Pivot extends SubsystemBase
     {
         // return run(() -> retract()).until(() -> isAtSetPosition(RETRACTED).getAsBoolean())
         //         .andThen(stopCommand());
-        return run(() -> retract()).until(() -> isAtSetPosition(RETRACTED))
+        return run(() -> retract()).until(isAtSetPosition(RETRACTED))
                 .andThen(stopCommand());
     }
 
@@ -142,7 +146,7 @@ public class Pivot extends SubsystemBase
     {
         // return run(() -> extend()).until(() -> isAtSetPosition(EXTENDED).getAsBoolean())
         //         .andThen(stopCommand());
-        return run(() -> extend()).until(() -> isAtSetPosition(EXTENDED))
+        return run(() -> extend()).until(isAtSetPosition(EXTENDED))
                 .andThen(stopCommand());
     }
 
