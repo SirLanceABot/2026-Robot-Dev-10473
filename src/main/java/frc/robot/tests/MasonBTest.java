@@ -31,9 +31,9 @@ public class MasonBTest implements Test
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
     private final Drivetrain drivetrain;
-    private final Roller roller;
+    // private final Roller roller;
     private final Joystick joystick = new Joystick(0);
-    private final CommandXboxController controller = new CommandXboxController(0);
+    // private final CommandXboxController controller = new CommandXboxController(0);
 
 
     // *** CLASS CONSTRUCTORS ***
@@ -51,7 +51,7 @@ public class MasonBTest implements Test
 
         this.robotContainer = robotContainer;
         drivetrain = robotContainer.getDrivetrain();
-        roller = robotContainer.getRoller();
+        // roller = robotContainer.getRoller();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -76,9 +76,9 @@ public class MasonBTest implements Test
      */
     public void periodic()
     {
-        // drivetrain.driveCommand(() -> -joystick.getRawAxis(1), () -> -joystick.getRawAxis(0), () -> joystick.getRawAxis(4), () -> 0.5).schedule();
-        controller.a().onTrue(roller.intakeFuelCommand());
-        controller.b().onTrue(roller.reverseCommand());
+        drivetrain.driveCommand(() -> -joystick.getRawAxis(1), () -> -joystick.getRawAxis(0), () -> joystick.getRawAxis(4), () -> 0.5).schedule();
+        // controller.a().onTrue(roller.intakeFuelCommand());
+        // controller.b().onTrue(roller.reverseCommand());
     }
     
     /**
