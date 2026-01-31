@@ -168,7 +168,7 @@ public class Pivot extends SubsystemBase
 
     public Command stopCommand()
     {
-        return run(this::stop);
+        return runOnce(() -> stop());
     }
 
 

@@ -37,6 +37,8 @@ public class Flywheel extends SubsystemBase
     private final TalonFXLance leadMotor = new TalonFXLance(LEADMOTOR, MOTOR_CAN_BUS, "Flywheel Lead Motor");
     private final TalonFXLance followMotor = new TalonFXLance(FOLLOWMOTOR, MOTOR_CAN_BUS, "Flywheel Follow Motor");
 
+    private final double TOLERANCE = 0.3;
+
     // PID constants
     private final double kP = 0.401;
     private final double kI = 0.0;
@@ -106,12 +108,12 @@ public class Flywheel extends SubsystemBase
         return leadMotor.getVelocity();
     }
 
-    public BooleanSupplier isAtSetSpeed(double targetSpeed, double tolerance)
+    public BooleanSupplier isAtSetSpeed(double targetSpeed)
     {
         double currentSpeed = getVelocity();
         return () ->
         {
-            if((currentSpeed + tolerance > targetSpeed) && (currentSpeed - tolerance < targetSpeed))
+            if((currentSpeed + TOLERANCE > targetSpeed) && (currentSpeed - TOLERANCE < targetSpeed))
                 return true;
             else
                 return false;

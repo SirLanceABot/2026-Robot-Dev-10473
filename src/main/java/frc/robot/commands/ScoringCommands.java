@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import java.lang.invoke.MethodHandles;
 
+import javax.lang.model.util.ElementScanner14;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
@@ -12,7 +14,7 @@ import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flywheel;
 
-public class GeneralCommands
+public class ScoringCommands
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -48,40 +50,22 @@ public class GeneralCommands
         System.out.println("  Constructor Finished: " + fullClassName);
     }
 
-    public static Command simpleIntakeAndScoreCommand()
+    //not working
+    public static Command simpleScoreCommand()
     {
-        if((roller != null) && (pivot != null) && (agitator != null) && (flywheel != null) && (shroud != null))
+        if((agitator != null) && (flywheel != null) && (shroud != null))
         {
-            return 
-                Commands.parallel(
-                    pivot.extendCommand(),
-                    roller.intakeFuelCommand(),
-                    agitator.forwardCommand(),
-                    flywheel.shootCommand(() -> 15.0),   //rps
-                    shroud.goToCommand(45)  //angle in degrees
-                );
+            return Commands.parallel(
+                shroud.goToCommand(45),
+                flywheel.shootCommand(() -> 15).until(flywheel.isAtSetSpeed(1))     //rps
+            )
+                .andThen(agitator.forwardCommand());
         }
-        else
-            return Commands.none();
-    }
-
-    public static Command simpleIntakeAndScoreStopCommand()
-    {
-        if((roller != null) && (pivot != null) && (agitator != null) && (flywheel != null) && (shroud != null))
+        else 
         {
-            return 
-                Commands.parallel(
-                    pivot.retractCommand(),
-                    roller.stopCommand(),
-                    agitator.stopCommand(),
-                    flywheel.stopCommand(),
-                    shroud.goToCommand(0)
-                );
-        }
-        else
             return Commands.none();
+        }
     }
-
     
 }
 
