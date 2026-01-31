@@ -42,6 +42,10 @@ public final class CommandsManager
 
         GeneralCommands.createCommands(robotContainer);
 
+        IntakingCommands.createCommands(robotContainer);
+
+        ScoringCommands.createCommands(robotContainer);
+
         createNamedCommands();
 
         System.out.println("  Constructor Finished: " + fullClassName);

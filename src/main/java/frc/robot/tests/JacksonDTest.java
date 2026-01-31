@@ -6,6 +6,8 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
 import frc.robot.commands.GeneralCommands;
+import frc.robot.commands.IntakingCommands;
+import frc.robot.commands.ScoringCommands;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 
@@ -78,8 +80,11 @@ public class JacksonDTest implements Test
         // controller.b().onTrue(pivot.retractCommand());
         // controller.x().onTrue(pivot.stopCommand());
 
-        controller.a().onTrue(GeneralCommands.simpleIntakeAndScoreCommand());
-        controller.b().onTrue(GeneralCommands.simpleIntakeAndScoreStopCommand());
+        // controller.a().onTrue(GeneralCommands.simpleIntakeAndScoreCommand());
+        // controller.b().onTrue(GeneralCommands.simpleIntakeAndScoreStopCommand());
+
+        controller.a().onTrue(ScoringCommands.simpleScoreCommand());
+        controller.b().onTrue(IntakingCommands.simpleIntakeCommand());
     }
 
     /**
@@ -98,6 +103,8 @@ public class JacksonDTest implements Test
 
         // System.out.println(pivot.isAtSetPosition(10.0).getAsBoolean());
         // System.out.println(pivot.isAtSetPosition(0.0).getAsBoolean());
+
+        // System.out.println(pivot.isExtended().getAsBoolean());
 
 
     }

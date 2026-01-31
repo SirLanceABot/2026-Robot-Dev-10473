@@ -12,7 +12,7 @@ import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flywheel;
 
-public class GeneralCommands
+public class IntakingCommands
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -48,40 +48,16 @@ public class GeneralCommands
         System.out.println("  Constructor Finished: " + fullClassName);
     }
 
-    public static Command simpleIntakeAndScoreCommand()
+    public static Command simpleIntakeCommand()
     {
-        if((roller != null) && (pivot != null) && (agitator != null) && (flywheel != null) && (shroud != null))
+        if((pivot != null) && (roller != null))
         {
-            return 
-                Commands.parallel(
-                    pivot.extendCommand(),
-                    roller.intakeFuelCommand(),
-                    agitator.forwardCommand(),
-                    flywheel.shootCommand(() -> 15.0),   //rps
-                    shroud.goToCommand(45)  //angle in degrees
-                );
+            return pivot.extendCommand()
+                .andThen(roller.intakeFuelCommand());
         }
         else
             return Commands.none();
     }
-
-    public static Command simpleIntakeAndScoreStopCommand()
-    {
-        if((roller != null) && (pivot != null) && (agitator != null) && (flywheel != null) && (shroud != null))
-        {
-            return 
-                Commands.parallel(
-                    pivot.retractCommand(),
-                    roller.stopCommand(),
-                    agitator.stopCommand(),
-                    flywheel.stopCommand(),
-                    shroud.goToCommand(0)
-                );
-        }
-        else
-            return Commands.none();
-    }
-
     
 }
 
