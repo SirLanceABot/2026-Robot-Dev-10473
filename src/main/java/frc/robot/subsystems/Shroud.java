@@ -32,10 +32,10 @@ public class Shroud extends SubsystemBase
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
 
-    private final TalonFXLance angleMotor = new TalonFXLance(MOTOR, MOTOR_CAN_BUS, "angleMotor");
+    private final TalonFXLance angleMotor = new TalonFXLance(MOTOR, MOTOR_CAN_BUS, "Shroud Angle Motor");
 
     // TODO: Tune later.
-    private static final double kP = 0.1;
+    private static final double kP = 3.5;
     private static final double kI = 0.0;
     private static final double kD = 0.0;
 

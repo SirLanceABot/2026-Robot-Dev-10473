@@ -5,6 +5,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
+import frc.robot.commands.GeneralCommands;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 
@@ -73,10 +74,12 @@ public class JacksonDTest implements Test
         // controller.a().onTrue(flywheel.shootCommand(() -> 2.0));
         // controller.b().onTrue(flywheel.stopCommand());
 
-        controller.a().onTrue(pivot.extendCommand());
-        controller.b().onTrue(pivot.retractCommand());
+        // controller.a().onTrue(pivot.extendCommand());
+        // controller.b().onTrue(pivot.retractCommand());
+        // controller.x().onTrue(pivot.stopCommand());
 
-        controller.x().onTrue(pivot.stopCommand());
+        controller.a().onTrue(GeneralCommands.simpleIntakeAndScoreCommand());
+        controller.b().onTrue(GeneralCommands.simpleIntakeAndScoreStopCommand());
     }
 
     /**
@@ -90,9 +93,8 @@ public class JacksonDTest implements Test
         // if(flywheel.isAtSetSpeed(2, 0.1).getAsBoolean())
             // System.out.println("At speed");
 
-        
-        if(pivot.getPosition() > 0.0)
-            System.out.println(pivot.getPosition());
+        // if(pivot.getPosition() > 0.0)
+        //     System.out.println(pivot.getPosition());
 
         // System.out.println(pivot.isAtSetPosition(10.0).getAsBoolean());
         // System.out.println(pivot.isAtSetPosition(0.0).getAsBoolean());
