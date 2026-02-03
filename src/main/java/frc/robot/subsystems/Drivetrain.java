@@ -289,7 +289,7 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
      * @param leftXAxis Left/right direction to move
      * @param scaleFactor What percentage of max speed to move
      * @param angleToLockAt What angle we want to face
-     * @return A command that faces the robot at the desired angle
+     * @return A command that faces the robot at the desired angle and moves it
      */
     public Command angleLockDriveCommand(DoubleSupplier leftYAxis, DoubleSupplier leftXAxis, DoubleSupplier scaleFactor, DoubleSupplier angleToLockAt)
     {

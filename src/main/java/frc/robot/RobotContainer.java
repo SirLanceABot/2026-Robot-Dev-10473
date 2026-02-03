@@ -40,7 +40,7 @@ public class RobotContainer
     private boolean useFlywheel = false;
     private boolean useAgitator = false;
     private boolean useRoller = false;
-    private boolean usePivot = true;
+    private boolean usePivot = false;
     private boolean useDrivetrain = false;
     private boolean useShroud = false;
 
