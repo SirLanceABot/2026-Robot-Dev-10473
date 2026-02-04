@@ -11,6 +11,7 @@ import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Roller;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Shroud;
@@ -43,7 +44,7 @@ public class RobotContainer
     private boolean usePivot = false;
     private boolean useDrivetrain = false;
     private boolean useShroud = false;
-
+    private boolean useLEDs = false;
 
     // Robot components
     private ExampleSubsystem exampleSubsystem = null;
@@ -53,7 +54,7 @@ public class RobotContainer
     private Pivot pivot = null;
     private Drivetrain drivetrain = null;
     private Shroud shroud = null;
-
+    private LEDs leds = null;
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() 
@@ -77,6 +78,9 @@ public class RobotContainer
         if(useFullRobot || useShroud)
             shroud = new Shroud();
 
+        if(useFullRobot || useLEDs)
+            leds = new LEDs();
+        
         if(useFullRobot || useDrivetrain)
             drivetrain = TunerConstants.createDrivetrain();
     }
@@ -114,5 +118,10 @@ public class RobotContainer
     public Shroud getShroud()
     {
         return shroud;
+    }
+
+    public LEDs getLEDs()
+    {
+        return leds;
     }
 }
