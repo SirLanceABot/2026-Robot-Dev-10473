@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.533444444444445,
-        "y": 2.3721666666666668
+        "x": 3.7823140633329744,
+        "y": 2.3484198185752225
       },
       "isLocked": false,
       "linkedName": "Right Starting Point"
@@ -20,8 +20,8 @@
         "y": 5.95
       },
       "prevControl": {
-        "x": 2.001622222222222,
-        "y": 6.112858323451677
+        "x": 3.0183339014593162,
+        "y": 6.0154489884286555
       },
       "nextControl": null,
       "isLocked": false,
