@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.7493238434237219,
-        "y": 7.289655990504686
+        "x": 2.1347408884876184,
+        "y": 7.785341704746463
       },
       "isLocked": false,
       "linkedName": "Left_Trench"
@@ -20,8 +20,8 @@
         "y": 5.154
       },
       "prevControl": {
-        "x": 9.539584816132859,
-        "y": 8.613036773428234
+        "x": 8.33225387861144,
+        "y": 8.096005122346698
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,12 +30,12 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.4316163410301949,
+      "waypointRelativePos": 0.5,
       "rotationDegrees": 0.0
     },
     {
-      "waypointRelativePos": 0.5630550621669603,
-      "rotationDegrees": 0.0
+      "waypointRelativePos": 0.8024505876068373,
+      "rotationDegrees": 135.0
     }
   ],
   "constraintZones": [],
@@ -51,7 +51,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 93.23970029610214
+    "rotation": 88.00216617371724
   },
   "reversed": false,
   "folder": "Left side paths",
