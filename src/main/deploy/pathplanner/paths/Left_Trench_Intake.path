@@ -3,32 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5,
-        "y": 4.0
+        "x": 3.546714116254339,
+        "y": 6.762455516018062
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.748424130211055,
-        "y": 4.028025908172276
+        "x": 0.7493238434237219,
+        "y": 7.289655990504686
       },
       "isLocked": false,
-      "linkedName": "Starting Point Center"
+      "linkedName": "Left_Trench"
     },
     {
       "anchor": {
-        "x": 0.5,
-        "y": 5.955
+        "x": 7.806,
+        "y": 5.154
       },
       "prevControl": {
-        "x": 0.8843385153280123,
-        "y": 5.619554102209722
+        "x": 9.539584816132859,
+        "y": 8.613036773428234
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Depot Intake Point"
+      "linkedName": "Neutral Intake Point"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.4316163410301949,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 0.5630550621669603,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,10 +51,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 93.23970029610214
   },
   "reversed": false,
-  "folder": "First attempt at paths - AA",
+  "folder": "Left side paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

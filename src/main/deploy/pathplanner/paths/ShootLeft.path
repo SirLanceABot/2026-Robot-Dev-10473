@@ -8,59 +8,32 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.445290345518546,
-        "y": 5.467581631935915
+        "x": 7.710521945424961,
+        "y": 8.344056939501314
       },
       "isLocked": false,
       "linkedName": "Neutral Intake Point"
     },
     {
       "anchor": {
-        "x": 5.8451690098024764,
-        "y": 7.351463277564859
+        "x": 3.3960854092529495,
+        "y": 7.278896797155048
       },
       "prevControl": {
-        "x": 6.306092049518792,
-        "y": 7.155389236589128
-      },
-      "nextControl": {
-        "x": 5.555987196650994,
-        "y": 7.47447957702387
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.3688705041273583,
-        "y": 7.245134784050708
-      },
-      "prevControl": {
-        "x": 3.8576608011363405,
-        "y": 7.571247601375701
-      },
-      "nextControl": {
-        "x": 2.6516236385041876,
-        "y": 6.7665995154555665
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.548122222222244,
-        "y": 3.752822222224453
-      },
-      "prevControl": {
-        "x": 1.7465933183059872,
-        "y": 3.904839405527255
+        "x": 3.632787663108229,
+        "y": 7.359546856469052
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Shooting point"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.7140319715808249,
+      "rotationDegrees": -90.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -74,10 +47,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -75.9637565336702
   },
   "reversed": false,
-  "folder": null,
+  "folder": "First attempt at paths - AA",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 93.23970029610214

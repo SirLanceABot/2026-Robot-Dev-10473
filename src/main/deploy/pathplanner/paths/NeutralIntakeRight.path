@@ -53,7 +53,7 @@
       },
       "prevControl": {
         "x": 7.801823361954751,
-        "y": 1.6770283018852832
+        "y": 1.6770283018852834
       },
       "nextControl": null,
       "isLocked": false,
@@ -77,7 +77,7 @@
     "rotation": -89.20427644726064
   },
   "reversed": false,
-  "folder": null,
+  "folder": "First attempt at paths - AA",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

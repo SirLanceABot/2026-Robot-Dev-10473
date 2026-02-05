@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.548122222222244,
-        "y": 3.752822222224453
+        "x": 3.3960854092529495,
+        "y": 7.278896797155048
       },
       "prevControl": {
-        "x": 1.5530551680106106,
-        "y": 3.5028708948708083
+        "x": 3.4010183550413164,
+        "y": 7.028945469801403
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -75.9637565336702
   },
   "reversed": false,
-  "folder": null,
+  "folder": "First attempt at paths - AA",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

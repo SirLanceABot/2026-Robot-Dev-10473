@@ -3,32 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5,
-        "y": 4.0
+        "x": 7.806,
+        "y": 5.154
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.748424130211055,
-        "y": 4.028025908172276
+        "x": 7.635227979677029,
+        "y": 7.181821963850577
       },
       "isLocked": false,
-      "linkedName": "Starting Point Center"
+      "linkedName": "Neutral Intake Point"
     },
     {
       "anchor": {
-        "x": 0.5,
-        "y": 5.955
+        "x": 3.051791221834488,
+        "y": 7.074472123364132
       },
       "prevControl": {
-        "x": 0.8843385153280123,
-        "y": 5.619554102209722
+        "x": 6.387141162509555,
+        "y": 7.945966785283396
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Depot Intake Point"
+      "linkedName": "Left_Shoot"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.8134991119005369,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -45,10 +50,10 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "First attempt at paths - AA",
+  "folder": "Left side paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 93.23970029610214
   },
   "useDefaultConstraints": true
 }

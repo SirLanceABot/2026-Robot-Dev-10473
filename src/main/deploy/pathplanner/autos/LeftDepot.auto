@@ -20,6 +20,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "First attempt at autos - AA",
   "choreoAuto": false
 }
