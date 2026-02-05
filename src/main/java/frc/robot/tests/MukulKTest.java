@@ -2,9 +2,11 @@ package frc.robot.tests;
 
 import java.lang.invoke.MethodHandles;
 
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Shroud;
+import frc.robot.subsystems.LEDs;
+// import frc.robot.subsystems.Shroud;
 
 @SuppressWarnings("unused")
 public class MukulKTest implements Test
@@ -26,8 +28,9 @@ public class MukulKTest implements Test
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
-    private final Shroud shroud;
     private final CommandXboxController controller = new CommandXboxController(0);
+    private final LEDs leds;
+    // private final Shroud shroud;
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
@@ -42,7 +45,8 @@ public class MukulKTest implements Test
         System.out.println("  Constructor Started:  " + fullClassName);
 
         this.robotContainer = robotContainer;
-        this.shroud = robotContainer.getShroud();
+        leds = robotContainer.getLEDs();
+        // shroud = robotContainer.getShroud();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -59,28 +63,26 @@ public class MukulKTest implements Test
      */
     public void init()
     {
-        controller.a().onTrue(this.shroud.goToCommand(12.5)); // Should be at lowest position.
-        controller.b().onTrue(this.shroud.goToCommand(38.0)); // Should be at 1/3 position.
-        controller.x().onTrue(this.shroud.goToCommand(76.0)); // Should be at 2/3 position.
-        controller.y().onTrue(this.shroud.goToCommand(90.0)); // Should be straight up.
+        // controller.a().onTrue(shroud.goToCommand(12.5));
+        // controller.b().onTrue(shroud.goToCommand(38.0));
+        // controller.x().onTrue(shroud.goToCommand(76.0));
+        // controller.y().onTrue(shroud.goToCommand(90.0));
 
-        System.out.println("A button moves shroud to lowest position");
-        System.out.println("B button moves shroud to 1/3 position");
-        System.out.println("X button moves shroud to 2/3 position");
-        System.out.println("Y button moves shroud to be straight up");
+        controller.a().onTrue(leds.setColorCommand(Color.kWhite));
+        controller.b().onTrue(leds.setGradientCommand(Color.kRed, Color.kGray));
+        controller.x().onTrue(leds.setRainbowCommand());
+        controller.y().onTrue(leds.setBreatheCommand(2.0));
     }
 
     /**
      * This method runs periodically (every 20ms).
      */
     public void periodic()
-    {
-        System.out.println("Position: " + this.shroud.getPosition());
-    }
+    {}
     
     /**
      * This method runs one time after the periodic() method.
      */
     public void exit()
-    {} 
+    {}
 }

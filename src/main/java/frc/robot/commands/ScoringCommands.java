@@ -50,16 +50,41 @@ public class ScoringCommands
         System.out.println("  Constructor Finished: " + fullClassName);
     }
 
-    //not working
+    /**
+     * Set shroud to 45 degrees, get flywheel to a speed of 15 RPS, and activates the agitator
+     * @author Jackson D.
+     * @return Simple score command
+     */
     public static Command simpleScoreCommand()
     {
         if((agitator != null) && (flywheel != null) && (shroud != null))
         {
             return Commands.parallel(
                 shroud.goToCommand(45),
-                flywheel.shootCommand(() -> 15).until(flywheel.isAtSetSpeed(1))     //rps
+                flywheel.shootCommand(() -> 15).until(flywheel.isAtSetSpeed(15))     //rps
             )
                 .andThen(agitator.forwardCommand());
+        }
+        else 
+        {
+            return Commands.none();
+        }
+    }
+
+    /**
+     * Set the shroud to 0 degrees, stops the flywheel, and stops the agitator
+     * @author Jackson D.
+     * @return Simple intake stop command
+     */
+    public static Command simpleScoreStopCommand()
+    {
+        if((agitator != null) && (flywheel != null) && (shroud != null))
+        {
+            return Commands.parallel(
+                shroud.goToCommand(0),
+                flywheel.stopCommand()      
+            )
+                .andThen(agitator.stopCommand());
         }
         else 
         {

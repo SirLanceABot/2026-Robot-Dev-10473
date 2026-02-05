@@ -76,12 +76,6 @@ public class Roller extends SubsystemBase
     public void stop()
     {
         set(0.0);
-        set(0.0);
-    }
-
-    public Command onCommand()
-    {
-        return run( () -> set(0.25) );
     }
 
     public Command setCommand(DoubleSupplier speed)
@@ -89,11 +83,9 @@ public class Roller extends SubsystemBase
         return run( () -> set(MathUtil.clamp(speed.getAsDouble(), 0.0, 0.5)) );
     }
 
-    // Use a method reference instead of this method
     public Command stopCommand()
     {
-        // return run( () -> stop() );
-        return run(this::stop);
+        return runOnce( () -> stop() );
     }
 
     public Command intakeFuelCommand()
