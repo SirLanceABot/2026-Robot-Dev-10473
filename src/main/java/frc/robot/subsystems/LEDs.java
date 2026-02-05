@@ -62,73 +62,115 @@ public class LEDs extends SubsystemBase
     // *** CLASS METHODS & INSTANCE METHODS ***
     // Put all class methods and instance methods here
 
+    /**
+     * Configures the LEDs and starts them off.
+     */
     private void configLEDs()
     {
         led.setLength(ledBuffer.getLength());
         led.start();
-
-        setOff();
     }
 
+    /**
+     * Sets the leds to the pattern in currentPattern.
+     */
     private void setPattern()
     {
         currentPattern.applyTo(ledBuffer);
         led.setData(ledBuffer);
     }
 
+    /**
+     * Turns off the leds.
+     */
     private void setOff()
     {
         currentPattern = off;
         setPattern();
     }
 
+    /**
+     * Turns off the leds.
+     */
     public Command setOffCommand()
     {
         return runOnce(() -> setOff());
     }
 
+    /**
+     * Sets the color of the leds to be solid.
+     */
     private void setColor(Color color)
     {
         currentPattern = LEDPattern.solid(color);
         setPattern();
     }
 
+    /**
+     * Sets the color of the leds to be solid.
+     */
     public Command setColorCommand(Color color)
     {
         return runOnce(() -> setColor(color));
     }
 
+    /**
+     * Sets the color of the leds to a gradient.
+     */
     private void setGradient(Color... colors)
     {
         currentPattern = LEDPattern.gradient(LEDPattern.GradientType.kContinuous, colors);
         setPattern();
     }
     
+    /**
+     * Sets the color of the leds to a gradient.
+     */
     public Command setGradientCommand(Color... colors)
     {
         return runOnce(() -> setGradient(colors));
     }
 
+    /**
+     * Sets the color of the leds to a rainbow.
+     */
     private void setRainbow()
     {
         currentPattern = LEDPattern.rainbow(255, 255);
         setPattern();
     }
 
+    /**
+     * Sets the color of the leds to a rainbow.
+     */
     public Command setRainbowCommand()
     {
         return runOnce(() -> setRainbow());
     }
 
+    /**
+     * Makes the current pattern of the leds breathe.
+     */
     private void setBreathe(double seconds)
     {
         currentPattern = currentPattern.breathe(Units.Second.of(seconds));
         setPattern();
     }
 
+    /**
+     * Makes the current pattern of the leds breathe.
+     */
     public Command setBreatheCommand(double seconds)
     {
         return runOnce(() -> setBreathe(seconds));
+    }
+    
+    /**
+     * Returns the current pattern.
+     */
+    public LEDPattern getCurrentPattern()
+    {
+        return currentPattern;
     }
 
     // *** OVERRIDEN METHODS ***
