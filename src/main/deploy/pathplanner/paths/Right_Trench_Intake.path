@@ -8,11 +8,11 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.026721053213443,
-        "y": 0.6052193119840796
+        "x": 3.202419928820243,
+        "y": 1.038564650064692
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right_Trench"
     },
     {
       "anchor": {
@@ -20,18 +20,26 @@
         "y": 2.6416844602663527
       },
       "prevControl": {
-        "x": 7.728581128390331,
-        "y": 0.5234530236586084
+        "x": 8.506702253849902,
+        "y": -0.6398695136363757
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right_Intake"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": -90.0
+      "waypointRelativePos": 0.3339253996447608,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 0.5790408525754923,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 0.7815275310834824,
+      "rotationDegrees": -112.76308212421542
     }
   ],
   "constraintZones": [],

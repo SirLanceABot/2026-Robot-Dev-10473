@@ -3,32 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.4695848161392395,
-        "y": 5.944756820879901
+        "x": 7.796595492284064,
+        "y": 2.6416844602663527
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4695848161392373,
-        "y": 5.944756820879901
+        "x": 7.764317912218269,
+        "y": 0.22086595492289351
       },
       "isLocked": false,
-      "linkedName": "Center_Depot_Intake"
+      "linkedName": "Right_Intake"
     },
     {
       "anchor": {
-        "x": 3.0517912218268095,
-        "y": 4.0403795966785285
+        "x": 2.7720521945432983,
+        "y": 1.0816014234875444
       },
       "prevControl": {
-        "x": 2.0517912218268095,
-        "y": 4.0403795966785285
+        "x": 3.0840688018979834,
+        "y": 0.22086595492289351
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Center_Shoot"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 0.6660746003552404,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,13 +51,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 48.576334374997224
   },
   "reversed": false,
-  "folder": "Center",
+  "folder": "Right",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -88.31531568210367
   },
   "useDefaultConstraints": true
 }
