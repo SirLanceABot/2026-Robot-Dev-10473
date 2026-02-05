@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.514436536180309,
-        "y": 3.997342823250296
+        "x": 0.46958481613285974,
+        "y": 0.6512336892052202
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3847212336892056,
-        "y": 4.0403795966785285
+        "x": 1.469584816132858,
+        "y": 0.6512336892052204
       },
       "isLocked": false,
-      "linkedName": "Center_Start"
+      "linkedName": "Center_Outpost_Intake"
     },
     {
       "anchor": {
-        "x": 0.48,
-        "y": 5.945
+        "x": 3.0517912218268095,
+        "y": 4.0403795966785285
       },
       "prevControl": {
-        "x": 3.4173183723471747,
-        "y": 6.267778220256176
+        "x": 2.0517912218268095,
+        "y": 4.0403795966785285
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Center_Depot_Intake"
+      "linkedName": "Center_Shoot"
     }
   ],
   "rotationTargets": [],
