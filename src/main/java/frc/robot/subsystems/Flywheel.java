@@ -13,6 +13,7 @@ import frc.robot.motors.TalonFXLance;
 
 /**
  * Shooter subsystem
+ * @author Jackson D.
  */
 public class Flywheel extends SubsystemBase
 {
@@ -103,11 +104,19 @@ public class Flywheel extends SubsystemBase
         leadMotor.setControlVelocity(speed);
     }
 
+    /**
+     * Get the velocity of the flywheel, in RPS
+     * @return The current shooter velocity
+     */
     public double getVelocity()
     {
         return leadMotor.getVelocity();
     }
 
+    /**
+     * @param targetSpeed
+     * @return Shooter is at target speed (RPS)
+     */
     public BooleanSupplier isAtSetSpeed(double targetSpeed)
     {
         double currentSpeed = getVelocity();
@@ -120,21 +129,24 @@ public class Flywheel extends SubsystemBase
         };
     }
 
+    /**
+     * Stops the flywheel
+     * @return Stop command
+     */
     public Command stopCommand()
     {
-        return run( () -> stop() );
+        return runOnce( () -> stop() );
     }
 
+    /**
+     * Shoot the flywheel at a given speed (RPS)
+     * @param speed
+     * @return Shoot command
+     */
     public Command shootCommand(DoubleSupplier speed)
     {
-        return run( () -> shoot(speed.getAsDouble()) );
+        return runOnce( () -> shoot(speed.getAsDouble()) );
     }
-
-    public Command onCommand()
-    {
-        return run( () -> leadMotor.set(0.1));
-    }
-
 
     // *** OVERRIDEN METHODS ***
     // Put all methods that are Overridden here

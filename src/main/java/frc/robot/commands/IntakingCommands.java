@@ -48,12 +48,33 @@ public class IntakingCommands
         System.out.println("  Constructor Finished: " + fullClassName);
     }
 
+    /**
+     * Extend pivot, then score
+     * @author Jackson D.
+     * @return Simple score command
+     */
     public static Command simpleIntakeCommand()
     {
         if((pivot != null) && (roller != null))
         {
             return pivot.extendCommand()
                 .andThen(roller.intakeFuelCommand());
+        }
+        else
+            return Commands.none();
+    }
+
+    /**
+     * Retracts the pivot and turns off the roller
+     * @author Jackson D.
+     * @return Simple intake stop command
+     */
+    public static Command simpleIntakeStopCommand()
+    {
+        if((pivot != null) && (roller != null))
+        {
+            return pivot.retractCommand()
+                .andThen(roller.stopCommand());
         }
         else
             return Commands.none();

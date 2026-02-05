@@ -3,16 +3,16 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.Pivot.*;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Currency;
+// import java.util.Currency;               //VERY IMPORTANT DO NOT REMOVE
 import java.util.function.BooleanSupplier;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.motors.TalonFXLance;
 
 /**
  * Intake pivot arm subsystem
+ * @author Jackson D.
  */
 public class Pivot extends SubsystemBase
 {
@@ -95,6 +95,10 @@ public class Pivot extends SubsystemBase
         set(0.0);
     }
 
+    /**
+     * Returns pivot position
+     * @return Encoder position in rotations
+     */
     public double getPosition()
     {
         return leadMotor.getPosition();
@@ -124,11 +128,17 @@ public class Pivot extends SubsystemBase
     //     };
     // }
 
+    /**
+     * @return Pivot is retracted
+     */
     public BooleanSupplier isRetracted()
     {
         return () -> (getPosition() - TOLERANCE) < RETRACTED;
     } 
 
+    /**
+     * @return Pivot is extended
+     */
     public BooleanSupplier isExtended()
     {
         return () -> (getPosition() + TOLERANCE) > EXTENDED;
@@ -144,6 +154,10 @@ public class Pivot extends SubsystemBase
         leadMotor.setControlPosition(EXTENDED);
     }
 
+    /**
+     * Retract the pivot arm
+     * @return Retract command
+     */
     public Command retractCommand()
     {
         // return run(() -> retract()).until(() -> isAtSetPosition(RETRACTED).getAsBoolean())
@@ -152,6 +166,10 @@ public class Pivot extends SubsystemBase
                 .andThen(stopCommand());
     }
 
+    /**
+     * Extend the pivot arm
+     * @return Extend command
+     */
     public Command extendCommand()
     {
         // return run(() -> extend()).until(() -> isAtSetPosition(EXTENDED).getAsBoolean())
@@ -159,12 +177,6 @@ public class Pivot extends SubsystemBase
         return run(() -> extend()).until(isExtended())
                 .andThen(stopCommand());
     }
-
-    public Command onCommand()
-    {
-        return run( () -> set(0.25) );
-    }
-
 
     public Command stopCommand()
     {
