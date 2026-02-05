@@ -4,10 +4,12 @@ import static frc.robot.Constants.LEDs.*;
 
 import java.lang.invoke.MethodHandles;
 
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -37,6 +39,10 @@ public class LEDs extends SubsystemBase
     private AddressableLED led = new AddressableLED(LED_PORT);
     private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LED_LENGTH);
 
+    private final LEDPattern off = LEDPattern.solid(Color.kBlack);
+
+    private LEDPattern currentPattern = null;
+
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
 
@@ -61,7 +67,68 @@ public class LEDs extends SubsystemBase
         led.setLength(ledBuffer.getLength());
         led.start();
 
-        LEDPattern.solid(Color.kWhite).applyTo(ledBuffer);
+        setOff();
+    }
+
+    private void setPattern()
+    {
+        currentPattern.applyTo(ledBuffer);
+        led.setData(ledBuffer);
+    }
+
+    private void setOff()
+    {
+        currentPattern = off;
+        setPattern();
+    }
+
+    public Command setOffCommand()
+    {
+        return runOnce(() -> setOff());
+    }
+
+    private void setColor(Color color)
+    {
+        currentPattern = LEDPattern.solid(color);
+        setPattern();
+    }
+
+    public Command setColorCommand(Color color)
+    {
+        return runOnce(() -> setColor(color));
+    }
+
+    private void setGradient(Color... colors)
+    {
+        currentPattern = LEDPattern.gradient(LEDPattern.GradientType.kContinuous, colors);
+        setPattern();
+    }
+    
+    public Command setGradientCommand(Color... colors)
+    {
+        return runOnce(() -> setGradient(colors));
+    }
+
+    private void setRainbow()
+    {
+        currentPattern = LEDPattern.rainbow(255, 255);
+        setPattern();
+    }
+
+    public Command setRainbowCommand()
+    {
+        return runOnce(() -> setRainbow());
+    }
+
+    private void setBreathe(double seconds)
+    {
+        currentPattern = currentPattern.breathe(Units.Second.of(seconds));
+        setPattern();
+    }
+
+    public Command setBreatheCommand(double seconds)
+    {
+        return runOnce(() -> setBreathe(seconds));
     }
 
     // *** OVERRIDEN METHODS ***
