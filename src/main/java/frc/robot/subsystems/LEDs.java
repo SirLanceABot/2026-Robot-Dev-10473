@@ -55,6 +55,7 @@ public class LEDs extends SubsystemBase
         System.out.println("  Constructor Started:  " + fullClassName);
 
         configLEDs();
+        setOff();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -163,14 +164,6 @@ public class LEDs extends SubsystemBase
     public Command setBreatheCommand(double seconds)
     {
         return runOnce(() -> setBreathe(seconds));
-    }
-    
-    /**
-     * Returns the current pattern.
-     */
-    public LEDPattern getCurrentPattern()
-    {
-        return currentPattern;
     }
 
     // *** OVERRIDEN METHODS ***

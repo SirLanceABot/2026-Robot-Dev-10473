@@ -97,15 +97,6 @@ public class Shroud extends SubsystemBase
         return runOnce(() -> goTo(degrees));
     }
 
-    /**
-     * Returns the position of the motor.
-     * @return
-     */
-    public double getPosition()
-    {
-        return angleMotor.getPosition();
-    }
-
     // *** OVERRIDEN METHODS ***
     // Put all methods that are Overridden here
 
