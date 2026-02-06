@@ -8,6 +8,8 @@ import frc.robot.RobotContainer;
 import frc.robot.commands.GeneralCommands;
 import frc.robot.commands.IntakingCommands;
 import frc.robot.commands.ScoringCommands;
+import frc.robot.sensors.Camera;
+import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.Pivot;
 
@@ -35,6 +37,8 @@ public class JacksonDTest implements Test
     private final RobotContainer robotContainer;
     private final Flywheel flywheel;
     private final Pivot pivot;
+    private final Agitator agitator;
+    private final Camera camera;
     private final CommandXboxController controller = new CommandXboxController(0);
 
 
@@ -54,6 +58,8 @@ public class JacksonDTest implements Test
         
         flywheel = robotContainer.getFlywheel();
         pivot = robotContainer.getPivot();
+        camera = robotContainer.getCamera();
+        agitator = robotContainer.getAgitator();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -83,8 +89,10 @@ public class JacksonDTest implements Test
         // controller.a().onTrue(GeneralCommands.simpleIntakeAndScoreCommand());
         // controller.b().onTrue(GeneralCommands.simpleIntakeAndScoreStopCommand());
 
-        controller.a().onTrue(ScoringCommands.simpleScoreCommand());
-        controller.b().onTrue(IntakingCommands.simpleIntakeCommand());
+        // controller.a().onTrue(ScoringCommands.simpleScoreCommand());
+        // controller.b().onTrue(IntakingCommands.simpleIntakeCommand());
+        // controller.x().onTrue(ScoringCommands.simpleScoreStopCommand());
+        // controller.y().onTrue(IntakingCommands.simpleIntakeStopCommand());
     }
 
     /**
@@ -106,6 +114,10 @@ public class JacksonDTest implements Test
 
         // System.out.println(pivot.isExtended().getAsBoolean());
 
+        if(camera.isValidTagInFrame())
+            agitator.forwardCommand();
+        else
+            agitator.stopCommand();
 
     }
     

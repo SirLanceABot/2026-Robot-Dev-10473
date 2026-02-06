@@ -7,6 +7,7 @@ package frc.robot;
 import java.lang.invoke.MethodHandles;
 
 import frc.robot.generated.TunerConstants;
+import frc.robot.sensors.Camera;
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -39,12 +40,13 @@ public class RobotContainer
 
     private boolean useExampleSubsystem = false;
     private boolean useFlywheel = false;
-    private boolean useAgitator = false;
+    private boolean useAgitator = true;
     private boolean useRoller = false;
     private boolean usePivot = false;
     private boolean useDrivetrain = false;
     private boolean useShroud = false;
     private boolean useLEDs = false;
+    private boolean useCamera = true;
 
     // Robot components
     private ExampleSubsystem exampleSubsystem = null;
@@ -55,6 +57,7 @@ public class RobotContainer
     private Drivetrain drivetrain = null;
     private Shroud shroud = null;
     private LEDs leds = null;
+    private Camera camera = null;
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() 
@@ -83,6 +86,9 @@ public class RobotContainer
         
         if(useFullRobot || useDrivetrain)
             drivetrain = TunerConstants.createDrivetrain();
+
+        if(useFullRobot || useCamera)
+            camera = new Camera("limelight");
     }
 
     public ExampleSubsystem getExampleSubsystem()
@@ -123,5 +129,10 @@ public class RobotContainer
     public LEDs getLEDs()
     {
         return leds;
+    }
+
+    public Camera getCamera()
+    {
+        return camera;
     }
 }
