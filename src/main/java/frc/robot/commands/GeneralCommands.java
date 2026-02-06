@@ -87,7 +87,7 @@ public class GeneralCommands
             return Commands.parallel(
                     agitator.stopCommand(),
                     flywheel.stopCommand(),
-                    leds.setOffCommand(),
+                    leds.setColorCommand(LEDs.RUNNING_COLOR),
                     pivot.retractCommand(),
                     roller.stopCommand(),
                     shroud.goToCommand(0)

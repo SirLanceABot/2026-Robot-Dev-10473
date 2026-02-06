@@ -36,10 +36,10 @@ public class LEDs extends SubsystemBase
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
 
+    public static final Color RUNNING_COLOR = Color.kYellow;
+
     private AddressableLED led = new AddressableLED(LED_PORT);
     private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LED_LENGTH);
-
-    private final LEDPattern off = LEDPattern.solid(Color.kBlack);
 
     private LEDPattern currentPattern = null;
 
@@ -55,7 +55,7 @@ public class LEDs extends SubsystemBase
         System.out.println("  Constructor Started:  " + fullClassName);
 
         configLEDs();
-        setOff();
+        setColor(RUNNING_COLOR);
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -79,23 +79,6 @@ public class LEDs extends SubsystemBase
     {
         currentPattern.applyTo(ledBuffer);
         led.setData(ledBuffer);
-    }
-
-    /**
-     * Turns off the leds.
-     */
-    private void setOff()
-    {
-        currentPattern = off;
-        setPattern();
-    }
-
-    /**
-     * Turns off the leds.
-     */
-    public Command setOffCommand()
-    {
-        return runOnce(() -> setOff());
     }
 
     /**

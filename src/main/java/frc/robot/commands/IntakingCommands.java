@@ -89,7 +89,7 @@ public class IntakingCommands
     {
         if (leds != null && pivot != null && roller != null)
         {
-            return leds.setOffCommand()
+            return leds.setColorCommand(LEDs.RUNNING_COLOR)
                 .andThen(pivot.retractCommand())
                 .andThen(roller.stopCommand());
         }
