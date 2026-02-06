@@ -2,15 +2,18 @@ package frc.robot.commands;
 
 import java.lang.invoke.MethodHandles;
 
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.Roller;
-import frc.robot.subsystems.Shroud;
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Roller;
+import frc.robot.subsystems.Shroud;
 
 public class GeneralCommands
 {
@@ -19,69 +22,80 @@ public class GeneralCommands
 
     // *** STATIC INITIALIZATION BLOCK ***
     // This block of code is run first when the class is loaded
-    static
-    {
+    static {
         System.out.println("Loading: " + fullClassName);
     }
 
-  // *** CLASS VARIABLES & INSTANCE VARIABLES ***
-  // Put all class variables and instance variables here
-  private static Roller roller;
-  private static Pivot pivot;
-  private static Agitator agitator;
-  private static Flywheel flywheel;
-  private static Shroud shroud;
-  private static Drivetrain drivetrain;
+    // *** INNER ENUMS and INNER CLASSES ***
+    // Put all inner enums and inner classes here
 
+    // *** CLASS VARIABLES & INSTANCE VARIABLES ***
+    // Put all class variables and instance variables here
+
+    private static Agitator agitator;
+    private static Drivetrain drivetrain;
+    private static Flywheel flywheel;
+    private static LEDs leds;
+    private static Pivot pivot;
+    private static Roller roller;
+    private static Shroud shroud;
+
+    // *** CLASS CONSTRUCTORS ***
+    // Put all class constructors here
+
+    // *** CLASS METHODS & INSTANCE METHODS ***
+    // Put all class methods and instance methods here
 
     public static void createCommands(RobotContainer robotContainer)
-    {        
+    {
         System.out.println("  Constructor Started:  " + fullClassName);
 
-        roller = robotContainer.getRoller();
-        pivot = robotContainer.getPivot();
         agitator = robotContainer.getAgitator();
-        flywheel = robotContainer.getFlywheel();
-        shroud = robotContainer.getShroud();
         drivetrain = robotContainer.getDrivetrain();
+        flywheel = robotContainer.getFlywheel();
+        leds = robotContainer.getLEDs();
+        pivot = robotContainer.getPivot();
+        roller = robotContainer.getRoller();
+        shroud = robotContainer.getShroud();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
 
     public static Command simpleIntakeAndScoreCommand()
     {
-        if((roller != null) && (pivot != null) && (agitator != null) && (flywheel != null) && (shroud != null))
+        if (agitator != null && flywheel != null && leds != null && pivot != null && roller != null && shroud != null)
         {
-            return 
-                Commands.parallel(
+            return Commands.parallel(
+                    agitator.forwardCommand(),
+                    flywheel.shootCommand(() -> 15.0),
+                    leds.setGradientCommand(Color.kRed, Color.kGreen),
                     pivot.extendCommand(),
                     roller.intakeFuelCommand(),
-                    agitator.forwardCommand(),
-                    flywheel.shootCommand(() -> 15.0),   //rps
-                    shroud.goToCommand(45)  //angle in degrees
+                    shroud.goToCommand(45)
                 );
         }
         else
+        {
             return Commands.none();
+        }
     }
 
     public static Command simpleIntakeAndScoreStopCommand()
     {
-        if((roller != null) && (pivot != null) && (agitator != null) && (flywheel != null) && (shroud != null))
+        if (agitator != null && flywheel != null && leds != null && pivot != null && roller != null && shroud != null)
         {
-            return 
-                Commands.parallel(
-                    pivot.retractCommand(),
-                    roller.stopCommand(),
+            return Commands.parallel(
                     agitator.stopCommand(),
                     flywheel.stopCommand(),
+                    leds.setColorCommand(LEDs.RUNNING_COLOR),
+                    pivot.retractCommand(),
+                    roller.stopCommand(),
                     shroud.goToCommand(0)
                 );
         }
         else
+        {
             return Commands.none();
+        }
     }
-
-    
 }
-

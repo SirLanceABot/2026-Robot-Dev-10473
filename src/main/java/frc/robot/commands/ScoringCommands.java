@@ -2,17 +2,18 @@ package frc.robot.commands;
 
 import java.lang.invoke.MethodHandles;
 
-import javax.lang.model.util.ElementScanner14;
-
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.Roller;
-import frc.robot.subsystems.Shroud;
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Roller;
+import frc.robot.subsystems.Shroud;
 
 public class ScoringCommands
 {
@@ -21,31 +22,41 @@ public class ScoringCommands
 
     // *** STATIC INITIALIZATION BLOCK ***
     // This block of code is run first when the class is loaded
-    static
-    {
+    static {
         System.out.println("Loading: " + fullClassName);
     }
 
-  // *** CLASS VARIABLES & INSTANCE VARIABLES ***
-  // Put all class variables and instance variables here
-  private static Roller roller;
-  private static Pivot pivot;
-  private static Agitator agitator;
-  private static Flywheel flywheel;
-  private static Shroud shroud;
-  private static Drivetrain drivetrain;
+    // *** INNER ENUMS and INNER CLASSES ***
+    // Put all inner enums and inner classes here
 
+    // *** CLASS VARIABLES & INSTANCE VARIABLES ***
+    // Put all class variables and instance variables here
+
+    private static Agitator agitator;
+    private static Drivetrain drivetrain;
+    private static Flywheel flywheel;
+    private static LEDs leds;
+    private static Pivot pivot;
+    private static Roller roller;
+    private static Shroud shroud;
+
+    // *** CLASS CONSTRUCTORS ***
+    // Put all class constructors here
+
+    // *** CLASS METHODS & INSTANCE METHODS ***
+    // Put all class methods and instance methods here
 
     public static void createCommands(RobotContainer robotContainer)
-    {        
+    {
         System.out.println("  Constructor Started:  " + fullClassName);
 
-        roller = robotContainer.getRoller();
-        pivot = robotContainer.getPivot();
         agitator = robotContainer.getAgitator();
-        flywheel = robotContainer.getFlywheel();
-        shroud = robotContainer.getShroud();
         drivetrain = robotContainer.getDrivetrain();
+        flywheel = robotContainer.getFlywheel();
+        leds = robotContainer.getLEDs();
+        pivot = robotContainer.getPivot();
+        roller = robotContainer.getRoller();
+        shroud = robotContainer.getShroud();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -57,12 +68,13 @@ public class ScoringCommands
      */
     public static Command simpleScoreCommand()
     {
-        if((agitator != null) && (flywheel != null) && (shroud != null))
+        if (agitator != null && flywheel != null && leds != null && shroud != null)
         {
             return Commands.parallel(
-                shroud.goToCommand(45),
-                flywheel.shootCommand(() -> 15).until(flywheel.isAtSetSpeed(15))     //rps
-            )
+                    flywheel.shootCommand(() -> 15).until(flywheel.isAtSetSpeed(15)),
+                    leds.setColorCommand(Color.kGreen),
+                    shroud.goToCommand(45)
+                )
                 .andThen(agitator.forwardCommand());
         }
         else 
@@ -78,12 +90,13 @@ public class ScoringCommands
      */
     public static Command simpleScoreStopCommand()
     {
-        if((agitator != null) && (flywheel != null) && (shroud != null))
+        if (agitator != null && flywheel != null && leds != null && shroud != null)
         {
             return Commands.parallel(
-                shroud.goToCommand(0),
-                flywheel.stopCommand()      
-            )
+                    flywheel.stopCommand(),
+                    leds.setColorCommand(LEDs.RUNNING_COLOR),
+                    shroud.goToCommand(0)
+                )
                 .andThen(agitator.stopCommand());
         }
         else 
@@ -93,4 +106,3 @@ public class ScoringCommands
     }
     
 }
-
