@@ -45,6 +45,7 @@ public final class Constants
         public static final int MOTOR1 = 1;
         public static final int MOTOR2 = 2;
     }
+
     public static class Flywheel
     {
         public static final int LEADMOTOR                   = 10473;
@@ -74,17 +75,20 @@ public final class Constants
 
         public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
     }
+
     public static class Shroud
     {
         public static final int MOTOR                      = 10473;
 
         public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
     }
+
     public static class LEDs
     {
         public static final int LED_PORT                   = 10473;
         public static final int LED_LENGTH                 = 10473;
     }
+    
     public static class Camera
     {
         public static final String CAMERA_NAME             = "placeholder-camera";
