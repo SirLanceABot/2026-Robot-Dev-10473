@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.*;
 
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -298,6 +299,30 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
             .withVelocityX(leftYAxis.getAsDouble())
             .withVelocityY(leftXAxis.getAsDouble())
         );
+    }
+
+    /**
+     * If current alliance is red, return true.
+     * NOT TESTED(!!!!!!!!!!!)
+     * @return Current alliance is red
+     * @author Jackson D.
+     */
+    public BooleanSupplier isRedAllianceSupplier()
+    {
+        return () ->
+        {
+            var alliance = DriverStation.getAlliance();
+            if(alliance.isPresent())
+            {
+                System.out.println("Alliance: " + alliance.get());
+                return alliance.get() == DriverStation.Alliance.Red;
+            }
+            else
+            {
+                DriverStation.reportError("No alliance found, defaulting to Blue", false);
+                return false;
+            }
+        };
     }
 
     @Override

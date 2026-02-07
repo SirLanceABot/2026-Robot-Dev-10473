@@ -11,6 +11,8 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.NetworkTable;
@@ -19,10 +21,11 @@ import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.controls.DriverBindings;
 import frc.robot.sensors.Camera;
 
 /**
- * Creates a new poseEstimator
+ * Creates a new PoseEstimator
  * @author Jackson D.
  */
 public class PoseEstimator extends SubsystemBase
@@ -48,6 +51,10 @@ public class PoseEstimator extends SubsystemBase
     private final SwerveDrivePoseEstimator poseEstimator;
     
     private Pose2d estimatedPose = new Pose2d();
+
+    //Hub Positions
+    Pose2d redHubPose = new Pose2d(new Translation2d(11.92, 4.030), new Rotation2d(0));     //where are these values from?
+    Pose2d blueHubPose = new Pose2d(new Translation2d(4.62, 4.030), new Rotation2d(0));
 
     //AdvantageScope
     private final NetworkTable ASTable;
@@ -171,7 +178,42 @@ public class PoseEstimator extends SubsystemBase
     }
 
     /**
-     * Gets the distance from the current robot pose to the given target
+     * Returns the location of an AprilTag with a given ID.
+     * NOT TESTED(!!!!!!!!!!!!)
+     * @param ID AprilTag ID
+     * @return AprilTag 2D location
+     */
+    public Pose2d getAprilTagLocation(int ID)
+    {
+        return aprilTagFieldLayout.getTagPose(ID).get().toPose2d();
+    }
+
+    public Pose2d getRedHubPose()
+    {
+        return redHubPose;
+    }
+
+    public Pose2d getBlueHubPose()
+    {
+        return blueHubPose;
+    }
+
+    /**
+     * Gets the position of your alliance's hub
+     * NOT TESTED(!!!!!!!!!!!)
+     * @return Alliance hub position
+     */
+    public Pose2d getAllianceHubPose()
+    {
+        if(drivetrain.isRedAllianceSupplier().getAsBoolean())
+            return redHubPose;
+        else
+            return blueHubPose;
+    }
+
+    /**
+     * Gets the distance from the current robot pose to the given target.
+     * NOT TESTED(!!!!!!!!)
      * @param robotPose Current robot position
      * @param target Target position
      * @return Distance from target
@@ -183,16 +225,82 @@ public class PoseEstimator extends SubsystemBase
         return () -> Math.hypot(deltax.getAsDouble(), deltay.getAsDouble());
     }
 
-    /**
-     * Returns the location of an AprilTag with a given ID.
-     * Not tested(!!!!!!!!!!!!)
-     * @param ID AprilTag ID
-     * @return AprilTag 2D location
-     */
-    public Pose2d getAprilTagLocation(int ID)
+    public DoubleSupplier getDistancetoRedHub()
     {
-        return aprilTagFieldLayout.getTagPose(ID).get().toPose2d();
+        return getDistanceToTarget(estimatedPose, redHubPose);
     }
+
+    public DoubleSupplier getDistanceToBlueHub()
+    {
+        return getDistanceToTarget(estimatedPose, blueHubPose);
+    }
+
+    /**
+     * Gets the distance from the current robot pose to your alliance's hub.
+     * NOT TESTED(!!!!!!!!!)
+     * @return Distance from hub
+     */
+    public DoubleSupplier getDistanceToAllianceHub()
+    {
+        if(drivetrain.isRedAllianceSupplier().getAsBoolean())
+            return getDistancetoRedHub();
+        else
+            return getDistanceToBlueHub();
+    }
+
+    public DoubleSupplier getAngleToRedTarget(Pose2d robotPose, Pose2d target)
+    {
+        DoubleSupplier deltay = () -> (target.getY() - robotPose.getY());
+        DoubleSupplier deltax = () -> (target.getX() - robotPose.getX());
+        return () -> Math.atan2(deltay.getAsDouble(), deltax.getAsDouble());        //why are these inverted?
+    }
+
+    public DoubleSupplier getAngleToBlueTarget(Pose2d robotPose, Pose2d target)
+    {
+        DoubleSupplier deltay = () -> (target.getY() - robotPose.getY());
+        DoubleSupplier deltax = () -> (target.getX() - robotPose.getX());
+        return () -> Math.atan2(-deltay.getAsDouble(), -deltax.getAsDouble());      //why are these inverted?
+    }
+
+    /**
+     * Gets the angle to face a given target, based on your alliance.
+     * NOT TESTED(!!!!!!!!!!)
+     * @param robotPose Current robot position
+     * @param target Target position
+     * @return Angle to target, in radians
+     */
+    public DoubleSupplier getAngleToTarget(Pose2d robotPose, Pose2d target)
+    {
+        if(drivetrain.isRedAllianceSupplier().getAsBoolean())
+            return getAngleToRedTarget(robotPose, target);
+        else
+            return getAngleToBlueTarget(robotPose, target);
+    }
+
+    public DoubleSupplier getAngleToRedHub()
+    {
+        return getAngleToTarget(estimatedPose, redHubPose);
+    }
+
+    public DoubleSupplier getAngleToBlueHub()
+    {
+        return getAngleToTarget(estimatedPose, blueHubPose);
+    }
+
+    /**
+     * Gets the angle from the current robot pose to your current alliance's hub
+     * NOT TESTED(!!!!!!!!!)
+     * @return Angle to hub, in radians
+     */
+    public DoubleSupplier getAngleToAllianceHub()
+    {
+        if(drivetrain.isRedAllianceSupplier().getAsBoolean())
+            return getAngleToRedHub();
+        else
+            return getAngleToBlueHub();
+    }
+
+
 
     // *** OVERRIDEN METHODS ***
     // Put all methods that are Overridden here

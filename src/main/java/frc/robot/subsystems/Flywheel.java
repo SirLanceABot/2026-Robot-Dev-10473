@@ -130,6 +130,17 @@ public class Flywheel extends SubsystemBase
     }
 
     /**
+     * Returns the appropriate shot speed for the given distance.
+     * PLACEHOLDER VALUE (always speed of 15) (!!!!!!!!)
+     * @param distance Distance from target
+     * @return Shot speed
+     */
+    public double getShotSpeed(double distance)
+    {
+        return 10.0;
+    }
+
+    /**
      * Stops the flywheel
      * @return Stop command
      */

@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.Shroud.*;
 
 import java.lang.invoke.MethodHandles;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -86,6 +87,18 @@ public class Shroud extends SubsystemBase
     private void goTo(double degrees)
     {
         angleMotor.setControlPosition(degreesToPosition(degrees));
+    }
+
+    /**
+     * Returns the appropriate angle to shoot from a given distance.
+     * PLACEHOLDER VALUE (always 45 degrees) (!!!!!!!!!!)
+     * @param distance Distance from target
+     * @return Shot angle
+     * @author Jackson D.
+     */
+    public double getShotAngle(double distance)
+    {
+        return 45.0;
     }
 
     /**

@@ -12,6 +12,7 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.Roller;
 import frc.robot.subsystems.Shroud;
 
@@ -40,6 +41,8 @@ public class ScoringCommands
     private static Roller roller;
     private static Shroud shroud;
 
+    private static PoseEstimator poseEstimator;
+
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
 
@@ -57,6 +60,8 @@ public class ScoringCommands
         pivot = robotContainer.getPivot();
         roller = robotContainer.getRoller();
         shroud = robotContainer.getShroud();
+        
+        poseEstimator = robotContainer.getPoseEstimator();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -100,6 +105,32 @@ public class ScoringCommands
                 .andThen(agitator.stopCommand());
         }
         else 
+        {
+            return Commands.none();
+        }
+    }
+
+    /**
+     * Command to stop driving, rotate towards the hub, set the flywheel and shroud appropriately, and score.
+     * NOT TESTED(!!!!!!!)
+     * @return Stationary score command
+     * @author Jackson D.
+     */
+    public static Command stationaryScoreCommand()
+    {
+        if(flywheel != null && shroud != null && agitator != null && drivetrain != null && poseEstimator != null)
+        {
+            return drivetrain.lockWheelsCommand()
+            .andThen(
+                    drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, poseEstimator.getAngleToAllianceHub()))
+            .andThen(
+                    shroud.goToCommand(shroud.getShotAngle(poseEstimator.getDistanceToAllianceHub().getAsDouble())))
+            .andThen(
+                    flywheel.shootCommand(() -> flywheel.getShotSpeed(poseEstimator.getDistanceToAllianceHub().getAsDouble())))
+                    .until(flywheel.isAtSetSpeed(flywheel.getShotSpeed(poseEstimator.getDistanceToAllianceHub().getAsDouble())))
+            .andThen(agitator.forwardCommand());           
+        }
+        else
         {
             return Commands.none();
         }
