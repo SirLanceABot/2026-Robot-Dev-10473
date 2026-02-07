@@ -55,7 +55,7 @@ public final class Constants
 
     public static class Agitator
     {
-        public static final int MOTOR                       = 10473;
+        public static final int MOTOR                       = 12;
 
         public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
     }
@@ -84,6 +84,10 @@ public final class Constants
     {
         public static final int LED_PORT                   = 10473;
         public static final int LED_LENGTH                 = 10473;
+    }
+    public static class Camera
+    {
+        public static final String CAMERA_NAME             = "placeholder-camera";
     }
 
     /**

@@ -88,7 +88,7 @@ public class RobotContainer
             drivetrain = TunerConstants.createDrivetrain();
 
         if(useFullRobot || useCamera)
-            camera = new Camera("limelight");
+            camera = new Camera();
     }
 
     public ExampleSubsystem getExampleSubsystem()

@@ -93,6 +93,9 @@ public class JacksonDTest implements Test
         // controller.b().onTrue(IntakingCommands.simpleIntakeCommand());
         // controller.x().onTrue(ScoringCommands.simpleScoreStopCommand());
         // controller.y().onTrue(IntakingCommands.simpleIntakeStopCommand());
+
+        // controller.a().onTrue(agitator.forwardCommand());
+        // controller.b().onTrue(agitator.stopCommand());
     }
 
     /**
@@ -114,10 +117,7 @@ public class JacksonDTest implements Test
 
         // System.out.println(pivot.isExtended().getAsBoolean());
 
-        if(camera.isValidTagInFrame())
-            agitator.forwardCommand();
-        else
-            agitator.stopCommand();
+        // System.out.println(camera.isValidTagInFrame());
 
     }
     

@@ -34,8 +34,6 @@ public class PoseEstimator extends SubsystemBase
     
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
-    private final TalonFXLance motor1 = new TalonFXLance(MOTOR1, MOTOR_CAN_BUS, "Motor 1");
-    private final TalonFXLance motor2 = new TalonFXLance(MOTOR2, MOTOR_CAN_BUS, "Motor 2");
 
 
     // *** CLASS CONSTRUCTORS ***
@@ -49,8 +47,6 @@ public class PoseEstimator extends SubsystemBase
         super("PoseEstimator");
         System.out.println("  Constructor Started:  " + fullClassName);
 
-        configMotors();
-
         System.out.println("  Constructor Finished: " + fullClassName);
     }
 
@@ -58,44 +54,6 @@ public class PoseEstimator extends SubsystemBase
     // *** CLASS METHODS & INSTANCE METHODS ***
     // Put all class methods and instance methods here
 
-    private void configMotors()
-    {
-        motor1.setupFactoryDefaults();
-        motor2.setupFactoryDefaults();
-    }
-
-    /**
-     * This sets the speed of the motors.
-     * @param speed The motor speed (-1.0 to 1.0)
-     */
-    private void set(double speed)
-    {
-        motor1.set(speed);
-        motor2.set(speed);
-    }
-
-    public void stop()
-    {
-        set(0.0);
-        set(0.0);
-    }
-
-    public Command onCommand()
-    {
-        return run( () -> set(0.25) );
-    }
-
-    public Command setCommand(DoubleSupplier speed)
-    {
-        return run( () -> set(MathUtil.clamp(speed.getAsDouble(), 0.0, 0.5)) );
-    }
-
-    // Use a method reference instead of this method
-    public Command stopCommand()
-    {
-        // return run( () -> stop() );
-        return run(this::stop);
-    }
 
 
     // *** OVERRIDEN METHODS ***
