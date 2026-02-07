@@ -13,6 +13,7 @@ import frc.robot.motors.TalonFXLance;
 
 /**
  * This is an example of what a subsystem should look like.
+ * @author Abinaya
  */
 public class Agitator extends SubsystemBase
 {
@@ -81,20 +82,38 @@ public class Agitator extends SubsystemBase
         //motor2.set(speed);
     }
 
+    /**
+     * This sets the velocity ig
+     */
     public void stop()
     {
         setVelocity(0.0);
     }
+
+    /**
+     * This is the command to rotate the motor forward
+     * @return {@link Command}
+     */
 
     public Command forwardCommand()
     {
         return run( () -> setVelocity(5) );
     }
 
+    /**
+     * This command rotates the motor backwards
+     * @return {@link Command}
+     */
+
     public Command reverseCommand()
     {
         return run( () -> setVelocity(-5) );
     }
+
+    /**
+     * This command jitters the motor
+     * @return {@link Command}
+     */
 
     public Command jitterCommand()
     {
@@ -103,7 +122,11 @@ public class Agitator extends SubsystemBase
     }
 
 
-    // Use a method reference instead of this method
+    /**
+     * This command stops the motor
+     * @return {@link Command}
+     */
+
     public Command stopCommand()
     {
         // return run( () -> stop() );
