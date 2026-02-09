@@ -97,7 +97,7 @@ public class ScoringCommands
         {
             return Commands.parallel(
                     flywheel.stopCommand(),
-                    LEDsController.setLEDCommand(leds, ColorPattern.kDefault, null),
+                    LEDsController.setLEDCommand(leds, ColorPattern.kDefault),
                     shroud.goToCommand(0)
                 )
                 .andThen(agitator.stopCommand());

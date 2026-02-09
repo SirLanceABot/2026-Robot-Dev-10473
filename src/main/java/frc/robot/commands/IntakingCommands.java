@@ -87,7 +87,7 @@ public class IntakingCommands
     {
         if (pivot != null && roller != null)
         {
-            return LEDsController.setLEDCommand(leds, ColorPattern.kDefault, null)
+            return LEDsController.setLEDCommand(leds, ColorPattern.kDefault)
                 .andThen(pivot.retractCommand())
                 .andThen(roller.stopCommand());
         }
