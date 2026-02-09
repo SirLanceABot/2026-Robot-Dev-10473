@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.LEDs.*;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Map;
 
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.AddressableLED;
@@ -33,6 +34,14 @@ public class LEDs extends SubsystemBase
     // *** INNER ENUMS and INNER CLASSES ***
     // Put all inner enums and inner classes here
 
+    public enum ColorPattern
+    {
+        kDefault,
+        kSolid,
+        kGradient,
+        kRainbow
+    }
+
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
 
@@ -55,7 +64,7 @@ public class LEDs extends SubsystemBase
         System.out.println("  Constructor Started:  " + fullClassName);
 
         configLEDs();
-        setColor(RUNNING_COLOR);
+        setColorSolid(RUNNING_COLOR);
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -84,7 +93,7 @@ public class LEDs extends SubsystemBase
     /**
      * Sets the color of the leds to be solid.
      */
-    private void setColor(Color color)
+    private void setColorSolid(Color color)
     {
         currentPattern = LEDPattern.solid(color);
         setPattern();
@@ -93,15 +102,15 @@ public class LEDs extends SubsystemBase
     /**
      * Sets the color of the leds to be solid.
      */
-    public Command setColorCommand(Color color)
+    public Command setColorSolidCommand(Color color)
     {
-        return runOnce(() -> setColor(color));
+        return runOnce(() -> setColorSolid(color));
     }
 
     /**
      * Sets the color of the leds to a gradient.
      */
-    private void setGradient(Color... colors)
+    private void setColorGradient(Color... colors)
     {
         currentPattern = LEDPattern.gradient(LEDPattern.GradientType.kContinuous, colors);
         setPattern();
@@ -110,43 +119,28 @@ public class LEDs extends SubsystemBase
     /**
      * Sets the color of the leds to a gradient.
      */
-    public Command setGradientCommand(Color... colors)
+    public Command setColorGradientCommand(Color... colors)
     {
-        return runOnce(() -> setGradient(colors));
+        return runOnce(() -> setColorGradient(colors));
     }
 
     /**
      * Sets the color of the leds to a rainbow.
      */
-    private void setRainbow()
+    private void setColorRainbow()
     {
-        currentPattern = LEDPattern.rainbow(255, 255);
+        LEDPattern base = LEDPattern.rainbow(255, 255);
+        LEDPattern mask = LEDPattern.steps(Map.of(0.0, Color.kWhite, 0.5, Color.kBlack)).scrollAtRelativeSpeed(Units.Percent.per(Units.Second).of(200));
+        currentPattern = base.mask(mask);
         setPattern();
     }
 
     /**
      * Sets the color of the leds to a rainbow.
      */
-    public Command setRainbowCommand()
+    public Command setColorRainbowCommand()
     {
-        return runOnce(() -> setRainbow());
-    }
-
-    /**
-     * Makes the current pattern of the leds breathe.
-     */
-    private void setBreathe(double seconds)
-    {
-        currentPattern = currentPattern.breathe(Units.Second.of(seconds));
-        setPattern();
-    }
-
-    /**
-     * Makes the current pattern of the leds breathe.
-     */
-    public Command setBreatheCommand(double seconds)
-    {
-        return runOnce(() -> setBreathe(seconds));
+        return runOnce(() -> setColorRainbow());
     }
 
     // *** OVERRIDEN METHODS ***

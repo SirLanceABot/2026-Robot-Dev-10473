@@ -5,12 +5,12 @@ import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.LEDs.ColorPattern;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Roller;
 import frc.robot.subsystems.Shroud;
@@ -63,39 +63,35 @@ public class GeneralCommands
 
     public static Command simpleIntakeAndScoreCommand()
     {
-        if (agitator != null && flywheel != null && leds != null && pivot != null && roller != null && shroud != null)
+        if (agitator != null && flywheel != null && pivot != null && roller != null && shroud != null)
         {
             return Commands.parallel(
                     agitator.forwardCommand(),
                     flywheel.shootCommand(() -> 15.0),
-                    leds.setGradientCommand(Color.kRed, Color.kGreen),
+                    LEDsController.setLEDCommand(leds, ColorPattern.kGradient, Color.kRed, Color.kGreen),
                     pivot.extendCommand(),
                     roller.intakeFuelCommand(),
                     shroud.goToCommand(45)
                 );
         }
         else
-        {
             return Commands.none();
-        }
     }
 
     public static Command simpleIntakeAndScoreStopCommand()
     {
-        if (agitator != null && flywheel != null && leds != null && pivot != null && roller != null && shroud != null)
+        if (agitator != null && flywheel != null && pivot != null && roller != null && shroud != null)
         {
             return Commands.parallel(
                     agitator.stopCommand(),
                     flywheel.stopCommand(),
-                    leds.setColorCommand(LEDs.RUNNING_COLOR),
+                    LEDsController.setLEDCommand(leds, ColorPattern.kDefault, null),
                     pivot.retractCommand(),
                     roller.stopCommand(),
                     shroud.goToCommand(0)
                 );
         }
         else
-        {
             return Commands.none();
-        }
     }
 }

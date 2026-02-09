@@ -5,12 +5,12 @@ import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.LEDs.ColorPattern;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Roller;
 import frc.robot.subsystems.Shroud;
@@ -68,16 +68,14 @@ public class IntakingCommands
      */
     public static Command simpleIntakeCommand()
     {
-        if (leds != null && pivot != null && roller != null)
+        if (pivot != null && roller != null)
         {
-            return leds.setColorCommand(Color.kRed)
+            return LEDsController.setLEDCommand(leds, ColorPattern.kSolid, Color.kRed)
                 .andThen(pivot.extendCommand())
                 .andThen(roller.intakeFuelCommand());
         }
         else
-        {
             return Commands.none();
-        }
     }
 
     /**
@@ -87,16 +85,13 @@ public class IntakingCommands
      */
     public static Command simpleIntakeStopCommand()
     {
-        if (leds != null && pivot != null && roller != null)
+        if (pivot != null && roller != null)
         {
-            return leds.setColorCommand(LEDs.RUNNING_COLOR)
+            return LEDsController.setLEDCommand(leds, ColorPattern.kDefault, null)
                 .andThen(pivot.retractCommand())
                 .andThen(roller.stopCommand());
         }
         else
-        {
             return Commands.none();
-        }
     }
-    
 }

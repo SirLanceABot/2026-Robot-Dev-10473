@@ -5,12 +5,12 @@ import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.LEDs.ColorPattern;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.Roller;
@@ -77,15 +77,13 @@ public class ScoringCommands
         {
             return Commands.parallel(
                     flywheel.shootCommand(() -> 15).until(flywheel.isAtSetSpeed(15)),
-                    leds.setColorCommand(Color.kGreen),
+                    LEDsController.setLEDCommand(leds, ColorPattern.kSolid, Color.kGreen),
                     shroud.goToCommand(45)
                 )
                 .andThen(agitator.forwardCommand());
         }
         else 
-        {
             return Commands.none();
-        }
     }
 
     /**
@@ -95,19 +93,17 @@ public class ScoringCommands
      */
     public static Command simpleScoreStopCommand()
     {
-        if (agitator != null && flywheel != null && leds != null && shroud != null)
+        if (agitator != null && flywheel != null && shroud != null)
         {
             return Commands.parallel(
                     flywheel.stopCommand(),
-                    leds.setColorCommand(LEDs.RUNNING_COLOR),
+                    LEDsController.setLEDCommand(leds, ColorPattern.kDefault, null),
                     shroud.goToCommand(0)
                 )
                 .andThen(agitator.stopCommand());
         }
         else 
-        {
             return Commands.none();
-        }
     }
 
     /**
@@ -131,9 +127,6 @@ public class ScoringCommands
             .andThen(agitator.forwardCommand());           
         }
         else
-        {
             return Commands.none();
-        }
     }
-    
 }
