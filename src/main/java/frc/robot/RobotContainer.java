@@ -74,7 +74,7 @@ public class RobotContainer
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
-    public RobotContainer() 
+    RobotContainer() 
     {
         // Instantiate ONLY the components selected above
         if(useFullRobot || useExampleSubsystem)
