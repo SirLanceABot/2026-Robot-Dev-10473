@@ -51,6 +51,7 @@ public class LEDs extends SubsystemBase
     private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LED_LENGTH);
 
     private LEDPattern currentPattern = null;
+    private boolean currentPatternIsAnimated = false;
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
@@ -96,6 +97,7 @@ public class LEDs extends SubsystemBase
     private void setColorSolid(Color color)
     {
         currentPattern = LEDPattern.solid(color);
+        currentPatternIsAnimated = false;
         setPattern();
     }
 
@@ -112,7 +114,8 @@ public class LEDs extends SubsystemBase
      */
     private void setColorGradient(Color... colors)
     {
-        currentPattern = LEDPattern.gradient(LEDPattern.GradientType.kContinuous, colors);
+        currentPattern = LEDPattern.gradient(LEDPattern.GradientType.kContinuous, colors).scrollAtRelativeSpeed(Units.Percent.per(Units.Second).of(100));
+        currentPatternIsAnimated = true;
         setPattern();
     }
     
@@ -129,9 +132,8 @@ public class LEDs extends SubsystemBase
      */
     private void setColorRainbow()
     {
-        LEDPattern base = LEDPattern.rainbow(255, 255);
-        LEDPattern mask = LEDPattern.steps(Map.of(0.0, Color.kWhite, 0.5, Color.kBlack)).scrollAtRelativeSpeed(Units.Percent.per(Units.Second).of(200));
-        currentPattern = base.mask(mask);
+        currentPattern = LEDPattern.rainbow(255, 255).scrollAtRelativeSpeed(Units.Percent.per(Units.Second).of(100));
+        currentPatternIsAnimated = true;
         setPattern();
     }
 
@@ -152,6 +154,9 @@ public class LEDs extends SubsystemBase
         // This method will be called once per scheduler run
         // Use this for sensors that need to be read periodically.
         // Use this for data that needs to be logged.
+
+        if (currentPattern != null && currentPatternIsAnimated)
+            setPattern();
     }
 
     @Override

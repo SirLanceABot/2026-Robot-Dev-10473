@@ -69,7 +69,7 @@ public class MukulKTest implements Test
         // controller.y().onTrue(shroud.goToCommand(90.0));
 
         controller.a().onTrue(leds.setColorSolidCommand(Color.kWhite));
-        controller.b().onTrue(leds.setColorGradientCommand(Color.kRed, Color.kGray));
+        controller.b().onTrue(leds.setColorGradientCommand(Color.kDarkBlue, Color.kPurple, Color.kRed));
         controller.x().onTrue(leds.setColorRainbowCommand());
     }
 
