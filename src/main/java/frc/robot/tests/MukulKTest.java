@@ -62,12 +62,11 @@ public class MukulKTest implements Test
      */
     public void init()
     {
-        LEDs.LEDView leftView = leds.createView(0, 99);
-        LEDs.LEDView rightView = leds.createView(100, 199);
-        controller.a().onTrue(leftView.setSolidCommand(Color.kWhite));
-        controller.b().onTrue(rightView.setRainbowCommand());
-        controller.x().onTrue(leftView.setGradientCommand(Color.kBlack, Color.kWhite));
-        controller.y().onTrue(rightView.setGradientCommand(Color.kRed, Color.kBlue));
+        LEDs.LEDView view = leds.createView(0, 199);
+        controller.a().onTrue(view.setSolidCommand(Color.kWhite));
+        controller.b().onTrue(view.setRainbowCommand());
+        controller.x().onTrue(view.setBlinkCommand(0.5));
+        controller.y().onTrue(view.undoCommand());
 
         // controller.a().onTrue(shroud.goToCommand(12.5));
         // controller.b().onTrue(shroud.goToCommand(38.0));

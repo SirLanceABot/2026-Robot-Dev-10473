@@ -5,7 +5,6 @@ import static frc.robot.Constants.LEDs.*;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.AddressableLED;
@@ -226,44 +225,6 @@ public class LEDs extends SubsystemBase
         public Command setBreatheCommand(double seconds)
         {
             return Commands.runOnce(() -> setBreathe(seconds));
-        }
-
-        /**
-         * Modifies the current pattern of the LED view to show a progress bar
-         * @param progress {@link DoubleSupplier} The current progress
-         */
-        private void setProgress(DoubleSupplier progress)
-        {
-            setPattern(this.pattern.mask(LEDPattern.progressMaskLayer(progress)), false);
-        }
-
-        /**
-         * Modifies the current pattern of the LED view to show a progress bar
-         * @param progress {@link DoubleSupplier} The current progress
-         * @return {@link Command} The command to set the leds in the LED view to show a progress bar
-         */
-        public Command setProgressCommand(DoubleSupplier progress)
-        {
-            return Commands.run(() -> setProgress(progress));
-        }
-
-        /**
-         * Modifies the current pattern of the LED view to show a progress bar
-         * @param progress {@link Double} The current progress
-         */
-        private void setProgress(double progress)
-        {
-            setPattern(this.pattern.mask(LEDPattern.progressMaskLayer(() -> progress)), false);
-        }
-
-        /**
-         * Modifies the current pattern of the LED view to show a progress bar
-         * @param progress {@link Double} The current progress
-         * @return {@link Command} The command to set the leds in the LED view to show a progress bar
-         */
-        public Command setProgressCommand(double progress)
-        {
-            return Commands.runOnce(() -> setProgress(progress));
         }
 
         /**
