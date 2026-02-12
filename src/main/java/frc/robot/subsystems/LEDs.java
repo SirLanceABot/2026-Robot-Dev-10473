@@ -6,6 +6,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.AddressableLED;
@@ -38,6 +39,9 @@ public class LEDs extends SubsystemBase
     // *** INNER ENUMS and INNER CLASSES ***
     // Put all inner enums and inner classes here
 
+    /**
+     * An LED view with helpers to create and set patterns
+     */
     public class LEDView
     {
         private final int startIndex;
@@ -78,7 +82,7 @@ public class LEDs extends SubsystemBase
 
         /**
          * Sets the pattern of the LED view to off
-         * @return {@link Command}
+         * @return {@link Command} The command to set the leds in the LED view off
          */
         public Command setOffCommand()
         {
@@ -98,7 +102,7 @@ public class LEDs extends SubsystemBase
         /**
          * Sets the pattern of the LED view to a solid color
          * @param color {@link Color} The color to set the LED view to
-         * @return {@link Command}
+         * @return {@link Command} The command to set the leds in the LED view to a solid color
          */
         public Command setSolidCommand(Color color)
         {
@@ -122,7 +126,7 @@ public class LEDs extends SubsystemBase
         /**
          * Sets the pattern of the LED view to a scrolling gradient
          * @param colors {@link Color} The colors to set the LED view to
-         * @return {@link Command}
+         * @return {@link Command} The command to set the leds in the LED view to a scrolling gradient
          */
         public Command setGradientCommand(Color... colors)
         {
@@ -143,11 +147,113 @@ public class LEDs extends SubsystemBase
 
         /**
          * Sets the pattern of the LED view to a scrolling rainbow
-         * @return {@link Command}
+         * @return {@link Command} The command to set the leds in the LED view to a scrolling rainbow
          */
         public Command setRainbowCommand()
         {
             return Commands.runOnce(() -> setRainbow());
+        }
+
+        /**
+         * Modifies the current pattern of the LED view to blink
+         * @param seconds {@link Double} The amount of seconds between each blink
+         */
+        private void setBlink(double seconds)
+        {
+            setPattern(this.pattern.blink(Units.Seconds.of(seconds)), true);
+        }
+
+        /**
+         * Modifies the current pattern of the LED view to blink
+         * @param seconds {@link Double} The amount of seconds between each blink
+         * @return {@link Command} The command to set the leds in the LED view to blink
+         * @implNote THIS STACKS WITH OTHER MODIFIERS AND CURRENTLY THERE IS NO WAY TO REMOVE A MODIFIER
+         */
+        public Command setBlinkCommand(double seconds)
+        {
+            return Commands.runOnce(() -> setBlink(seconds));
+        }
+
+        /**
+         * Modifies the current pattern of the LED view to blink
+         * @param offSeconds {@link Double} The amount of seconds to stay off
+         * @param onSeconds {@link Double} The amount of seconds to stay on
+         */
+        private void setBlink(double offSeconds, double onSeconds)
+        {
+            setPattern(this.pattern.blink(Units.Seconds.of(offSeconds), Units.Seconds.of(onSeconds)), true);
+        }
+
+        /**
+         * Modifies the current pattern of the LED view to blink
+         * @param offSeconds {@link Double} The amount of seconds to stay off
+         * @param onSeconds {@link Double} The amount of seconds to stay on
+         * @return {@link Command} The command to set the leds in the LED view to blink
+         * @implNote THIS STACKS WITH OTHER MODIFIERS AND CURRENTLY THERE IS NO WAY TO REMOVE A MODIFIER
+         */
+        public Command setBlinkCommand(double offSeconds, double onSeconds)
+        {
+            return Commands.runOnce(() -> setBlink(offSeconds, onSeconds));
+        }
+
+        /**
+         * Modifies the current pattern of the LED view to breathe
+         * @param seconds {@link Double} The amount of seconds between each breathe
+         */
+        private void setBreathe(double seconds)
+        {
+            setPattern(this.pattern.breathe(Units.Seconds.of(seconds)), true);
+        }
+
+        /**
+         * Modifies the current pattern of the LED view to breathe
+         * @param seconds {@link Double} The amount of seconds between each breathe
+         * @return {@link Command} The command to set the leds in the LED view to breathe
+         * @implNote THIS STACKS WITH OTHER MODIFIERS AND CURRENTLY THERE IS NO WAY TO REMOVE A MODIFIER
+         */
+        public Command setBreatheCommand(double seconds)
+        {
+            return Commands.runOnce(() -> setBreathe(seconds));
+        }
+
+        /**
+         * Modifies the current pattern of the LED view to show a progress bar
+         * @param progress {@link DoubleSupplier} The current progress
+         */
+        private void setProgress(DoubleSupplier progress)
+        {
+            setPattern(this.pattern.mask(LEDPattern.progressMaskLayer(progress)), false);
+        }
+
+        /**
+         * Modifies the current pattern of the LED view to show a progress bar
+         * @param progress {@link DoubleSupplier} The current progress
+         * @return {@link Command} The command to set the leds in the LED view to show a progress bar
+         * @implNote THIS STACKS WITH OTHER MODIFIERS AND CURRENTLY THERE IS NO WAY TO REMOVE A MODIFIER
+         */
+        public Command setProgressCommand(DoubleSupplier progress)
+        {
+            return Commands.run(() -> setProgress(progress));
+        }
+
+        /**
+         * Modifies the current pattern of the LED view to show a progress bar
+         * @param progress {@link Double} The current progress
+         */
+        private void setProgress(double progress)
+        {
+            setPattern(this.pattern.mask(LEDPattern.progressMaskLayer(() -> progress)), false);
+        }
+
+        /**
+         * Modifies the current pattern of the LED view to show a progress bar
+         * @param progress {@link Double} The current progress
+         * @return {@link Command} The command to set the leds in the LED view to show a progress bar
+         * @implNote THIS STACKS WITH OTHER MODIFIERS AND CURRENTLY THERE IS NO WAY TO REMOVE A MODIFIER
+         */
+        public Command setProgressCommand(double progress)
+        {
+            return Commands.runOnce(() -> setProgress(progress));
         }
     }
 

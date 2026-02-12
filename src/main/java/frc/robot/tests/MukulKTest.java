@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.LEDs;
 // import frc.robot.subsystems.Shroud;
-import frc.robot.subsystems.LEDs.LEDView;
 
 @SuppressWarnings("unused")
 public class MukulKTest implements Test
@@ -63,18 +62,17 @@ public class MukulKTest implements Test
      */
     public void init()
     {
-        // controller.a().onTrue(shroud.goToCommand(12.5));
-        // controller.b().onTrue(shroud.goToCommand(38.0));
-        // controller.x().onTrue(shroud.goToCommand(76.0));
-        // controller.y().onTrue(shroud.goToCommand(90.0));
-
-        LEDView leftView = leds.createView(0, 99);
-        LEDView rightView = leds.createView(100, 199);
-
+        LEDs.LEDView leftView = leds.createView(0, 99);
+        LEDs.LEDView rightView = leds.createView(100, 199);
         controller.a().onTrue(leftView.setSolidCommand(Color.kWhite));
         controller.b().onTrue(rightView.setRainbowCommand());
         controller.x().onTrue(leftView.setGradientCommand(Color.kBlack, Color.kWhite));
         controller.y().onTrue(rightView.setGradientCommand(Color.kRed, Color.kBlue));
+
+        // controller.a().onTrue(shroud.goToCommand(12.5));
+        // controller.b().onTrue(shroud.goToCommand(38.0));
+        // controller.x().onTrue(shroud.goToCommand(76.0));
+        // controller.y().onTrue(shroud.goToCommand(90.0));
     }
 
     /**

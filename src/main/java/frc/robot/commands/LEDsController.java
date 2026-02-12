@@ -1,37 +1,44 @@
-// package frc.robot.commands;
+package frc.robot.commands;
 
-// import edu.wpi.first.wpilibj.util.Color;
-// import edu.wpi.first.wpilibj2.command.Command;
-// import edu.wpi.first.wpilibj2.command.Commands;
-// import frc.robot.subsystems.LEDs;
-// import frc.robot.subsystems.LEDs.ColorPattern;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.subsystems.LEDs.LEDView;
 
-// public class LEDsController
-// {
-//     /**
-//      * Sets the leds to the pattern and color(s).
-//      * @param pattern {@link ColorPattern} The pattern to set the leds to.
-//      * @param colors {@link Color} The color(s) to set the leds to,
-//      * @return {@link Command} The respective led command or none if the leds are not being used.
-//      * @author Mukul Kedia
-//      */
-//     public static Command setLEDCommand(LEDs leds, ColorPattern pattern, Color... colors)
-//     {
-//         if (leds == null)
-//             return Commands.none();
+public class LEDsController {
+    /**
+     * The LED view patterns
+     */
+    public enum LEDPatternType {
+        OFF,
+        SOLID,
+        GRADIENT,
+        RAINBOW
+    }
 
-//         switch (pattern)
-//         {
-//             case kDefault:
-//                 return leds.setColorSolidCommand(LEDs.RUNNING_COLOR);
-//             case kSolid:
-//                 return leds.setColorSolidCommand(colors[0]);
-//             case kGradient:
-//                 return leds.setColorGradientCommand(colors);
-//             case kRainbow:
-//                 return leds.setColorRainbowCommand();
-//             default:
-//                 return Commands.none();
-//         }
-//     }
-// }
+    /**
+     * Sets a specific LED View to a pattern
+     * 
+     * @param view {@link LEDView} The LED view to use
+     * @param pattern {@link LEDPatternType} The pattern type to use
+     * @param colors {@link Color} Optional color(s) used for patterns that need them
+     * @return {@link Command} The command to update the led view to the new pattern
+     */
+    public static Command setLEDCommand(LEDView view, LEDPatternType pattern, Color... colors) {
+        if (view == null)
+            return Commands.none();
+
+        switch (pattern) {
+            case OFF:
+                return view.setOffCommand();
+            case SOLID:
+                return view.setSolidCommand(colors[0]);
+            case GRADIENT:
+                return view.setGradientCommand(colors);
+            case RAINBOW:
+                return view.setRainbowCommand();
+            default:
+                return Commands.none();
+        }
+    }
+}
