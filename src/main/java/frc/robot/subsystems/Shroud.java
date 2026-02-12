@@ -71,6 +71,20 @@ public class Shroud extends SubsystemBase
     }
 
     /**
+     * This sets the speed of the motors.
+     * @param speed The motor speed (-1.0 to 1.0)
+     */
+    private void set(double speed)
+    {
+        angleMotor.set(speed);
+    }
+
+    private void stop()
+    {
+        set(0.0);
+    }
+
+    /**
      * Helper method to convert degrees to the encoder position.
      * @param degrees The degrees to convert into position.
      */
@@ -108,6 +122,11 @@ public class Shroud extends SubsystemBase
     public Command goToCommand(double degrees)
     {
         return runOnce(() -> goTo(degrees));
+    }
+
+    public Command stopCommand()
+    {
+        return runOnce(() -> stop());
     }
 
     // *** OVERRIDEN METHODS ***

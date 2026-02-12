@@ -94,4 +94,22 @@ public class GeneralCommands
         else
             return Commands.none();
     }
+
+    public static Command stopAllCommand()
+    {
+        if(roller != null && pivot != null && agitator != null && flywheel != null && shroud != null)
+        {
+            return Commands.parallel(
+                    roller.stopCommand(),
+                    pivot.stopCommand(),
+                    agitator.stopCommand(),
+                    flywheel.stopCommand()      
+            );
+        }
+        else
+        {
+            return Commands.none();
+        }
+
+    }
 }
