@@ -2,7 +2,7 @@ package frc.robot.commands;
 
 import java.lang.invoke.MethodHandles;
 
-import edu.wpi.first.wpilibj.util.Color;
+// import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
@@ -10,7 +10,7 @@ import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.LEDs;
-import frc.robot.subsystems.LEDs.ColorPattern;
+// import frc.robot.subsystems.LEDs.ColorPattern;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.Roller;
@@ -77,7 +77,7 @@ public class ScoringCommands
         {
             return Commands.parallel(
                     flywheel.shootCommand(() -> 15).until(flywheel.isAtSetSpeed(15)),
-                    LEDsController.setLEDCommand(leds, ColorPattern.kSolid, Color.kGreen),
+                    // LEDsController.setLEDCommand(leds, ColorPattern.kSolid, Color.kGreen),
                     shroud.goToCommand(45)
                 )
                 .andThen(agitator.forwardCommand());
@@ -97,7 +97,7 @@ public class ScoringCommands
         {
             return Commands.parallel(
                     flywheel.stopCommand(),
-                    LEDsController.setLEDCommand(leds, ColorPattern.kDefault),
+                    // LEDsController.setLEDCommand(leds, ColorPattern.kDefault),
                     shroud.goToCommand(0)
                 )
                 .andThen(agitator.stopCommand());

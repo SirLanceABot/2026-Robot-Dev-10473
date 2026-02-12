@@ -2,7 +2,7 @@ package frc.robot.commands;
 
 import java.lang.invoke.MethodHandles;
 
-import edu.wpi.first.wpilibj.util.Color;
+// import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
@@ -10,7 +10,7 @@ import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.LEDs;
-import frc.robot.subsystems.LEDs.ColorPattern;
+// import frc.robot.subsystems.LEDs.ColorPattern;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Roller;
 import frc.robot.subsystems.Shroud;
@@ -70,7 +70,8 @@ public class IntakingCommands
     {
         if (pivot != null && roller != null)
         {
-            return LEDsController.setLEDCommand(leds, ColorPattern.kSolid, Color.kRed)
+            // return LEDsController.setLEDCommand(leds, ColorPattern.kSolid, Color.kRed)
+            return Commands.none()
                 .andThen(pivot.extendCommand())
                 .andThen(roller.intakeFuelCommand());
         }
@@ -87,7 +88,8 @@ public class IntakingCommands
     {
         if (pivot != null && roller != null)
         {
-            return LEDsController.setLEDCommand(leds, ColorPattern.kDefault)
+            // return LEDsController.setLEDCommand(leds, ColorPattern.kDefault)
+            return Commands.none()
                 .andThen(pivot.retractCommand())
                 .andThen(roller.stopCommand());
         }

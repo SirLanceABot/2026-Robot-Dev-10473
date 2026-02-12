@@ -2,7 +2,7 @@ package frc.robot.commands;
 
 import java.lang.invoke.MethodHandles;
 
-import edu.wpi.first.wpilibj.util.Color;
+// import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
@@ -10,7 +10,7 @@ import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.LEDs;
-import frc.robot.subsystems.LEDs.ColorPattern;
+// import frc.robot.subsystems.LEDs.ColorPattern;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Roller;
 import frc.robot.subsystems.Shroud;
@@ -68,7 +68,7 @@ public class GeneralCommands
             return Commands.parallel(
                     agitator.forwardCommand(),
                     flywheel.shootCommand(() -> 15.0),
-                    LEDsController.setLEDCommand(leds, ColorPattern.kGradient, Color.kRed, Color.kGreen),
+                    // LEDsController.setLEDCommand(leds, ColorPattern.kGradient, Color.kRed, Color.kGreen),
                     pivot.extendCommand(),
                     roller.intakeFuelCommand(),
                     shroud.goToCommand(45)
@@ -85,7 +85,7 @@ public class GeneralCommands
             return Commands.parallel(
                     agitator.stopCommand(),
                     flywheel.stopCommand(),
-                    LEDsController.setLEDCommand(leds, ColorPattern.kDefault),
+                    // LEDsController.setLEDCommand(leds, ColorPattern.kDefault),
                     pivot.retractCommand(),
                     roller.stopCommand(),
                     shroud.goToCommand(0)

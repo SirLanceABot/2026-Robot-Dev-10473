@@ -3,18 +3,22 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.LEDs.*;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
- * Class controling the LEDs
+ * Class controling the LED strip
  * 
  * @author Mukul Kedia
  */
@@ -34,38 +38,138 @@ public class LEDs extends SubsystemBase
     // *** INNER ENUMS and INNER CLASSES ***
     // Put all inner enums and inner classes here
 
-    public enum ColorPattern
+    public class LEDView
     {
-        kDefault,
-        kSolid,
-        kGradient,
-        kRainbow
+        private final int startIndex;
+        private final int endIndex;
+        private final AddressableLEDBufferView bufferView;
+        private LEDPattern pattern = LEDPattern.solid(Color.kBlack);
+        private boolean isAnimated = false;
+        private boolean needsUpdate = true;
+        
+        /**
+         * Creates the LED view
+         * @param startIndex {@link Integer} The start index of the view
+         * @param endIndex {@link Integer} The end index of the view
+         */
+        private LEDView(int startIndex, int endIndex)
+        {
+            this.startIndex = startIndex;
+            this.endIndex = endIndex;
+            this.bufferView = ledBuffer.createView(startIndex, endIndex);
+        }
+
+        /**
+         * Sets the pattern of the LED view
+         * @param pattern {@link LEDPattern} The pattern to set to
+         * @param isAnimated {@link Boolean} Whether the pattern needs to be updated constantly
+         */
+        private void setPattern(LEDPattern pattern, boolean isAnimated)
+        {
+            if (pattern == null)
+            {
+                throw new IllegalArgumentException("Pattern cannot be null");
+            }
+
+            this.pattern = pattern;
+            this.isAnimated = isAnimated;
+            this.needsUpdate = true;
+        }
+
+        /**
+         * Sets the pattern of the LED view to off
+         * @return {@link Command}
+         */
+        public Command setOffCommand()
+        {
+            return Commands.runOnce(() -> setSolid(Color.kBlack));
+        }
+
+        /**
+         * Sets the pattern of the LED view to a solid color
+         * @param color {@link Color} The color to set the LED view to
+         */
+        private void setSolid(Color color)
+        {
+            Objects.requireNonNull(color, "Color cannot be null");
+            setPattern(LEDPattern.solid(color), false);
+        }
+
+        /**
+         * Sets the pattern of the LED view to a solid color
+         * @param color {@link Color} The color to set the LED view to
+         * @return {@link Command}
+         */
+        public Command setSolidCommand(Color color)
+        {
+            return Commands.runOnce(() -> setSolid(color));
+        }
+
+        /**
+         * Sets the pattern of the LED view to a scrolling gradient
+         * @param colors {@link Color} The colors to set the LED view to
+         */
+        private void setGradient(Color... colors)
+        {
+            Objects.requireNonNull(colors, "Colors cannot be null");
+            setPattern(
+                LEDPattern.gradient(LEDPattern.GradientType.kContinuous, colors)
+                    .scrollAtRelativeSpeed(Units.Percent.per(Units.Second).of(100)),
+                true
+            );
+        }
+
+        /**
+         * Sets the pattern of the LED view to a scrolling gradient
+         * @param colors {@link Color} The colors to set the LED view to
+         * @return {@link Command}
+         */
+        public Command setGradientCommand(Color... colors)
+        {
+            return Commands.runOnce(() -> setGradient(colors));
+        }
+
+        /**
+         * Sets the pattern of the LED view to a scrolling rainbow
+         */
+        private void setRainbow()
+        {
+            setPattern(
+                LEDPattern.rainbow(255, 255)
+                    .scrollAtRelativeSpeed(Units.Percent.per(Units.Second).of(100)),
+                true
+            );
+        }
+
+        /**
+         * Sets the pattern of the LED view to a scrolling rainbow
+         * @return {@link Command}
+         */
+        public Command setRainbowCommand()
+        {
+            return Commands.runOnce(() -> setRainbow());
+        }
     }
 
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
 
-    public static final Color RUNNING_COLOR = Color.kYellow;
-
-    private AddressableLED led = new AddressableLED(LED_PORT);
-    private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LED_LENGTH);
-
-    private LEDPattern currentPattern = null;
-    private boolean currentPatternIsAnimated = false;
+    private final AddressableLED led = new AddressableLED(LED_PORT);
+    private final AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LED_LENGTH);
+    private final List<LEDView> views = new ArrayList<>();
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
 
     /**
-     * Creates a new LEDs.
+     * Creates the LEDs subsystem
      */
     public LEDs()
     {
         super("LEDs");
         System.out.println("  Constructor Started:  " + fullClassName);
 
-        configLEDs();
-        setColorSolid(RUNNING_COLOR);
+        configLEDStrip();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -74,75 +178,36 @@ public class LEDs extends SubsystemBase
     // Put all class methods and instance methods here
 
     /**
-     * Configures the LEDs and starts them off.
+     * Configures the LED strip for use
      */
-    private void configLEDs()
+    private void configLEDStrip()
     {
         led.setLength(ledBuffer.getLength());
         led.start();
     }
 
     /**
-     * Sets the leds to the pattern in currentPattern.
+     * Creates a LED view
+     * @param startIndex {@link Integer} The start index of the view
+     * @param endIndex {@link Integer} The end index of the view
+     * @return {@link LEDView}
      */
-    private void setPattern()
+    public LEDView createView(int startIndex, int endIndex)
     {
-        currentPattern.applyTo(ledBuffer);
-        led.setData(ledBuffer);
-    }
+        for (LEDView existing : views)
+        {
+            if (startIndex <= existing.endIndex && endIndex >= existing.startIndex)
+            {
+                throw new IllegalArgumentException(
+                    "View [" + startIndex + ", " + endIndex +
+                    "] overlaps with existing view [" + existing.startIndex + ", " + existing.endIndex + "]");
+            }
+        }
 
-    /**
-     * Sets the color of the leds to be solid.
-     */
-    private void setColorSolid(Color color)
-    {
-        currentPattern = LEDPattern.solid(color);
-        currentPatternIsAnimated = false;
-        setPattern();
-    }
+        LEDView view = new LEDView(startIndex, endIndex);
+        views.add(view);
 
-    /**
-     * Sets the color of the leds to be solid.
-     */
-    public Command setColorSolidCommand(Color color)
-    {
-        return runOnce(() -> setColorSolid(color));
-    }
-
-    /**
-     * Sets the color of the leds to a gradient.
-     */
-    private void setColorGradient(Color... colors)
-    {
-        currentPattern = LEDPattern.gradient(LEDPattern.GradientType.kContinuous, colors).scrollAtRelativeSpeed(Units.Percent.per(Units.Second).of(100));
-        currentPatternIsAnimated = true;
-        setPattern();
-    }
-    
-    /**
-     * Sets the color of the leds to a gradient.
-     */
-    public Command setColorGradientCommand(Color... colors)
-    {
-        return runOnce(() -> setColorGradient(colors));
-    }
-
-    /**
-     * Sets the color of the leds to a rainbow.
-     */
-    private void setColorRainbow()
-    {
-        currentPattern = LEDPattern.rainbow(255, 255).scrollAtRelativeSpeed(Units.Percent.per(Units.Second).of(100));
-        currentPatternIsAnimated = true;
-        setPattern();
-    }
-
-    /**
-     * Sets the color of the leds to a rainbow.
-     */
-    public Command setColorRainbowCommand()
-    {
-        return runOnce(() -> setColorRainbow());
+        return view;
     }
 
     // *** OVERRIDEN METHODS ***
@@ -151,17 +216,21 @@ public class LEDs extends SubsystemBase
     @Override
     public void periodic()
     {
-        // This method will be called once per scheduler run
-        // Use this for sensors that need to be read periodically.
-        // Use this for data that needs to be logged.
+        boolean dirty = false;
 
-        if (currentPattern != null && currentPatternIsAnimated)
-            setPattern();
-    }
+        for (LEDView view : views)
+        {
+            if (view.isAnimated || view.needsUpdate)
+            {
+                view.pattern.applyTo(view.bufferView);
+                view.needsUpdate = false;
+                dirty = true;
+            }
+        }
 
-    @Override
-    public String toString()
-    {
-        return "";
+        if (dirty)
+        {
+            led.setData(ledBuffer);
+        }
     }
 }

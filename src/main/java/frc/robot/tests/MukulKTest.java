@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.LEDs;
 // import frc.robot.subsystems.Shroud;
+import frc.robot.subsystems.LEDs.LEDView;
 
 @SuppressWarnings("unused")
 public class MukulKTest implements Test
@@ -51,7 +52,6 @@ public class MukulKTest implements Test
         System.out.println("  Constructor Finished: " + fullClassName);
     }
 
-
     // *** CLASS METHODS & INSTANCE METHODS ***
     // Put all class methods and instance methods here
 
@@ -68,9 +68,13 @@ public class MukulKTest implements Test
         // controller.x().onTrue(shroud.goToCommand(76.0));
         // controller.y().onTrue(shroud.goToCommand(90.0));
 
-        controller.a().onTrue(leds.setColorSolidCommand(Color.kWhite));
-        controller.b().onTrue(leds.setColorGradientCommand(Color.kDarkBlue, Color.kPurple, Color.kRed));
-        controller.x().onTrue(leds.setColorRainbowCommand());
+        LEDView leftView = leds.createView(0, 99);
+        LEDView rightView = leds.createView(100, 199);
+
+        controller.a().onTrue(leftView.setSolidCommand(Color.kWhite));
+        controller.b().onTrue(rightView.setRainbowCommand());
+        controller.x().onTrue(leftView.setGradientCommand(Color.kBlack, Color.kWhite));
+        controller.y().onTrue(rightView.setGradientCommand(Color.kRed, Color.kBlue));
     }
 
     /**
