@@ -4,7 +4,6 @@ import static frc.robot.Constants.LEDs.*;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.DoubleSupplier;
 
@@ -48,9 +47,23 @@ public class LEDs extends SubsystemBase
         private final int endIndex;
         private final AddressableLEDBufferView bufferView;
         private LEDPattern pattern = LEDPattern.solid(Color.kBlack);
+        private ArrayList<PatternState> history = new ArrayList<>();
         private boolean isAnimated = false;
         private boolean needsUpdate = true;
         
+        /**
+         * Helper class to store history states
+         */
+        private class PatternState {
+            LEDPattern pattern;
+            boolean isAnimated;
+            
+            PatternState(LEDPattern p, boolean a) {
+                this.pattern = p;
+                this.isAnimated = a;
+            }
+        }
+
         /**
          * Creates the LED view
          * @param startIndex {@link Integer} The start index of the view
@@ -74,6 +87,8 @@ public class LEDs extends SubsystemBase
             {
                 throw new IllegalArgumentException("Pattern cannot be null");
             }
+
+            history.add(new PatternState(this.pattern, this.isAnimated));
 
             this.pattern = pattern;
             this.isAnimated = isAnimated;
@@ -167,7 +182,6 @@ public class LEDs extends SubsystemBase
          * Modifies the current pattern of the LED view to blink
          * @param seconds {@link Double} The amount of seconds between each blink
          * @return {@link Command} The command to set the leds in the LED view to blink
-         * @implNote THIS STACKS WITH OTHER MODIFIERS AND CURRENTLY THERE IS NO WAY TO REMOVE A MODIFIER
          */
         public Command setBlinkCommand(double seconds)
         {
@@ -189,7 +203,6 @@ public class LEDs extends SubsystemBase
          * @param offSeconds {@link Double} The amount of seconds to stay off
          * @param onSeconds {@link Double} The amount of seconds to stay on
          * @return {@link Command} The command to set the leds in the LED view to blink
-         * @implNote THIS STACKS WITH OTHER MODIFIERS AND CURRENTLY THERE IS NO WAY TO REMOVE A MODIFIER
          */
         public Command setBlinkCommand(double offSeconds, double onSeconds)
         {
@@ -209,7 +222,6 @@ public class LEDs extends SubsystemBase
          * Modifies the current pattern of the LED view to breathe
          * @param seconds {@link Double} The amount of seconds between each breathe
          * @return {@link Command} The command to set the leds in the LED view to breathe
-         * @implNote THIS STACKS WITH OTHER MODIFIERS AND CURRENTLY THERE IS NO WAY TO REMOVE A MODIFIER
          */
         public Command setBreatheCommand(double seconds)
         {
@@ -229,7 +241,6 @@ public class LEDs extends SubsystemBase
          * Modifies the current pattern of the LED view to show a progress bar
          * @param progress {@link DoubleSupplier} The current progress
          * @return {@link Command} The command to set the leds in the LED view to show a progress bar
-         * @implNote THIS STACKS WITH OTHER MODIFIERS AND CURRENTLY THERE IS NO WAY TO REMOVE A MODIFIER
          */
         public Command setProgressCommand(DoubleSupplier progress)
         {
@@ -249,11 +260,37 @@ public class LEDs extends SubsystemBase
          * Modifies the current pattern of the LED view to show a progress bar
          * @param progress {@link Double} The current progress
          * @return {@link Command} The command to set the leds in the LED view to show a progress bar
-         * @implNote THIS STACKS WITH OTHER MODIFIERS AND CURRENTLY THERE IS NO WAY TO REMOVE A MODIFIER
          */
         public Command setProgressCommand(double progress)
         {
             return Commands.runOnce(() -> setProgress(progress));
+        }
+
+        /**
+         * Undos the last change to the LED view's pattern
+         */
+        public void undo()
+        {
+            if (!history.isEmpty())
+            {
+                int lastIndex = history.size() - 1;
+                PatternState previousState = history.get(lastIndex);
+                
+                this.pattern = previousState.pattern;
+                this.isAnimated = previousState.isAnimated;
+                this.needsUpdate = true;
+                
+                history.remove(lastIndex);
+            }
+        }
+
+        /**
+         * Undos the last change to the LED view's pattern
+         * @return {@link Command} The command to undo the last change
+         */
+        public Command undoCommand()
+        {
+            return Commands.runOnce(() -> undo());
         }
     }
 
@@ -262,7 +299,7 @@ public class LEDs extends SubsystemBase
 
     private final AddressableLED led = new AddressableLED(LED_PORT);
     private final AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LED_LENGTH);
-    private final List<LEDView> views = new ArrayList<>();
+    private final ArrayList<LEDView> views = new ArrayList<>();
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
@@ -296,7 +333,7 @@ public class LEDs extends SubsystemBase
      * Creates a LED view
      * @param startIndex {@link Integer} The start index of the view
      * @param endIndex {@link Integer} The end index of the view
-     * @return {@link LEDView}
+     * @return {@link LEDView} The created view
      */
     public LEDView createView(int startIndex, int endIndex)
     {
@@ -314,6 +351,19 @@ public class LEDs extends SubsystemBase
         views.add(view);
 
         return view;
+    }
+
+    /**
+     * Deletes a LED view
+     * @param view {@link LEDView} The view to delete
+     */
+    public void deleteView(LEDView view)
+    {
+        view.pattern = LEDPattern.solid(Color.kBlack);
+        view.pattern.applyTo(view.bufferView);
+        led.setData(ledBuffer);
+
+        views.remove(view);
     }
 
     // *** OVERRIDEN METHODS ***
