@@ -1,9 +1,14 @@
 package frc.robot.controls;
 
 import java.lang.invoke.MethodHandles;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.PoseEstimator;
 
 public final class DriverBindings
 {
@@ -20,7 +25,18 @@ public final class DriverBindings
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
     private static CommandXboxController controller;
-    // Other class variables to store subsystems from robot container.
+
+    private static Drivetrain drivetrain;
+    private static Flywheel flywheel;
+    private static LEDs leds;
+    private static PoseEstimator poseEstimator;
+
+    private static DoubleSupplier leftYAxis;
+    private static DoubleSupplier leftXAxis;
+    private static DoubleSupplier rightXAxis;
+    private static DoubleSupplier scaleFactorSupplier;
+
+    private static double scaleFactor = 0.5;
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
@@ -35,11 +51,33 @@ public final class DriverBindings
     {
         System.out.println("Creating Operator Bindings: " + fullClassName);
 
-        // [thing] = robotContainer.get[thing]s here.
+        controller = robotContainer.getDriverController();
+        drivetrain = robotContainer.getDrivetrain();
+        flywheel = robotContainer.getFlywheel();
+        leds = robotContainer.getLEDs();
+        poseEstimator = robotContainer.getPoseEstimator();
 
         if(controller != null)
         {
-            // Config[Method]s here.
+            configSuppliers();
+            configDefaultCommands();
         }
+    }
+
+    private static void configSuppliers()
+    {
+        leftYAxis = () -> -controller.getRawAxis(1);
+        leftXAxis = () -> -controller.getRawAxis(0);
+        rightXAxis = () -> -controller.getRawAxis(4);
+        scaleFactorSupplier = () -> scaleFactor;
+    }
+
+    private static void configDefaultCommands()
+    {
+        if(drivetrain != null)
+        {
+            drivetrain.setDefaultCommand(drivetrain.driveCommand(leftYAxis, leftXAxis, rightXAxis, scaleFactorSupplier));     
+        }
+        System.out.println("Config Default Commands Driver Controller");
     }
 }

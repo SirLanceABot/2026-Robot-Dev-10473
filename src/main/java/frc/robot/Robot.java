@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.CommandsManager;
+import frc.robot.controls.DriverBindings;
 import frc.robot.loggers.DataLogFile;
 import frc.robot.motors.MotorControllerLance;
 
@@ -59,6 +60,7 @@ public class Robot extends TimedRobot
         CommandsManager.createCommands(robotContainer);
 
         // 4. Create the Trigger Bindings
+        DriverBindings.createBindings(robotContainer);
 
 
         // 5. Configure PathPlanner

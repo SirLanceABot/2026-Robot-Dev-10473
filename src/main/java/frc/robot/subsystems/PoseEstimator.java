@@ -9,6 +9,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -86,10 +87,16 @@ public class PoseEstimator extends SubsystemBase
         this.gyro = drivetrain.getPigeon2();
         this.camera = camera;
 
+        
+
         ASTable = NetworkTableInstance.getDefault().getTable(Constants.NetworkTableLance.ADVANTAGE_SCOPE_TABLE);
         //AdvantageScope starting position
         poseEstimatorEntry = ASTable.getStructTopic("PoseEstimator", Pose2d.struct).publish();
 
+        double[] doubleArray = {0.0, 0.0, 0.0};
+
+        visionStdDevs = new Matrix<N3, N1>(Nat.N3(), Nat.N1(), doubleArray);
+        stateStdDevs = new Matrix<N3, N1>(Nat.N3(), Nat.N1(), doubleArray);
         configStdDevs();
 
         if(drivetrain != null && gyro != null)
