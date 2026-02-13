@@ -123,6 +123,7 @@ public class PoseEstimator extends SubsystemBase
 
     // *** CLASS METHODS & INSTANCE METHODS ***
     // Put all class methods and instance methods here
+    boolean isFirstTagSight = true;
 
     /**
      * Determines how much PoseEstimator should trust vision vs. odometry. Higher values mean less trust.
@@ -130,13 +131,13 @@ public class PoseEstimator extends SubsystemBase
      */
      public void configStdDevs()
     {
-        stateStdDevs.set(0, 0, 0.1); // x in meters
-        stateStdDevs.set(1, 0, 0.1); // y in meters
-        stateStdDevs.set(2, 0, 0.05); // heading in radians
+        stateStdDevs.set(0, 0, 0.2); // x in meters
+        stateStdDevs.set(1, 0, 0.2); // y in meters
+        stateStdDevs.set(2, 0, 0.25); // heading in radians
 
-        visionStdDevs.set(0, 0, 0.1); // x in meters 
-        visionStdDevs.set(1, 0, 0.1); // y in meters
-        visionStdDevs.set(2, 0, 0.15); // heading in radians
+        visionStdDevs.set(0, 0, 0.2); // x in meters 
+        visionStdDevs.set(1, 0, 0.2); // y in meters
+        visionStdDevs.set(2, 0, 0.25); // heading in radians
     }
 
     public void resetPose(Pose2d pose)
@@ -329,6 +330,12 @@ public class PoseEstimator extends SubsystemBase
                     double robotVelo = Math.hypot(drivetrain.getState().Speeds.vxMetersPerSecond, drivetrain.getState().Speeds.vyMetersPerSecond);
                     double robotRotation = Math.toDegrees(drivetrain.getState().Speeds.omegaRadiansPerSecond);
                     boolean rejectUpdate = false;
+                    
+                    if(isFirstTagSight && visionPose != null)
+                    {
+                        isFirstTagSight = false;
+                        drivetrain.resetPose(visionPose);
+                    }
 
                     if(visionPose == null)
                     {
