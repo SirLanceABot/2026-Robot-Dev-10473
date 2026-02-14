@@ -85,6 +85,8 @@ public class ElasticLance
                 }
             });
         }
+        else
+            System.out.println("    WARNING: Drivetrain is null!");
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
