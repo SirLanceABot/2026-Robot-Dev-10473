@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.Shroud.*;
 
 import java.lang.invoke.MethodHandles;
-import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -35,7 +34,7 @@ public class Shroud extends SubsystemBase
 
     private final TalonFXLance angleMotor = new TalonFXLance(MOTOR, MOTOR_CAN_BUS, "Shroud Angle Motor");
 
-    // TODO: Tune later.
+    // TODO: Tune later
     private static final double kP = 3.5;
     private static final double kI = 0.0;
     private static final double kD = 0.0;
@@ -60,7 +59,7 @@ public class Shroud extends SubsystemBase
     // Put all class methods and instance methods here
 
     /**
-     * This method resets the motor to factory defaults.
+     * Resets the motor to factory defaults
      */
     private void configMotors()
     {
@@ -71,32 +70,20 @@ public class Shroud extends SubsystemBase
     }
 
     /**
-     * This sets the speed of the motors.
-     * @param speed The motor speed (-1.0 to 1.0)
-     */
-    private void set(double speed)
-    {
-        angleMotor.set(speed);
-    }
-
-    private void stop()
-    {
-        set(0.0);
-    }
-
-    /**
-     * Helper method to convert degrees to the encoder position.
-     * @param degrees The degrees to convert into position.
+     * Helper to convert degrees to the encoder position
+     * @param degrees {@link Double} The degrees
+     * @return {@link Double} The encoder position
+     * @implNote PLACEHOLDER VALUE (always the same degrees passed in) (!!!!!!!!!!)
      */
     private double degreesToPosition(double degrees)
     {
-        // TODO: Tune later.
+        // TODO: Tune later
         return degrees;
     }
 
     /**
-     * This method moves the shroud to the specified degrees.
-     * @param degrees The degrees the shroud should be set to.
+     * Moves the shroud to the specified degrees
+     * @param degrees {@link Double} The degrees the shroud should be set to
      */
     private void goTo(double degrees)
     {
@@ -104,41 +91,39 @@ public class Shroud extends SubsystemBase
     }
 
     /**
-     * Returns the appropriate angle to shoot from a given distance.
-     * PLACEHOLDER VALUE (always 45 degrees) (!!!!!!!!!!)
-     * @param distance Distance from target
-     * @return Shot angle
-     * @author Jackson D.
-     */
-    public double getShotAngle(double distance)
-    {
-        return 45.0;
-    }
-
-    /**
-     * This command moves the shroud to the specified degrees.
-     * @param degrees The degrees the shroud should be set to.
+     * Moves the shroud to the specified degrees
+     * @param degrees {@link Double} The degrees the shroud should be set to
+     * @return {@link Command} The command to move the shroud
      */
     public Command goToCommand(double degrees)
     {
         return runOnce(() -> goTo(degrees));
     }
 
+    /**
+     * Returns the appropriate angle to shoot from a given distance.
+     * @param distance {@link Double} The distance from the target
+     * @return {@link Double} The shot angle
+     * @author Jackson D.
+     * @implNote PLACEHOLDER VALUE (always 45 degrees) (!!!!!!!!!!)
+     */
+    public double getShotAngle(double distance)
+    {
+        // TODO: Tune later
+        return 45.0;
+    }
+
+    /**
+     * Stops the shroud from moving
+     * @return {@link Command} The command to stop the shroud
+     */
     public Command stopCommand()
     {
-        return runOnce(() -> stop());
+        return runOnce(() -> angleMotor.set(0.0));
     }
 
     // *** OVERRIDEN METHODS ***
     // Put all methods that are Overridden here
-
-    @Override
-    public void periodic()
-    {
-        // This method will be called once per scheduler run
-        // Use this for sensors that need to be read periodically.
-        // Use this for data that needs to be logged.
-    }
 
     @Override
     public String toString()
