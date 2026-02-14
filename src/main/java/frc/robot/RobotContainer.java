@@ -102,7 +102,7 @@ public class RobotContainer
             leds = new LEDs();
 
         if(useFullRobot || useCamera)
-            camera = new Camera();
+            camera = new Camera(Constants.Camera.CAMERA_NAME);
 
         if(useFullRobot || usePoseEstimator)
             poseEstimator = new PoseEstimator(drivetrain, camera);

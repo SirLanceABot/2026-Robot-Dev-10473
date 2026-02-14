@@ -3,7 +3,9 @@ package frc.robot.controls;
 import java.lang.invoke.MethodHandles;
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flywheel;
@@ -61,6 +63,8 @@ public final class DriverBindings
         {
             configSuppliers();
             configDefaultCommands();
+            configStartButton();
+            configAButton();
         }
     }
 
@@ -79,5 +83,19 @@ public final class DriverBindings
             drivetrain.setDefaultCommand(drivetrain.driveCommand(leftYAxis, leftXAxis, rightXAxis, scaleFactorSupplier));     
         }
         System.out.println("Config Default Commands Driver Controller");
+    }
+
+    private static void configStartButton()
+    {
+        Trigger startButton = controller.start();
+        startButton
+            .onTrue(Commands.runOnce(() -> drivetrain.resetForFieldCentric(), drivetrain));
+    }
+
+    private static void configAButton()
+    {
+        Trigger aButton = controller.a();
+        aButton
+            .whileTrue(drivetrain.angleLockDriveCommand(leftYAxis, leftXAxis, scaleFactorSupplier, () -> (poseEstimator.getAngleToTarget(poseEstimator.getEstimatedPose(), poseEstimator.getAllianceHubPose()).getAsDouble())));
     }
 }

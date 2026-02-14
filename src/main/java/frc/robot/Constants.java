@@ -91,7 +91,7 @@ public final class Constants
     
     public static class Camera
     {
-        public static final String CAMERA_NAME             = "placeholder-camera";
+        public static final String CAMERA_NAME             = "limelight-shooter";
     }
 
     /**

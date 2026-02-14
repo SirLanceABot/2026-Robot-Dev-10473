@@ -54,7 +54,7 @@ public class Camera extends SubsystemBase
     /** 
      * Creates a new Camera
      */
-    public Camera()
+    public Camera(String cameraName)
     {   
         super("Camera");
         System.out.println("  Constructor Started:  " + fullClassName);

@@ -55,7 +55,7 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
             .withMaxAbsRotationalRate(Math.PI) // Max Rotation Speed
             .withDeadband(MaxSpeed * 0.05) // Movement Speed Deadband
             .withRotationalDeadband(0.01) // Rotational Speed Deadband
-            .withHeadingPID(3.0, 0.0, 0.0); // PID for rotation
+            .withHeadingPID(6.0, 0.0, 0.0); // PID for rotation
 
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -208,6 +208,16 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
         if (Utils.isSimulation()) {
             startSimThread();
         }
+    }
+
+     //TODO order matters
+    public void resetForFieldCentric()
+    {
+        seedFieldCentric();
+        getPigeon2().reset();
+
+        // seedFieldCentric();
+        // getPigeon2().reset();
     }
 
     /**

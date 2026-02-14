@@ -359,6 +359,14 @@ public class PoseEstimator extends SubsystemBase
                                     visionPose,
                                     camera.getTimestamp(),
                                     visionStdDevs);
+                        if(drivetrain.isRedAllianceSupplier().getAsBoolean())
+                        {
+                            drivetrain.resetPose(new Pose2d(visionPose.getTranslation(), new Rotation2d(drivetrain.getPigeon2().getRotation2d().getRadians()).plus(new Rotation2d(Math.PI))));
+                        }
+                        else
+                        {
+                            drivetrain.resetPose(new Pose2d(visionPose.getTranslation(), new Rotation2d(drivetrain.getPigeon2().getRotation2d().getRadians())));
+                        }
                     }
                 }
             }
