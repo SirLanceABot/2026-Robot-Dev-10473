@@ -27,21 +27,19 @@ public class ElasticLance
         System.out.println("Loading: " + fullClassName);
     }
 
-    // *** INNER ENUMS and INNER CLASSES ***
-    // Put all inner enums and inner classes here
-
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
 
     private static Drivetrain drivetrain = null;
     private static Shroud shroud = null;
 
-    // *** CLASS CONSTRUCTORS ***
-    // Put all class constructors here
-
     // *** CLASS METHODS & INSTANCE METHODS ***
     // Put all class methods and instance methods here
 
+    /**
+     * Gets the subsystems needed for Elastic
+     * @param robotContainer {@link RobotContainer} The robot container to get subsystems from
+     */
     public static void configElastic(RobotContainer robotContainer)
     {
         System.out.println("  Constructor Started:  " + fullClassName);
@@ -52,7 +50,10 @@ public class ElasticLance
         System.out.println("  Constructor Finished: " + fullClassName);
     }
 
-    // Runs once
+    /**
+     * Inits the SmartDashboard
+     * @implNote Runs once
+     */
     public static void initSmartDashboard()
     {
         if (drivetrain != null)
@@ -98,7 +99,10 @@ public class ElasticLance
             System.out.println("    WARNING: Drivetrain is null!");
     }
 
-    // Runs continuously
+    /**
+     * Updates the SmartDashboard
+     * @implNote Runs continuously
+     */
     public static void updateSmartDashboard()
     {
         if (shroud != null)
@@ -108,7 +112,4 @@ public class ElasticLance
         else
             System.out.println("    WARNING: Shroud is null!");
     }
-
-    // *** OVERRIDEN METHODS ***
-    // Put all methods that are Overridden here
 }
