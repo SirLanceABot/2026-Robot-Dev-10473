@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.CommandsManager;
 import frc.robot.controls.DriverBindings;
+import frc.robot.elastic.ElasticLance;
 import frc.robot.loggers.DataLogFile;
 import frc.robot.motors.MotorControllerLance;
 
@@ -65,6 +66,7 @@ public class Robot extends TimedRobot
 
         // 5. Configure PathPlanner
 
+        ElasticLance.configElastic(robotContainer);
     }
 
     /**
@@ -82,6 +84,8 @@ public class Robot extends TimedRobot
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
+
+        ElasticLance.updateSmartDashboard();
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
