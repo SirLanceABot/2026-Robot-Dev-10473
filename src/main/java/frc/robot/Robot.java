@@ -66,7 +66,10 @@ public class Robot extends TimedRobot
 
         // 5. Configure PathPlanner
 
+
+        // 6. Configure Elastic
         ElasticLance.configElastic(robotContainer);
+        ElasticLance.initSmartDashboard();
     }
 
     /**
