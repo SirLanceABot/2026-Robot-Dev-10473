@@ -1,6 +1,5 @@
 package frc.robot.elastic;
 
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +10,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.util.struct.parser.ParseException;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -50,10 +48,11 @@ public class ElasticLance
 
     /**
      * Gets the subsystems needed for Elastic
-     * @param robotContainer {@link RobotContainer} The robot container to get subsystems from
+     * 
+     * @param robotContainer {@link RobotContainer} The robot container to get
+     *                       subsystems from
      */
-    public static void configElastic(RobotContainer robotContainer)
-    {
+    public static void configElastic(RobotContainer robotContainer) {
         System.out.println("  Constructor Started:  " + fullClassName);
 
         drivetrain = robotContainer.getDrivetrain();
@@ -63,6 +62,7 @@ public class ElasticLance
 
     /**
      * Inits the SmartDashboard
+     * 
      * @implNote Runs once
      */
     public static void initSmartDashboard()
@@ -72,6 +72,7 @@ public class ElasticLance
 
     /**
      * Updates the SmartDashboard
+     * 
      * @implNote Runs continuously
      */
     public static void updateSmartDashboard()
@@ -84,8 +85,10 @@ public class ElasticLance
 
     /**
      * Initalizes the Auto Field Widget
+     * 
      * @author Unknown
-     * @implNote ~stolen~ taken from last year's code: https://github.com/SirLanceABot/2025-Robot-Dev-10473/commit/1e412475e1989f0d6bb7df463b50acd20b2d4c8c
+     * @implNote ~stolen~ taken from last year's code:
+     *           https://github.com/SirLanceABot/2025-Robot-Dev-10473/commit/1e412475e1989f0d6bb7df463b50acd20b2d4c8c
      */
     private static void initAutoField()
     {
@@ -99,8 +102,10 @@ public class ElasticLance
 
     /**
      * Updates the Auto Field Widget
+     * 
      * @author Unknown
-     * @implNote ~stolen~ taken from last year's code: https://github.com/SirLanceABot/2025-Robot-Dev-10473/commit/1e412475e1989f0d6bb7df463b50acd20b2d4c8c
+     * @implNote ~stolen~ taken from last year's code:
+     *           https://github.com/SirLanceABot/2025-Robot-Dev-10473/commit/1e412475e1989f0d6bb7df463b50acd20b2d4c8c
      */
     public static void updateAutoField()
     {
@@ -125,10 +130,13 @@ public class ElasticLance
 
     /**
      * Helper to extract poses from paths
-     * @param pathPlannerPaths {@link List}<{@link PathPlannerPath}> The paths to extract poses from
+     * 
+     * @param pathPlannerPaths {@link List}<{@link PathPlannerPath}> The paths to
+     *                         extract poses from
      * @return {@link List}<{@link Pose2d}> The extracted poses from the input paths
      * @author Unknown
-     * @implNote ~stolen~ taken from last year's code: https://github.com/SirLanceABot/2025-Robot-Dev-10473/commit/1e412475e1989f0d6bb7df463b50acd20b2d4c8c
+     * @implNote ~stolen~ taken from last year's code:
+     *           https://github.com/SirLanceABot/2025-Robot-Dev-10473/commit/1e412475e1989f0d6bb7df463b50acd20b2d4c8c
      */
     private static List<Pose2d> extractPosesFromPaths(List<PathPlannerPath> pathPlannerPaths)
     {
@@ -136,8 +144,8 @@ public class ElasticLance
         for (PathPlannerPath path : pathPlannerPaths)
         {
             poses.addAll(path.getAllPathPoints().stream()
-                .map(point -> new Pose2d(point.position.getX(), point.position.getY(), new Rotation2d()))
-                .collect(Collectors.toList()));
+                    .map(point -> new Pose2d(point.position.getX(), point.position.getY(), new Rotation2d()))
+                    .collect(Collectors.toList()));
         }
         return poses;
     }
