@@ -49,15 +49,17 @@ public class LEDs extends SubsystemBase
         private ArrayList<PatternState> history = new ArrayList<>();
         private boolean isAnimated = false;
         private boolean needsUpdate = true;
-        
+
         /**
          * Helper class to store history states
          */
-        private class PatternState {
+        private class PatternState
+        {
             LEDPattern pattern;
             boolean isAnimated;
-            
-            PatternState(LEDPattern p, boolean a) {
+
+            PatternState(LEDPattern p, boolean a)
+            {
                 this.pattern = p;
                 this.isAnimated = a;
             }
@@ -65,8 +67,9 @@ public class LEDs extends SubsystemBase
 
         /**
          * Creates the LED view
+         * 
          * @param startIndex {@link Integer} The start index of the view
-         * @param endIndex {@link Integer} The end index of the view
+         * @param endIndex   {@link Integer} The end index of the view
          */
         private LEDView(int startIndex, int endIndex)
         {
@@ -77,8 +80,10 @@ public class LEDs extends SubsystemBase
 
         /**
          * Sets the pattern of the LED view
-         * @param pattern {@link LEDPattern} The pattern to set to
-         * @param isAnimated {@link Boolean} Whether the pattern needs to be updated constantly
+         * 
+         * @param pattern    {@link LEDPattern} The pattern to set to
+         * @param isAnimated {@link Boolean} Whether the pattern needs to be updated
+         *                   constantly
          */
         private void setPattern(LEDPattern pattern, boolean isAnimated)
         {
@@ -96,6 +101,7 @@ public class LEDs extends SubsystemBase
 
         /**
          * Sets the pattern of the LED view to off
+         * 
          * @return {@link Command} The command to set the leds in the LED view off
          */
         public Command setOffCommand()
@@ -105,6 +111,7 @@ public class LEDs extends SubsystemBase
 
         /**
          * Sets the pattern of the LED view to a solid color
+         * 
          * @param color {@link Color} The color to set the LED view to
          */
         private void setSolid(Color color)
@@ -115,8 +122,10 @@ public class LEDs extends SubsystemBase
 
         /**
          * Sets the pattern of the LED view to a solid color
+         * 
          * @param color {@link Color} The color to set the LED view to
-         * @return {@link Command} The command to set the leds in the LED view to a solid color
+         * @return {@link Command} The command to set the leds in the LED view to a
+         *         solid color
          */
         public Command setSolidCommand(Color color)
         {
@@ -125,22 +134,24 @@ public class LEDs extends SubsystemBase
 
         /**
          * Sets the pattern of the LED view to a scrolling gradient
+         * 
          * @param colors {@link Color} The colors to set the LED view to
          */
         private void setGradient(Color... colors)
         {
             Objects.requireNonNull(colors, "Colors cannot be null");
             setPattern(
-                LEDPattern.gradient(LEDPattern.GradientType.kContinuous, colors)
-                    .scrollAtRelativeSpeed(Units.Percent.per(Units.Second).of(100)),
-                true
-            );
+                    LEDPattern.gradient(LEDPattern.GradientType.kContinuous, colors)
+                            .scrollAtRelativeSpeed(Units.Percent.per(Units.Second).of(100)),
+                    true);
         }
 
         /**
          * Sets the pattern of the LED view to a scrolling gradient
+         * 
          * @param colors {@link Color} The colors to set the LED view to
-         * @return {@link Command} The command to set the leds in the LED view to a scrolling gradient
+         * @return {@link Command} The command to set the leds in the LED view to a
+         *         scrolling gradient
          */
         public Command setGradientCommand(Color... colors)
         {
@@ -153,15 +164,16 @@ public class LEDs extends SubsystemBase
         private void setRainbow()
         {
             setPattern(
-                LEDPattern.rainbow(255, 255)
-                    .scrollAtRelativeSpeed(Units.Percent.per(Units.Second).of(100)),
-                true
-            );
+                    LEDPattern.rainbow(255, 255)
+                            .scrollAtRelativeSpeed(Units.Percent.per(Units.Second).of(100)),
+                    true);
         }
 
         /**
          * Sets the pattern of the LED view to a scrolling rainbow
-         * @return {@link Command} The command to set the leds in the LED view to a scrolling rainbow
+         * 
+         * @return {@link Command} The command to set the leds in the LED view to a
+         *         scrolling rainbow
          */
         public Command setRainbowCommand()
         {
@@ -170,6 +182,7 @@ public class LEDs extends SubsystemBase
 
         /**
          * Modifies the current pattern of the LED view to blink
+         * 
          * @param seconds {@link Double} The amount of seconds between each blink
          */
         private void setBlink(double seconds)
@@ -179,6 +192,7 @@ public class LEDs extends SubsystemBase
 
         /**
          * Modifies the current pattern of the LED view to blink
+         * 
          * @param seconds {@link Double} The amount of seconds between each blink
          * @return {@link Command} The command to set the leds in the LED view to blink
          */
@@ -189,8 +203,9 @@ public class LEDs extends SubsystemBase
 
         /**
          * Modifies the current pattern of the LED view to blink
+         * 
          * @param offSeconds {@link Double} The amount of seconds to stay off
-         * @param onSeconds {@link Double} The amount of seconds to stay on
+         * @param onSeconds  {@link Double} The amount of seconds to stay on
          */
         private void setBlink(double offSeconds, double onSeconds)
         {
@@ -199,8 +214,9 @@ public class LEDs extends SubsystemBase
 
         /**
          * Modifies the current pattern of the LED view to blink
+         * 
          * @param offSeconds {@link Double} The amount of seconds to stay off
-         * @param onSeconds {@link Double} The amount of seconds to stay on
+         * @param onSeconds  {@link Double} The amount of seconds to stay on
          * @return {@link Command} The command to set the leds in the LED view to blink
          */
         public Command setBlinkCommand(double offSeconds, double onSeconds)
@@ -210,6 +226,7 @@ public class LEDs extends SubsystemBase
 
         /**
          * Modifies the current pattern of the LED view to breathe
+         * 
          * @param seconds {@link Double} The amount of seconds between each breathe
          */
         private void setBreathe(double seconds)
@@ -219,8 +236,10 @@ public class LEDs extends SubsystemBase
 
         /**
          * Modifies the current pattern of the LED view to breathe
+         * 
          * @param seconds {@link Double} The amount of seconds between each breathe
-         * @return {@link Command} The command to set the leds in the LED view to breathe
+         * @return {@link Command} The command to set the leds in the LED view to
+         *         breathe
          */
         public Command setBreatheCommand(double seconds)
         {
@@ -236,17 +255,18 @@ public class LEDs extends SubsystemBase
             {
                 int lastIndex = history.size() - 1;
                 PatternState previousState = history.get(lastIndex);
-                
+
                 this.pattern = previousState.pattern;
                 this.isAnimated = previousState.isAnimated;
                 this.needsUpdate = true;
-                
+
                 history.remove(lastIndex);
             }
         }
 
         /**
          * Undos the last change to the LED view's pattern
+         * 
          * @return {@link Command} The command to undo the last change
          */
         public Command undoCommand()
@@ -292,8 +312,9 @@ public class LEDs extends SubsystemBase
 
     /**
      * Creates a LED view
+     * 
      * @param startIndex {@link Integer} The start index of the view
-     * @param endIndex {@link Integer} The end index of the view
+     * @param endIndex   {@link Integer} The end index of the view
      * @return {@link LEDView} The created view
      */
     public LEDView createView(int startIndex, int endIndex)
@@ -303,8 +324,9 @@ public class LEDs extends SubsystemBase
             if (startIndex <= existing.endIndex && endIndex >= existing.startIndex)
             {
                 throw new IllegalArgumentException(
-                    "View [" + startIndex + ", " + endIndex +
-                    "] overlaps with existing view [" + existing.startIndex + ", " + existing.endIndex + "]");
+                        "View [" + startIndex + ", " + endIndex +
+                                "] overlaps with existing view [" + existing.startIndex + ", " + existing.endIndex
+                                + "]");
             }
         }
 
@@ -316,6 +338,7 @@ public class LEDs extends SubsystemBase
 
     /**
      * Deletes a LED view
+     * 
      * @param view {@link LEDView} The view to delete
      */
     public void deleteView(LEDView view)
