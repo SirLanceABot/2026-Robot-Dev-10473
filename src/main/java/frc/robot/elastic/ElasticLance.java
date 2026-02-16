@@ -1,11 +1,24 @@
 package frc.robot.elastic;
 
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.struct.parser.ParseException;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
+import frc.robot.pathplanner.PathPlannerLance;
+import frc.robot.subsystems.Drivetrain;
 
 /**
  * Implements code to send data to elastic
@@ -28,6 +41,10 @@ public class ElasticLance
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
 
+    private static Drivetrain drivetrain = null;
+
+    private static Field2d autofield = new Field2d();
+
     // *** CLASS METHODS & INSTANCE METHODS ***
     // Put all class methods and instance methods here
 
@@ -39,6 +56,8 @@ public class ElasticLance
     {
         System.out.println("  Constructor Started:  " + fullClassName);
 
+        drivetrain = robotContainer.getDrivetrain();
+
         System.out.println("  Constructor Finished: " + fullClassName);
     }
 
@@ -47,7 +66,9 @@ public class ElasticLance
      * @implNote Runs once
      */
     public static void initSmartDashboard()
-    {}
+    {
+        initAutoField();
+    }
 
     /**
      * Updates the SmartDashboard
@@ -57,5 +78,67 @@ public class ElasticLance
     {
         SmartDashboard.putNumber("Voltage", RobotController.getBatteryVoltage());
         SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
+
+        updateAutoField();
+    }
+
+    /**
+     * Initalizes the Auto Field Widget
+     * @author Unknown
+     * @implNote ~stolen~ taken from last year's code: https://github.com/SirLanceABot/2025-Robot-Dev-10473/commit/1e412475e1989f0d6bb7df463b50acd20b2d4c8c
+     */
+    private static void initAutoField()
+    {
+        if (drivetrain != null)
+        {
+            SmartDashboard.putData("AutoField", autofield);
+            Pose2d pose = drivetrain.getState().Pose;
+            autofield.setRobotPose(pose);
+        }
+    }
+
+    /**
+     * Updates the Auto Field Widget
+     * @author Unknown
+     * @implNote ~stolen~ taken from last year's code: https://github.com/SirLanceABot/2025-Robot-Dev-10473/commit/1e412475e1989f0d6bb7df463b50acd20b2d4c8c
+     */
+    public static void updateAutoField()
+    {
+        String autoName = PathPlannerLance.getAutonomousCommand().getName();
+
+        List<PathPlannerPath> pathPlannerPaths = null;
+        try
+        {
+            pathPlannerPaths = PathPlannerAuto.getPathGroupFromAutoFile(autoName);
+        }
+        catch (Exception error)
+        {
+            error.printStackTrace();
+        }
+
+        if (pathPlannerPaths != null)
+        {
+            List<Pose2d> poses = extractPosesFromPaths(pathPlannerPaths);
+            autofield.getObject("path").setPoses(poses);
+        }
+    }
+
+    /**
+     * Helper to extract poses from paths
+     * @param pathPlannerPaths {@link List}<{@link PathPlannerPath}> The paths to extract poses from
+     * @return {@link List}<{@link Pose2d}> The extracted poses from the input paths
+     * @author Unknown
+     * @implNote ~stolen~ taken from last year's code: https://github.com/SirLanceABot/2025-Robot-Dev-10473/commit/1e412475e1989f0d6bb7df463b50acd20b2d4c8c
+     */
+    private static List<Pose2d> extractPosesFromPaths(List<PathPlannerPath> pathPlannerPaths)
+    {
+        List<Pose2d> poses = new ArrayList<>();
+        for (PathPlannerPath path : pathPlannerPaths)
+        {
+            poses.addAll(path.getAllPathPoints().stream()
+                .map(point -> new Pose2d(point.position.getX(), point.position.getY(), new Rotation2d()))
+                .collect(Collectors.toList()));
+        }
+        return poses;
     }
 }
