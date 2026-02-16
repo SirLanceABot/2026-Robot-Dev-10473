@@ -105,11 +105,14 @@ public class ElasticLance
      */
     public static void updateSmartDashboard()
     {
-        if (shroud != null)
-        {
-            SmartDashboard.putNumber("angle", shroud.getShotAngle(10));
-        }
-        else
-            System.out.println("    WARNING: Shroud is null!");
+        //This doesn't make sense
+        // if(shroud != null)
+        // {
+            // SmartDashboard.putNumber("Shroud Angle", shroud.getShotAngle(10));
+        // }
+
+        //DON'T DO THIS
+        // else
+            // System.out.println("    WARNING: Shroud is null!");
     }
 }
