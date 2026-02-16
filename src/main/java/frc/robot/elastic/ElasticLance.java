@@ -6,7 +6,6 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Shroud;
 import frc.robot.subsystems.Drivetrain;
 
 /**
@@ -31,7 +30,6 @@ public class ElasticLance
     // Put all class variables and instance variables here
 
     private static Drivetrain drivetrain = null;
-    private static Shroud shroud = null;
 
     // *** CLASS METHODS & INSTANCE METHODS ***
     // Put all class methods and instance methods here
@@ -45,7 +43,6 @@ public class ElasticLance
         System.out.println("  Constructor Started:  " + fullClassName);
 
         drivetrain = robotContainer.getDrivetrain();
-        shroud = robotContainer.getShroud();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -104,15 +101,5 @@ public class ElasticLance
      * @implNote Runs continuously
      */
     public static void updateSmartDashboard()
-    {
-        //This doesn't make sense
-        // if(shroud != null)
-        // {
-            // SmartDashboard.putNumber("Shroud Angle", shroud.getShotAngle(10));
-        // }
-
-        //DON'T DO THIS
-        // else
-            // System.out.println("    WARNING: Shroud is null!");
-    }
+    {}
 }
