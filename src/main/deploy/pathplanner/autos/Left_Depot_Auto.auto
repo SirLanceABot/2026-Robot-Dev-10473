@@ -15,6 +15,12 @@
           "data": {
             "pathName": "Left_Depot_Shoot"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Simple Intake Command"
+          }
         }
       ]
     }
