@@ -40,7 +40,14 @@
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Stationary Score Command",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -57,7 +64,7 @@
   "folder": "Right",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -88.31531568210367
+    "rotation": 91.3322198532194
   },
   "useDefaultConstraints": true
 }

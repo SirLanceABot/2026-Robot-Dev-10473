@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left_Neutral_Intake"
+            "pathName": "Neutral_For_Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left_Neutral_Shoot"
+            "pathName": "Neutral_To_Shoot"
           }
         }
       ]

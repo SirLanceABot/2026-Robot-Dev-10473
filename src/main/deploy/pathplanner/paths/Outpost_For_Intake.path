@@ -4,50 +4,34 @@
     {
       "anchor": {
         "x": 3.45,
-        "y": 6.762455516018062
+        "y": 6.765
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0380267722332794,
-        "y": 7.785341704746463
+        "x": 3.2907761719286475,
+        "y": 6.51318356014627
       },
       "isLocked": false,
       "linkedName": "Left_Trench"
     },
     {
       "anchor": {
-        "x": 7.806,
-        "y": 5.154
+        "x": 0.475,
+        "y": 0.65
       },
       "prevControl": {
-        "x": 8.33225387861144,
-        "y": 8.0960051223467
+        "x": 1.087516094031319,
+        "y": 1.8313345798887601
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left_Neutral"
+      "linkedName": "Left_Outpost"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 0.0
-    },
-    {
-      "waypointRelativePos": 0.8024505876068373,
-      "rotationDegrees": 135.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Simple Intake Command",
-      "waypointRelativePos": 0.7086614173228312,
-      "endWaypointRelativePos": 1.0,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -58,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 91.23651753205745
+    "rotation": -1.4594640548250652
   },
   "reversed": false,
   "folder": "Left",

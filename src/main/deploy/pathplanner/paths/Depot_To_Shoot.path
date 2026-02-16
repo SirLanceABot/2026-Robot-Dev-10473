@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.4736813642393868,
-        "y": 0.6555152749115565
+        "x": 0.4500887197818396,
+        "y": 5.944590258328419
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.596581768503692,
-        "y": 0.9654799199168538
+        "x": 0.7167584021096147,
+        "y": 6.040066102638714
       },
       "isLocked": false,
-      "linkedName": "Left_Outpost"
+      "linkedName": "Left_Depot"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 7.0
       },
       "prevControl": {
-        "x": 2.8427458150149043,
-        "y": 6.614092334866366
+        "x": 1.9590094948120484,
+        "y": 6.548393813046351
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,14 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Stationary Score Command",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -48,7 +55,7 @@
   "folder": "Left",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -0.5282958422643168
+    "rotation": 0.02285355561038708
   },
   "useDefaultConstraints": true
 }

@@ -7,19 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left_Depot_Intake"
+            "pathName": "Depot_For_Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Left_Depot_Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Simple Intake Command"
+            "pathName": "Depot_To_Shoot"
           }
         }
       ]

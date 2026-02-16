@@ -35,12 +35,19 @@
     },
     {
       "waypointRelativePos": 0.7091680021367516,
-      "rotationDegrees": -90.0
+      "rotationDegrees": 90.0
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Simple Intake Command",
+      "waypointRelativePos": 0.7244094488188921,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -51,7 +58,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -88.31531568210367
+    "rotation": 91.3322198532194
   },
   "reversed": false,
   "folder": "Right",
