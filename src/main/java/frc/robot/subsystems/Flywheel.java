@@ -6,6 +6,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.motors.TalonFXLance;
@@ -40,6 +41,8 @@ public class Flywheel extends SubsystemBase
 
     private final double TOLERANCE = 0.3;
 
+    private InterpolatingDoubleTreeMap distanceToSpeedMap = new InterpolatingDoubleTreeMap();
+
     // PID constants
     private final double kP = 0.401;
     private final double kI = 0.0;
@@ -61,6 +64,7 @@ public class Flywheel extends SubsystemBase
         System.out.println("  Constructor Started:  " + fullClassName);
 
         configMotors();
+        configShotMap();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -83,6 +87,32 @@ public class Flywheel extends SubsystemBase
         leadMotor.setupPIDController(0, kP, kI, kD, kS, kV, kA);
 
         followMotor.setupFollower(LEADMOTOR, false);
+    }
+
+    private void configShotMap()
+    {
+        //for distance in meters
+        //TODO: Tune these values with the real bot
+        distanceToSpeedMap.put(1.0, 10473.0);
+        distanceToSpeedMap.put(2.0, 10473.0);
+        distanceToSpeedMap.put(3.0, 10473.0);
+        distanceToSpeedMap.put(4.0, 10473.0);
+        distanceToSpeedMap.put(5.0, 10473.0);
+        distanceToSpeedMap.put(6.0, 10473.0);
+        distanceToSpeedMap.put(7.0, 10473.0);
+        distanceToSpeedMap.put(8.0, 10473.0);
+        distanceToSpeedMap.put(9.0, 10473.0);
+        distanceToSpeedMap.put(10.0, 10473.0);
+        distanceToSpeedMap.put(11.0, 10473.0);
+        distanceToSpeedMap.put(12.0, 10473.0);
+        distanceToSpeedMap.put(13.0, 10473.0);
+        distanceToSpeedMap.put(14.0, 10473.0);
+        distanceToSpeedMap.put(15.0, 10473.0);
+        distanceToSpeedMap.put(16.0, 10473.0);
+        distanceToSpeedMap.put(17.0, 10473.0);
+        distanceToSpeedMap.put(18.0, 10473.0);
+        distanceToSpeedMap.put(19.0, 10473.0);
+        distanceToSpeedMap.put(20.0, 10473.0);
     }
 
     /**
@@ -130,14 +160,14 @@ public class Flywheel extends SubsystemBase
     }
 
     /**
-     * Returns the appropriate shot speed for the given distance.
-     * PLACEHOLDER VALUE (always speed of 15) (!!!!!!!!)
+     * Returns the appropriate shot speed for the given distance (meters).
      * @param distance Distance from target
      * @return Shot speed
      */
     public double getShotSpeed(double distance)
     {
-        return 10.0;
+        distance = Math.max(1.0, Math.min(20.0, distance));
+        return distanceToSpeedMap.get(distance);
     }
 
     /**
@@ -146,7 +176,7 @@ public class Flywheel extends SubsystemBase
      */
     public Command stopCommand()
     {
-        return runOnce( () -> stop() );
+        return runOnce(() -> stop());
     }
 
     /**
@@ -156,7 +186,17 @@ public class Flywheel extends SubsystemBase
      */
     public Command shootCommand(DoubleSupplier speed)
     {
-        return runOnce( () -> shoot(speed.getAsDouble()) );
+        return runOnce(() -> shoot(speed.getAsDouble()));
+    }
+
+    /**
+     * Shoot the flywheel at the appropriate speed for the given distance
+     * @param distance Distance in feet
+     * @return Shoot from distance command
+     */
+    public Command shootFromDistanceCommand(double distance)
+    {
+        return runOnce(() -> shoot(getShotSpeed(distance)));
     }
 
     // *** OVERRIDEN METHODS ***

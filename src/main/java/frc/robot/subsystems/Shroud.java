@@ -4,13 +4,14 @@ import static frc.robot.Constants.Shroud.*;
 
 import java.lang.invoke.MethodHandles;
 
+import javax.lang.model.util.ElementScanner14;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.motors.TalonFXLance;
 
 /**
- * Class controling the angle of the shroud and shooter
- * 
+ * Class controling the angle of the shroud 
  * @author Mukul Kedia
  */
 public class Shroud extends SubsystemBase
@@ -73,7 +74,7 @@ public class Shroud extends SubsystemBase
      * Helper to convert degrees to the encoder position
      * @param degrees {@link Double} The degrees
      * @return {@link Double} The encoder position
-     * @implNote PLACEHOLDER VALUE (always the same degrees passed in) (!!!!!!!!!!)
+     * @implNote PLACEHOLDER (this method returns the value it recieves) (!!!!!!!!!!)
      */
     private double degreesToPosition(double degrees)
     {
@@ -101,16 +102,32 @@ public class Shroud extends SubsystemBase
     }
 
     /**
+     * Moves the shroud to the appropriate angle for the distance in meters
+     * @param distance {@link Double} The degree
+     * @return {@link Command} Distance to angle command
+     */
+    public Command distanceToAngleCommand(double distance)
+    {
+        return runOnce(() -> goTo(getShotAngle(distance)));
+    }
+
+    /**
      * Returns the appropriate angle to shoot from a given distance.
-     * @param distance {@link Double} The distance from the target
+     * @param distance {@link Double} The distance from the target in meters
      * @return {@link Double} The shot angle
      * @author Jackson D.
-     * @implNote PLACEHOLDER VALUE (always 45 degrees) (!!!!!!!!!!)
+     * @implNote PLACEHOLDER VALUES (!!!!!!!!!!)
      */
     public double getShotAngle(double distance)
     {
+        distance = Math.max(1.0, Math.min(20.0, distance));
         // TODO: Tune later
-        return 45.0;
+        if(distance < 5.0)
+            return degreesToPosition(75);
+        else if(distance < 10.0)
+            return degreesToPosition(65);
+        else
+            return degreesToPosition(55);
     }
 
     /**

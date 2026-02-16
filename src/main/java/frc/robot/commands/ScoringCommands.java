@@ -89,7 +89,7 @@ public class ScoringCommands
     /**
      * Set the shroud to 0 degrees, stops the flywheel, and stops the agitator
      * @author Jackson D.
-     * @return Simple intake stop command
+     * @return Simple score stop command
      */
     public static Command simpleScoreStopCommand()
     {
@@ -114,16 +114,17 @@ public class ScoringCommands
      */
     public static Command stationaryScoreCommand()
     {
+        double distance = poseEstimator.getDistanceToAllianceHub().getAsDouble();
         if(flywheel != null && shroud != null && agitator != null && drivetrain != null && poseEstimator != null)
         {
             return drivetrain.lockWheelsCommand()
             .andThen(
                     drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, poseEstimator.getAngleToAllianceHub()))
             .andThen(
-                    shroud.goToCommand(shroud.getShotAngle(poseEstimator.getDistanceToAllianceHub().getAsDouble())))
+                    shroud.distanceToAngleCommand(distance))
             .andThen(
-                    flywheel.shootCommand(() -> flywheel.getShotSpeed(poseEstimator.getDistanceToAllianceHub().getAsDouble())))
-                    .until(flywheel.isAtSetSpeed(flywheel.getShotSpeed(poseEstimator.getDistanceToAllianceHub().getAsDouble())))
+                    flywheel.shootFromDistanceCommand(distance))
+                    .until(flywheel.isAtSetSpeed(flywheel.getShotSpeed(distance)))
             .andThen(agitator.forwardCommand());           
         }
         else
