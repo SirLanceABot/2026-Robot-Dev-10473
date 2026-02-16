@@ -53,6 +53,20 @@ public final class CommandsManager
 
     private static void createNamedCommands()
     {
+
+        //GeneralCommands
+        NamedCommands.registerCommand("Stop All Command", GeneralCommands.stopAllCommand());
+        NamedCommands.registerCommand("Eject Fuel Command", GeneralCommands.ejectFuelCommand());
+
+        //IntakingCommands
+        NamedCommands.registerCommand("Simple Intake Command", IntakingCommands.simpleIntakeCommand());
+        NamedCommands.registerCommand("Stop Intaking Command", IntakingCommands.stopIntakingCommand());
+
+        //ScoringCommands
+        NamedCommands.registerCommand("Simple Shoot Command", ScoringCommands.simpleScoreCommand());
+        NamedCommands.registerCommand("Stationary Score Command", ScoringCommands.stationaryScoreCommand());
+        NamedCommands.registerCommand("Stop Scoring Command", ScoringCommands.stopScoringCommand());
+
         SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
     }
 }

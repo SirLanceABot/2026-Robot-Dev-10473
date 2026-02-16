@@ -70,9 +70,7 @@ public class IntakingCommands
     {
         if (pivot != null && roller != null)
         {
-            // return LEDsController.setLEDCommand(leds, ColorPattern.kSolid, Color.kRed)
-            return Commands.none()
-                .andThen(pivot.extendCommand())
+            return pivot.extendCommand()
                 .andThen(roller.intakeFuelCommand());
         }
         else
@@ -82,16 +80,15 @@ public class IntakingCommands
     /**
      * Retracts the pivot and turns off the roller
      * @author Jackson D.
-     * @return Simple intake stop command
+     * @return Intake stop command
      */
-    public static Command simpleIntakeStopCommand()
+    public static Command stopIntakingCommand()
     {
         if (pivot != null && roller != null)
         {
-            // return LEDsController.setLEDCommand(leds, ColorPattern.kDefault)
-            return Commands.none()
-                .andThen(pivot.retractCommand())
-                .andThen(roller.stopCommand());
+            return Commands.parallel(
+                    pivot.retractCommand(),
+                    roller.stopCommand());
         }
         else
             return Commands.none();

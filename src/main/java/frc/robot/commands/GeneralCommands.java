@@ -97,11 +97,11 @@ public class GeneralCommands
 
     public static Command stopAllCommand()
     {
-        if(roller != null && pivot != null && agitator != null && flywheel != null && shroud != null)
+        if(roller != null && pivot != null && agitator != null && flywheel != null)
         {
             return Commands.parallel(
                     roller.stopCommand(),
-                    pivot.stopCommand(),
+                    pivot.retractCommand(),
                     agitator.stopCommand(),
                     flywheel.stopCommand()      
             );
@@ -111,5 +111,21 @@ public class GeneralCommands
             return Commands.none();
         }
 
+    }
+
+    public static Command ejectFuelCommand()
+    {
+        if(roller != null && agitator != null && flywheel != null)
+        {
+            return Commands.parallel(
+                roller.reverseCommand(),
+                agitator.reverseCommand(),
+                flywheel.reverseCommand()
+            );
+        }
+        else
+        {
+            return Commands.none();
+        }
     }
 }

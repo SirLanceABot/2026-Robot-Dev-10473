@@ -180,6 +180,15 @@ public class Flywheel extends SubsystemBase
     }
 
     /**
+     * Reverses the flywheel at a speed 15.0
+     * @return Reverse flywheel command
+     */
+    public Command reverseCommand()
+    {
+        return runOnce(() -> set(15.0));
+    }
+
+    /**
      * Shoot the flywheel at a given speed (RPS)
      * @param speed
      * @return Shoot command

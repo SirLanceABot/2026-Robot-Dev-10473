@@ -67,7 +67,7 @@ public class ScoringCommands
     }
 
     /**
-     * Set shroud to 45 degrees, get flywheel to a speed of 15 RPS, and activates the agitator
+     * Set shroud to 65 degrees, set flywheel to a speed of 15 RPS, and activates the agitator
      * @author Jackson D.
      * @return Simple score command
      */
@@ -77,8 +77,7 @@ public class ScoringCommands
         {
             return Commands.parallel(
                     flywheel.shootCommand(() -> 15).until(flywheel.isAtSetSpeed(15)),
-                    // LEDsController.setLEDCommand(leds, ColorPattern.kSolid, Color.kGreen),
-                    shroud.goToCommand(45)
+                    shroud.goToCommand(65)
                 )
                 .andThen(agitator.forwardCommand());
         }
@@ -87,20 +86,16 @@ public class ScoringCommands
     }
 
     /**
-     * Set the shroud to 0 degrees, stops the flywheel, and stops the agitator
+     * Stops the flywheel, and stops the agitator
      * @author Jackson D.
-     * @return Simple score stop command
+     * @return Scoring stop command
      */
-    public static Command simpleScoreStopCommand()
+    public static Command stopScoringCommand()
     {
-        if (agitator != null && flywheel != null && shroud != null)
+        if (agitator != null && flywheel != null)
         {
-            return Commands.parallel(
-                    flywheel.stopCommand(),
-                    // LEDsController.setLEDCommand(leds, ColorPattern.kDefault),
-                    shroud.goToCommand(0)
-                )
-                .andThen(agitator.stopCommand());
+            return flywheel.stopCommand()
+                   .andThen(agitator.stopCommand());
         }
         else 
             return Commands.none();
