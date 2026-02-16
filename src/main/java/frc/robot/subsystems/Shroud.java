@@ -30,6 +30,17 @@ public class Shroud extends SubsystemBase
     // *** INNER ENUMS and INNER CLASSES ***
     // Put all inner enums and inner classes here
 
+    public enum Position
+    {
+        kCLOSE(0.0), kMID(1.0), kFAR(2.0);
+
+        public final double value;
+        private Position(double value)
+        {
+            this.value = value;
+        }
+    };
+
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
 
@@ -66,43 +77,33 @@ public class Shroud extends SubsystemBase
     {
         angleMotor.setupFactoryDefaults();
         angleMotor.setPosition(0.0);
+
+        angleMotor.setupBrakeMode();
         
         angleMotor.setupPIDController(0, kP, kI, kD);
     }
 
     /**
-     * Helper to convert degrees to the encoder position
-     * @param degrees {@link Double} The degrees
-     * @return {@link Double} The encoder position
-     * @implNote PLACEHOLDER (this method returns the value it recieves) (!!!!!!!!!!)
+     * Moves the shroud to the specified position (rotations)
+     * @param degrees {@link Double} The degrees the shroud should be set to
      */
-    private double degreesToPosition(double degrees)
+    private void goTo(double position)
     {
-        // TODO: Tune later
-        return degrees;
+        angleMotor.setControlPosition(position);
     }
 
     /**
-     * Moves the shroud to the specified degrees
-     * @param degrees {@link Double} The degrees the shroud should be set to
-     */
-    private void goTo(double degrees)
-    {
-        angleMotor.setControlPosition(degreesToPosition(degrees));
-    }
-
-    /**
-     * Moves the shroud to the specified degrees
-     * @param degrees {@link Double} The degrees the shroud should be set to
+     * Moves the shroud to the specified position (in rotations)
+     * @param position {@link double} The degrees the shroud should be set to
      * @return {@link Command} The command to move the shroud
      */
-    public Command goToCommand(double degrees)
+    public Command goToCommand(double position)
     {
-        return runOnce(() -> goTo(degrees));
+        return runOnce(() -> goTo(position));
     }
 
     /**
-     * Moves the shroud to the appropriate angle for the distance in meters
+     * Moves the shroud to the appropriate angle for the 
      * @param distance {@link Double} The degree
      * @return {@link Command} Distance to angle command
      */
@@ -123,11 +124,11 @@ public class Shroud extends SubsystemBase
         distance = Math.max(1.0, Math.min(20.0, distance));
         // TODO: Tune later
         if(distance < 5.0)
-            return degreesToPosition(75);
+            return Position.kCLOSE.value;
         else if(distance < 10.0)
-            return degreesToPosition(65);
+            return Position.kMID.value;
         else
-            return degreesToPosition(55);
+            return Position.kFAR.value;
     }
 
     /**
