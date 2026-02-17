@@ -116,7 +116,7 @@ public class ScoringCommands
             .andThen(
                     drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, poseEstimator.getAngleToAllianceHub()))
             .andThen(
-                    shroud.distanceToAngleCommand(distance))
+                    shroud.setAngleFromDistanceCommand(distance))
             .andThen(
                     flywheel.shootFromDistanceCommand(distance))
                     .until(flywheel.isAtSetSpeed(flywheel.getShotSpeed(distance)))

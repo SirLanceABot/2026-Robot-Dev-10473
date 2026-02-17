@@ -81,6 +81,10 @@ public class Shroud extends SubsystemBase
         angleMotor.setupBrakeMode();
         
         angleMotor.setupPIDController(0, kP, kI, kD);
+
+        // Hard Limits
+        angleMotor.setupForwardHardLimitSwitch(true, true);
+        angleMotor.setupReverseHardLimitSwitch(true, true);
     }
 
     /**
@@ -107,7 +111,7 @@ public class Shroud extends SubsystemBase
      * @param distance {@link Double} The degree
      * @return {@link Command} Distance to angle command
      */
-    public Command distanceToAngleCommand(double distance)
+    public Command setAngleFromDistanceCommand(double distance)
     {
         return runOnce(() -> goTo(getShotAngle(distance)));
     }

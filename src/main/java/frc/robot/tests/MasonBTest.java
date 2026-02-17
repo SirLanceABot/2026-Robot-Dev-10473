@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Roller;
+import frc.robot.subsystems.Shroud;
 
 @SuppressWarnings("unused")
 public class MasonBTest implements Test
@@ -30,7 +31,8 @@ public class MasonBTest implements Test
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
     private final RobotContainer robotContainer;
-    private final Drivetrain drivetrain;
+    // private final Drivetrain drivetrain;
+    private final Shroud shroud;
     // private final Roller roller;
     private final Joystick joystick = new Joystick(0);
     private final CommandXboxController controller = new CommandXboxController(0);
@@ -50,7 +52,8 @@ public class MasonBTest implements Test
         System.out.println("  Constructor Started:  " + fullClassName);
 
         this.robotContainer = robotContainer;
-        drivetrain = robotContainer.getDrivetrain();
+        // drivetrain = robotContainer.getDrivetrain();
+        shroud = robotContainer.getShroud();
         // roller = robotContainer.getRoller();
 
         System.out.println("  Constructor Finished: " + fullClassName);
@@ -79,15 +82,16 @@ public class MasonBTest implements Test
      */
     public void periodic()
     {
+        controller.a().onTrue(shroud.goToCommand(500));
         // drivetrain.driveCommand(() -> -joystick.getRawAxis(1), () -> -joystick.getRawAxis(0), () -> joystick.getRawAxis(4), () -> 0.5).schedule();
         // drivetrain.pointWheelsCommand(() -> -joystick.getRawAxis(1), () -> -joystick.getRawAxis(0)).schedule();
-        drivetrain.angleLockDriveCommand(() -> -joystick.getRawAxis(1), () -> -joystick.getRawAxis(0), () -> 0.5, () -> 90).schedule();
+        // drivetrain.angleLockDriveCommand(() -> -joystick.getRawAxis(1), () -> -joystick.getRawAxis(0), () -> 0.5, () -> 90).schedule();
         // System.out.println(-joystick.getRawAxis(1));
         // System.out.println(-joystick.getRawAxis(0));
         // controller.a().onTrue(roller.intakeFuelCommand());
         // controller.b().onTrue(roller.reverseCommand());
     }
-    
+
     /**
      * This method runs one time after the periodic() method.
      */
