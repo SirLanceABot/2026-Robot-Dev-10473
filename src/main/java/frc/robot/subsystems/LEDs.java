@@ -69,7 +69,7 @@ public class LEDs extends SubsystemBase
          * Creates the LED view
          * 
          * @param startIndex {@link Integer} The start index of the view
-         * @param endIndex   {@link Integer} The end index of the view
+         * @param endIndex {@link Integer} The end index of the view
          */
         private LEDView(int startIndex, int endIndex)
         {
@@ -81,9 +81,9 @@ public class LEDs extends SubsystemBase
         /**
          * Sets the pattern of the LED view
          * 
-         * @param pattern    {@link LEDPattern} The pattern to set to
+         * @param pattern {@link LEDPattern} The pattern to set to
          * @param isAnimated {@link Boolean} Whether the pattern needs to be updated
-         *                   constantly
+         *            constantly
          */
         private void setPattern(LEDPattern pattern, boolean isAnimated)
         {
@@ -205,7 +205,7 @@ public class LEDs extends SubsystemBase
          * Modifies the current pattern of the LED view to blink
          * 
          * @param offSeconds {@link Double} The amount of seconds to stay off
-         * @param onSeconds  {@link Double} The amount of seconds to stay on
+         * @param onSeconds {@link Double} The amount of seconds to stay on
          */
         private void setBlink(double offSeconds, double onSeconds)
         {
@@ -216,7 +216,7 @@ public class LEDs extends SubsystemBase
          * Modifies the current pattern of the LED view to blink
          * 
          * @param offSeconds {@link Double} The amount of seconds to stay off
-         * @param onSeconds  {@link Double} The amount of seconds to stay on
+         * @param onSeconds {@link Double} The amount of seconds to stay on
          * @return {@link Command} The command to set the leds in the LED view to blink
          */
         public Command setBlinkCommand(double offSeconds, double onSeconds)
@@ -314,7 +314,7 @@ public class LEDs extends SubsystemBase
      * Creates a LED view
      * 
      * @param startIndex {@link Integer} The start index of the view
-     * @param endIndex   {@link Integer} The end index of the view
+     * @param endIndex {@link Integer} The end index of the view
      * @return {@link LEDView} The created view
      */
     public LEDView createView(int startIndex, int endIndex)
