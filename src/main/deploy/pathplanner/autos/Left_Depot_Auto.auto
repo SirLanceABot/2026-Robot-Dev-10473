@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Depot_For_Intake"
+            "pathName": "Left_Depot_Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Depot_To_Shoot"
+            "pathName": "Left_Depot_Shoot"
           }
         }
       ]

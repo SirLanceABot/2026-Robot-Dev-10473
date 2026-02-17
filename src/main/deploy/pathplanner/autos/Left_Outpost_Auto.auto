@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Outpost_For_Intake"
+            "pathName": "Left_Outpost_Intake"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Outpost_To_Shoot"
+            "pathName": "Left_Outpost_Shoot"
           }
         }
       ]

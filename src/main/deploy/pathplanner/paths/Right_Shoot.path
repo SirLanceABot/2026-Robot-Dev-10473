@@ -42,6 +42,12 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "Stop Intaking Command",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "Stationary Score Command",
       "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,
