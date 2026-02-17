@@ -50,9 +50,10 @@ public class ElasticLance
      * Gets the subsystems needed for Elastic
      * 
      * @param robotContainer {@link RobotContainer} The robot container to get
-     *                       subsystems from
+     *            subsystems from
      */
-    public static void configElastic(RobotContainer robotContainer) {
+    public static void configElastic(RobotContainer robotContainer)
+    {
         System.out.println("  Constructor Started:  " + fullClassName);
 
         drivetrain = robotContainer.getDrivetrain();
@@ -115,8 +116,7 @@ public class ElasticLance
         try
         {
             pathPlannerPaths = PathPlannerAuto.getPathGroupFromAutoFile(autoName);
-        }
-        catch (Exception error)
+        } catch (Exception error)
         {
             error.printStackTrace();
         }
@@ -132,7 +132,7 @@ public class ElasticLance
      * Helper to extract poses from paths
      * 
      * @param pathPlannerPaths {@link List}<{@link PathPlannerPath}> The paths to
-     *                         extract poses from
+     *            extract poses from
      * @return {@link List}<{@link Pose2d}> The extracted poses from the input paths
      * @author Unknown
      * @implNote ~stolen~ taken from last year's code:

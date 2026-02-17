@@ -7,7 +7,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.LEDs.LEDView;
 
-public class LEDsController {
+public class LEDsController
+{
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
 
@@ -21,7 +22,7 @@ public class LEDsController {
 
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
-    
+
     private static LEDView view = null;
 
     // *** CLASS CONSTRUCTORS ***
@@ -29,6 +30,7 @@ public class LEDsController {
 
     /**
      * Instantiates the LEDs controller
+     * 
      * @param view {@link LEDView} The LED view to use
      */
     public LEDsController(LEDView view)
@@ -45,6 +47,7 @@ public class LEDsController {
 
     /**
      * Sets the pattern of the LED view to off
+     * 
      * @return {@link Command} The command to set the leds in the LED view off
      */
     public static Command setOffCommand()
@@ -56,8 +59,10 @@ public class LEDsController {
 
     /**
      * Sets the pattern of the LED view to a solid color
+     * 
      * @param color {@link Color} The color to set the LED view to
-     * @return {@link Command} The command to set the leds in the LED view to a solid color
+     * @return {@link Command} The command to set the leds in the LED view to a
+     *         solid color
      */
     public static Command setSolidCommand(Color color)
     {
@@ -68,8 +73,10 @@ public class LEDsController {
 
     /**
      * Sets the pattern of the LED view to a scrolling gradient
+     * 
      * @param colors {@link Color} The colors to set the LED view to
-     * @return {@link Command} The command to set the leds in the LED view to a scrolling gradient
+     * @return {@link Command} The command to set the leds in the LED view to a
+     *         scrolling gradient
      */
     public static Command setGradientCommand(Color... colors)
     {
@@ -80,7 +87,9 @@ public class LEDsController {
 
     /**
      * Sets the pattern of the LED view to a scrolling rainbow
-     * @return {@link Command} The command to set the leds in the LED view to a scrolling rainbow
+     * 
+     * @return {@link Command} The command to set the leds in the LED view to a
+     *         scrolling rainbow
      */
     public static Command setRainbowCommand()
     {
@@ -91,6 +100,7 @@ public class LEDsController {
 
     /**
      * Modifies the current pattern of the LED view to blink
+     * 
      * @param seconds {@link Double} The amount of seconds between each blink
      * @return {@link Command} The command to set the leds in the LED view to blink
      */
@@ -103,6 +113,7 @@ public class LEDsController {
 
     /**
      * Modifies the current pattern of the LED view to blink
+     * 
      * @param offSeconds {@link Double} The amount of seconds to stay off
      * @param onSeconds {@link Double} The amount of seconds to stay on
      * @return {@link Command} The command to set the leds in the LED view to blink
@@ -116,8 +127,10 @@ public class LEDsController {
 
     /**
      * Modifies the current pattern of the LED view to breathe
+     * 
      * @param seconds {@link Double} The amount of seconds between each breathe
-     * @return {@link Command} The command to set the leds in the LED view to breathe
+     * @return {@link Command} The command to set the leds in the LED view to
+     *         breathe
      */
     public static Command setBreatheCommand(double seconds)
     {
@@ -128,6 +141,7 @@ public class LEDsController {
 
     /**
      * Undos the last change to the LED view's pattern
+     * 
      * @return {@link Command} The command to undo the last change
      */
     public static Command undoCommand()
