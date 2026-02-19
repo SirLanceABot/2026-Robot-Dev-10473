@@ -3,9 +3,11 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.Shroud.*;
 
 import java.lang.invoke.MethodHandles;
+import java.util.function.BooleanSupplier;
 
 import javax.lang.model.util.ElementScanner14;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.motors.TalonFXLance;
@@ -46,6 +48,8 @@ public class Shroud extends SubsystemBase
 
     private final TalonFXLance angleMotor = new TalonFXLance(MOTOR, MOTOR_CAN_BUS, "Shroud Angle Motor");
 
+    private final DigitalInput forwardHardLimit = new DigitalInput(1);
+
     // TODO: Tune later
     private static final double kP = 3.5;
     private static final double kI = 0.0;
@@ -83,8 +87,8 @@ public class Shroud extends SubsystemBase
         angleMotor.setupPIDController(0, kP, kI, kD);
 
         // Hard Limits
-        angleMotor.setupForwardHardLimitSwitch(true, true);
-        angleMotor.setupReverseHardLimitSwitch(true, true);
+        angleMotor.setupForwardHardLimitSwitch(true, true, 0);
+        angleMotor.setupReverseHardLimitSwitch(true, true, 1);
     }
 
     /**
@@ -133,6 +137,11 @@ public class Shroud extends SubsystemBase
             return Position.kMID.value;
         else
             return Position.kFAR.value;
+    }
+
+    public BooleanSupplier getLimitSwitchState()
+    {
+        return () -> forwardHardLimit.get();
     }
 
     /**

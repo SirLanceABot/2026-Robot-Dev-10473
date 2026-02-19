@@ -2,6 +2,7 @@ package frc.robot.tests;
 
 import java.lang.invoke.MethodHandles;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
@@ -74,6 +75,7 @@ public class MasonBTest implements Test
     public void init()
     {
         // controller.a().whileTrue(drivetrain.lockWheelsCommand());
+        controller.a().onTrue(shroud.goToCommand(500));
         // drivetrain.setDefaultCommand(drivetrain.driveCommand(() -> -joystick.getRawAxis(1), () -> -joystick.getRawAxis(0), () -> joystick.getRawAxis(4), () -> 0.5));
     }
 
@@ -82,7 +84,8 @@ public class MasonBTest implements Test
      */
     public void periodic()
     {
-        controller.a().onTrue(shroud.goToCommand(500));
+        
+        System.out.println(shroud.getLimitSwitchState().getAsBoolean());
         // drivetrain.driveCommand(() -> -joystick.getRawAxis(1), () -> -joystick.getRawAxis(0), () -> joystick.getRawAxis(4), () -> 0.5).schedule();
         // drivetrain.pointWheelsCommand(() -> -joystick.getRawAxis(1), () -> -joystick.getRawAxis(0)).schedule();
         // drivetrain.angleLockDriveCommand(() -> -joystick.getRawAxis(1), () -> -joystick.getRawAxis(0), () -> 0.5, () -> 90).schedule();
