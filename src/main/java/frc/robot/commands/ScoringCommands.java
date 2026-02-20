@@ -67,17 +67,17 @@ public class ScoringCommands
     }
 
     /**
-     * Set shroud to lowest position, set flywheel to a speed of 15 RPS, and activates the agitator
+     * Set shroud to position 2, set flywheel to a speed of 15 RPS, and activates the agitator
      * @author Jackson D.
-     * @return Simple score command
+     * @return Pass Command
      */
-    public static Command simpleScoreCommand()
+    public static Command passCommand()
     {
         if (agitator != null && flywheel != null && leds != null && shroud != null)
         {
             return Commands.parallel(
                     flywheel.shootCommand(() -> 15.0).until(flywheel.isAtSetSpeed(15)),
-                    shroud.goToCommand(0.0)
+                    shroud.goToCommand(2.0)
                 )
                 .andThen(agitator.forwardCommand());
         }

@@ -63,7 +63,7 @@ public final class CommandsManager
         NamedCommands.registerCommand("Stop Intaking Command", IntakingCommands.stopIntakingCommand());
 
         //ScoringCommands
-        NamedCommands.registerCommand("Simple Shoot Command", ScoringCommands.simpleScoreCommand());
+        NamedCommands.registerCommand("Pass Command", ScoringCommands.passCommand());
         NamedCommands.registerCommand("Stationary Score Command", ScoringCommands.stationaryScoreCommand());
         NamedCommands.registerCommand("Stop Scoring Command", ScoringCommands.stopScoringCommand());
 

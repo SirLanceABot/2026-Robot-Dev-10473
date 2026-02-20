@@ -124,8 +124,8 @@ public final class DriverBindings
     private static void configAButton()
     {
         Trigger aButton = controller.a();
-        aButton
-            .whileTrue(drivetrain.angleLockDriveCommand(leftYAxis, leftXAxis, scaleFactorSupplier, () -> (poseEstimator.getAngleToTarget(poseEstimator.getEstimatedPose(), poseEstimator.getAllianceHubPose()).getAsDouble())));
+        // aButton
+        //     .whileTrue(drivetrain.angleLockDriveCommand(leftYAxis, leftXAxis, scaleFactorSupplier, () -> (poseEstimator.getAngleToTarget(poseEstimator.getEstimatedPose(), poseEstimator.getAllianceHubPose()).getAsDouble())));
     }
 
     private static void configBButton()
@@ -158,6 +158,8 @@ public final class DriverBindings
     private static void configBackButton()
     {
         Trigger backButton = controller.back();
+        backButton
+            .onTrue(GeneralCommands.stopAllCommand());
     }
 
     private static void configStartButton()
@@ -197,8 +199,6 @@ public final class DriverBindings
     private static void configDpadDown()
     {
         Trigger dpadDown = controller.povDown();
-        dpadDown
-            .onTrue(GeneralCommands.stopAllCommand());
     }
 
     private static void configDpadLeft()

@@ -144,7 +144,7 @@ public final class OperatorBindings
     {
         Trigger leftBumper = controller.leftBumper();
         leftBumper
-            .onTrue(ScoringCommands.simpleScoreCommand());
+            .onTrue(ScoringCommands.passCommand());
     }
 
     private static void configRightBumper()
@@ -155,6 +155,8 @@ public final class OperatorBindings
     private static void configBackButton()
     {
         Trigger backButton = controller.back();
+        backButton
+            .onTrue(GeneralCommands.stopAllCommand());
     }
 
     private static void configStartButton()
@@ -190,8 +192,6 @@ public final class OperatorBindings
     private static void configDpadDown()
     {
         Trigger dpadDown = controller.povDown();
-        dpadDown
-            .onTrue(GeneralCommands.stopAllCommand());
     }
 
     private static void configDpadLeft()
