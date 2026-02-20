@@ -79,6 +79,9 @@ public class Pivot extends SubsystemBase
         leadMotor.setupPIDController(0, kP, kI, kD);
 
         followMotor.setupFollower(LEADMOTOR, false);
+
+        leadMotor.setupForwardHardLimitSwitch(true, true);
+        leadMotor.setupReverseHardLimitSwitch(true, true);
     }
 
     /**

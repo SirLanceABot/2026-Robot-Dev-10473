@@ -80,8 +80,6 @@ public class ElasticLance
     {
         SmartDashboard.putNumber("Voltage", RobotController.getBatteryVoltage());
         SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
-
-        updateAutoField();
     }
 
     /**
@@ -98,33 +96,6 @@ public class ElasticLance
             SmartDashboard.putData("AutoField", autofield);
             Pose2d pose = drivetrain.getState().Pose;
             autofield.setRobotPose(pose);
-        }
-    }
-
-    /**
-     * Updates the Auto Field Widget
-     * 
-     * @author Unknown
-     * @implNote ~stolen~ taken from last year's code:
-     *           https://github.com/SirLanceABot/2025-Robot-Dev-10473/commit/1e412475e1989f0d6bb7df463b50acd20b2d4c8c
-     */
-    public static void updateAutoField()
-    {
-        String autoName = PathPlannerLance.getAutonomousCommand().getName();
-
-        List<PathPlannerPath> pathPlannerPaths = null;
-        try
-        {
-            pathPlannerPaths = PathPlannerAuto.getPathGroupFromAutoFile(autoName);
-        } catch (Exception error)
-        {
-            error.printStackTrace();
-        }
-
-        if (pathPlannerPaths != null)
-        {
-            List<Pose2d> poses = extractPosesFromPaths(pathPlannerPaths);
-            autofield.getObject("path").setPoses(poses);
         }
     }
 

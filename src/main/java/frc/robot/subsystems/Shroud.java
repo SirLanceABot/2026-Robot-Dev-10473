@@ -47,9 +47,6 @@ public class Shroud extends SubsystemBase
     // Put all class variables and instance variables here
 
     private final TalonFXLance angleMotor = new TalonFXLance(MOTOR, MOTOR_CAN_BUS, "Shroud Angle Motor");
-
-    private final DigitalInput forwardHardLimit = new DigitalInput(1);
-
     // TODO: Tune later
     private static final double kP = 3.5;
     private static final double kI = 0.0;
@@ -87,8 +84,8 @@ public class Shroud extends SubsystemBase
         angleMotor.setupPIDController(0, kP, kI, kD);
 
         // Hard Limits
-        angleMotor.setupForwardHardLimitSwitch(true, true, 0);
-        angleMotor.setupReverseHardLimitSwitch(true, true, 1);
+        angleMotor.setupForwardHardLimitSwitch(true, true);
+        angleMotor.setupReverseHardLimitSwitch(true, true);
     }
 
     /**
@@ -139,10 +136,10 @@ public class Shroud extends SubsystemBase
             return Position.kFAR.value;
     }
 
-    public BooleanSupplier getLimitSwitchState()
-    {
-        return () -> forwardHardLimit.get();
-    }
+    // public BooleanSupplier getLimitSwitchState()
+    // {
+    //     return () -> forwardHardLimit.get();
+    // }
 
     /**
      * Stops the shroud from moving

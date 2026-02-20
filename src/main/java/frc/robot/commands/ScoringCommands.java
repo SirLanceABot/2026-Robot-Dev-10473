@@ -109,9 +109,9 @@ public class ScoringCommands
      */
     public static Command stationaryScoreCommand()
     {
-        double distance = poseEstimator.getDistanceToAllianceHub().getAsDouble();
         if(flywheel != null && shroud != null && agitator != null && drivetrain != null && poseEstimator != null)
         {
+            double distance = poseEstimator.getDistanceToAllianceHub().getAsDouble();
             return drivetrain.lockWheelsCommand()
             .andThen(
                     drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, poseEstimator.getAngleToAllianceHub()))
