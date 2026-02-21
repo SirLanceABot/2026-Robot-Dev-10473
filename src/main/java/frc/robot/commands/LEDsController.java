@@ -12,7 +12,7 @@ public class LEDsController
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
 
-    // *** STATIC INITIALIZATION BLOCK ***
+    // *** INITIALIZATION BLOCK ***
     // This block of code is run first when the class is loaded
 
     static
@@ -23,7 +23,7 @@ public class LEDsController
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
 
-    private static LEDView view = null;
+    private LEDView view = null;
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
@@ -37,7 +37,7 @@ public class LEDsController
     {
         System.out.println("  Constructor Started:  " + fullClassName);
 
-        LEDsController.view = view;
+        this.view = view;
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -50,7 +50,7 @@ public class LEDsController
      * 
      * @return {@link Command} The command to set the leds in the LED view off
      */
-    public static Command setOffCommand()
+    public Command setOffCommand()
     {
         if (view == null)
             return Commands.none();
@@ -64,7 +64,7 @@ public class LEDsController
      * @return {@link Command} The command to set the leds in the LED view to a
      *         solid color
      */
-    public static Command setSolidCommand(Color color)
+    public Command setSolidCommand(Color color)
     {
         if (view == null)
             return Commands.none();
@@ -78,7 +78,7 @@ public class LEDsController
      * @return {@link Command} The command to set the leds in the LED view to a
      *         scrolling gradient
      */
-    public static Command setGradientCommand(Color... colors)
+    public Command setGradientCommand(Color... colors)
     {
         if (view == null)
             return Commands.none();
@@ -91,7 +91,7 @@ public class LEDsController
      * @return {@link Command} The command to set the leds in the LED view to a
      *         scrolling rainbow
      */
-    public static Command setRainbowCommand()
+    public Command setRainbowCommand()
     {
         if (view == null)
             return Commands.none();
@@ -104,7 +104,7 @@ public class LEDsController
      * @param seconds {@link Double} The amount of seconds between each blink
      * @return {@link Command} The command to set the leds in the LED view to blink
      */
-    public static Command setBlinkCommand(double seconds)
+    public Command setBlinkCommand(double seconds)
     {
         if (view == null)
             return Commands.none();
@@ -118,7 +118,7 @@ public class LEDsController
      * @param onSeconds {@link Double} The amount of seconds to stay on
      * @return {@link Command} The command to set the leds in the LED view to blink
      */
-    public static Command setBlinkCommand(double offSeconds, double onSeconds)
+    public Command setBlinkCommand(double offSeconds, double onSeconds)
     {
         if (view == null)
             return Commands.none();
@@ -132,7 +132,7 @@ public class LEDsController
      * @return {@link Command} The command to set the leds in the LED view to
      *         breathe
      */
-    public static Command setBreatheCommand(double seconds)
+    public Command setBreatheCommand(double seconds)
     {
         if (view == null)
             return Commands.none();
@@ -144,7 +144,7 @@ public class LEDsController
      * 
      * @return {@link Command} The command to undo the last change
      */
-    public static Command undoCommand()
+    public Command undoCommand()
     {
         if (view == null)
             return Commands.none();

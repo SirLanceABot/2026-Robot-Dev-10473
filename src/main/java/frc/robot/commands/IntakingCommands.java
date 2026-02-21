@@ -2,7 +2,7 @@ package frc.robot.commands;
 
 import java.lang.invoke.MethodHandles;
 
-// import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
@@ -10,7 +10,6 @@ import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.LEDs;
-// import frc.robot.subsystems.LEDs.ColorPattern;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Roller;
 import frc.robot.subsystems.Shroud;
@@ -22,7 +21,8 @@ public class IntakingCommands
 
     // *** STATIC INITIALIZATION BLOCK ***
     // This block of code is run first when the class is loaded
-    static {
+    static
+    {
         System.out.println("Loading: " + fullClassName);
     }
 
@@ -32,13 +32,16 @@ public class IntakingCommands
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
 
-    private static Agitator agitator;
-    private static Drivetrain drivetrain;
-    private static Flywheel flywheel;
-    private static LEDs leds;
-    private static Pivot pivot;
-    private static Roller roller;
-    private static Shroud shroud;
+    private static Agitator agitator = null;
+    private static Drivetrain drivetrain = null;
+    private static Flywheel flywheel = null;
+    private static LEDs leds = null;
+    private static Pivot pivot = null;
+    private static Roller roller = null;
+    private static Shroud shroud = null;
+
+    private static LEDs.LEDView view = null;
+    private static LEDsController viewController = null;
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
@@ -58,11 +61,16 @@ public class IntakingCommands
         roller = robotContainer.getRoller();
         shroud = robotContainer.getShroud();
 
+        if (leds != null)
+            leds.createView(0, 199);
+        viewController = new LEDsController(view);
+
         System.out.println("  Constructor Finished: " + fullClassName);
     }
 
     /**
      * Extend pivot, then score
+     * 
      * @author Jackson D.
      * @return Simple score command
      */
@@ -70,15 +78,16 @@ public class IntakingCommands
     {
         if (pivot != null && roller != null)
         {
-            return pivot.extendCommand()
-                .andThen(roller.intakeFuelCommand());
-        }
-        else
+            return viewController.setGradientCommand(Color.kYellow, Color.kRed)
+                    .andThen(pivot.extendCommand())
+                    .andThen(roller.intakeFuelCommand());
+        } else
             return Commands.none();
     }
 
     /**
      * Retracts the pivot and turns off the roller
+     * 
      * @author Jackson D.
      * @return Intake stop command
      */
@@ -87,10 +96,10 @@ public class IntakingCommands
         if (pivot != null && roller != null)
         {
             return Commands.parallel(
+                    viewController.setSolidCommand(Color.kRed),
                     pivot.retractCommand(),
                     roller.stopCommand());
-        }
-        else
+        } else
             return Commands.none();
     }
 }
