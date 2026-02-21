@@ -10,6 +10,7 @@ import javax.lang.model.util.ElementScanner14;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.motors.SparkFlexLance;
 import frc.robot.motors.TalonFXLance;
 
 /**
@@ -46,9 +47,10 @@ public class Shroud extends SubsystemBase
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
 
-    private final TalonFXLance angleMotor = new TalonFXLance(MOTOR, MOTOR_CAN_BUS, "Shroud Angle Motor");
+    private final SparkFlexLance angleMotor = new SparkFlexLance(MOTOR, MOTOR_CAN_BUS, "Shroud Angle Motor");
+    
     // TODO: Tune later
-    private static final double kP = 3.5;
+    private static final double kP = 0.1;
     private static final double kI = 0.0;
     private static final double kD = 0.0;
 
@@ -77,9 +79,9 @@ public class Shroud extends SubsystemBase
     private void configMotors()
     {
         angleMotor.setupFactoryDefaults();
-        angleMotor.setPosition(0.0);
+       angleMotor.setPosition(0.0);
 
-        angleMotor.setupBrakeMode();
+       angleMotor.setupBrakeMode();
         
         angleMotor.setupPIDController(0, kP, kI, kD);
 
@@ -140,6 +142,7 @@ public class Shroud extends SubsystemBase
     // {
     //     return () -> forwardHardLimit.get();
     // }
+
 
     /**
      * Stops the shroud from moving
