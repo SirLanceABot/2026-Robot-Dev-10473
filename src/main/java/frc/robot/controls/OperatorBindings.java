@@ -1,8 +1,11 @@
 package frc.robot.controls;
 
 import java.lang.invoke.MethodHandles;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -81,6 +84,7 @@ public final class OperatorBindings
         {
             configSuppliers();
             configDefaultCommands();
+            configRumble();
 
             configAButton();
             configBButton();
@@ -111,6 +115,28 @@ public final class OperatorBindings
 
     private static void configDefaultCommands()
     {}
+
+    private static void configRumble()
+    {
+        configRumbleTime(135);
+        configRumbleTime(110);
+        configRumbleTime(85);
+        configRumbleTime(60);
+        configRumbleTime(35);
+    }
+
+    private static void configRumbleTime(int shiftTime)
+    {
+        //is true five seconds before the shift switch
+        BooleanSupplier shiftSwitch = () -> (
+                ((DriverStation.getMatchTime() <= shiftTime) && (DriverStation.getMatchTime()  >= shiftTime - 1.5)));
+
+        Trigger rumble = new Trigger(shiftSwitch);
+
+        rumble
+            .onTrue(Commands.runOnce(() -> controller.getHID().setRumble(RumbleType.kBothRumble, 0.5)))
+            .onFalse(Commands.runOnce(() -> controller.getHID().setRumble(RumbleType.kBothRumble, 0.0)));
+    }
 
     private static void configAButton()
     {
