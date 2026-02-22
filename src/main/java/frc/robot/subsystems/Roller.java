@@ -3,9 +3,7 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.Roller.*;
 
 import java.lang.invoke.MethodHandles;
-import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.motors.TalonFXLance;
@@ -33,15 +31,21 @@ public class Roller extends SubsystemBase
     
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
-    private final TalonFXLance motor1 = new TalonFXLance(MOTOR, MOTOR_CAN_BUS, "Roller Motor");
-    // private final TalonFXLance motor2 = new TalonFXLance(MOTOR2, MOTOR_CAN_BUS, "Motor 2");
+    private final TalonFXLance motor = new TalonFXLance(MOTOR, MOTOR_CAN_BUS, "Roller Motor");
+
+    private final double kP = 0.0;
+    private final double kI = 0.0;
+    private final double kD = 0.0;
+    private final double kS = 0.0;
+    private final double kV = 0.0;
+    private final double kA = 0.0;
 
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
 
     /** 
-     * Creates a new ExampleSubsystem. 
+     * Creates a Roller
      */
     public Roller()
     {
@@ -59,28 +63,23 @@ public class Roller extends SubsystemBase
 
     private void configMotors()
     {
-        motor1.setupFactoryDefaults();
-        // motor2.setupFactoryDefaults();
-    }
+        motor.setupFactoryDefaults();
 
-    /**
-     * This sets the speed of the motors.
-     * @param speed The motor speed (-1.0 to 1.0)
-     */
-    private void set(double speed)
-    {
-        motor1.set(speed);
-        // motor2.set(speed);
+        motor.setupCoastMode();
+
+        motor.setSafetyEnabled(false);
+
+        motor.setupPIDController(0, kP, kI, kD, kS, kV, kA);
     }
 
     public void stop()
     {
-        set(0.0);
+        motor.setControlVelocity(MOTOR);;
     }
 
-    public Command setCommand(DoubleSupplier speed)
+    public Command basicSetCommand(double speed)
     {
-        return run( () -> set(MathUtil.clamp(speed.getAsDouble(), 0.0, 0.5)) );
+        return run( () -> motor.set(speed));
     }
 
     public Command stopCommand()
@@ -90,14 +89,12 @@ public class Roller extends SubsystemBase
 
     public Command intakeFuelCommand()
     {
-        return runOnce( () -> set(0.2))
-        .withName("Intake Fuel");
+        return runOnce(() -> motor.setControlVelocity(8));
     }
 
     public Command reverseCommand()
     {
-        return runOnce( () -> set(-0.1))
-        .withName("Reverse Roller");
+        return runOnce(() -> motor.setControlVelocity(-8));
     }
 
 

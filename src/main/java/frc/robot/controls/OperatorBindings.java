@@ -73,6 +73,7 @@ public final class OperatorBindings
         drivetrain = robotContainer.getDrivetrain();
         flywheel = robotContainer.getFlywheel();
         agitator = robotContainer.getAgitator();
+        roller = robotContainer.getRoller();
         pivot = robotContainer.getPivot();
         shroud = robotContainer.getShroud();
         leds = robotContainer.getLEDs();
@@ -213,11 +214,15 @@ public final class OperatorBindings
     private static void configDpadUp()
     {
         Trigger dpadUp = controller.povUp();
+        dpadUp
+            .onTrue(agitator.forwardCommand());
     }
 
     private static void configDpadDown()
     {
         Trigger dpadDown = controller.povDown();
+        dpadDown
+            .onTrue(agitator.stopCommand());
     }
 
     private static void configDpadLeft()
@@ -228,5 +233,7 @@ public final class OperatorBindings
     private static void configDpadRight()
     {
         Trigger dpadRight = controller.povRight();
+        dpadRight
+            .onTrue(flywheel.shootCommand(() -> 15));
     }
 }

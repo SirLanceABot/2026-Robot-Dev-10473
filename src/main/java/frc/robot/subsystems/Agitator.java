@@ -3,9 +3,7 @@ package frc.robot.subsystems;
 import static frc.robot.Constants.Agitator.*;
 
 import java.lang.invoke.MethodHandles;
-import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -37,9 +35,12 @@ public class Agitator extends SubsystemBase
     // Put all class variables and instance variables here
     private final TalonFXLance motor = new TalonFXLance(MOTOR, MOTOR_CAN_BUS, "Agitator Motor");
     
-    private final double kP = 0.1;
+    private final double kP = 0.46;
     private final double kI = 0.0;
     private final double kD = 0.0;
+    private final double kS = 0.3;
+    private final double kV = 0.12;
+    private final double kA = 0.0;
 
 
     // *** CLASS CONSTRUCTORS ***
@@ -65,29 +66,20 @@ public class Agitator extends SubsystemBase
     private void configMotors()
     {
         motor.setupFactoryDefaults();
-        motor.setupPIDController(0,kP,kI,kD);
+
         motor.setupCoastMode();
-        //motor1.setupFactoryDefaults();
-        //motor2.setupFactoryDefaults();
+
+        motor.setSafetyEnabled(false);
+
+        motor.setupPIDController(0, kP, kI, kD, kS, kV, kA);
     }
 
     /**
-     * This sets the speed of the motors.
-     * @param speed The motor speed (-1.0 to 1.0)
+     *  Stops the agitator
      */
-    private void setVelocity(double speed)
+    private void stop()
     {
-        motor.setControlVelocity(speed);
-        //motor1.set(speed);
-        //motor2.set(speed);
-    }
-
-    /**
-     * This sets the velocity ig
-     */
-    public void stop()
-    {
-        setVelocity(0.0);
+        motor.setControlVelocity(0.0);
     }
 
     /**
@@ -97,7 +89,7 @@ public class Agitator extends SubsystemBase
 
     public Command forwardCommand()
     {
-        return run( () -> setVelocity(5) );
+        return run(() -> motor.setControlVelocity(8));
     }
 
     /**
@@ -107,7 +99,7 @@ public class Agitator extends SubsystemBase
 
     public Command reverseCommand()
     {
-        return run( () -> setVelocity(-5) );
+        return run(() -> motor.setControlVelocity(-8));
     }
 
     /**
@@ -121,6 +113,11 @@ public class Agitator extends SubsystemBase
         .andThen(Commands.race(reverseCommand(), Commands.waitSeconds(0.1)));
     }
 
+    public Command basicSetCommand(double speed)
+    {
+        return Commands.runOnce(() -> motor.set(speed));
+    }
+
 
     /**
      * This command stops the motor
@@ -129,7 +126,6 @@ public class Agitator extends SubsystemBase
 
     public Command stopCommand()
     {
-        // return run( () -> stop() );
         return run(this::stop);
     }
 

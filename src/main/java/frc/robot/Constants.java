@@ -51,21 +51,21 @@ public final class Constants
         public static final int LEADMOTOR                   = 15;
         public static final int FOLLOWMOTOR                 = 16;
 
-        public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
+        public static final String MOTOR_CAN_BUS = CANbus.CANIVORE;
     }
 
     public static class Agitator
     {
         public static final int MOTOR                       = 19;
 
-        public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
+        public static final String MOTOR_CAN_BUS = CANbus.CANIVORE;
     }
 
     public static class Roller
     {
         public static final int MOTOR                       = 17;
 
-        public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
+        public static final String MOTOR_CAN_BUS = CANbus.CANIVORE;
     }
 
     public static class Pivot
@@ -73,7 +73,7 @@ public final class Constants
         public static final int LEADMOTOR                  = 13;
         public static final int FOLLOWMOTOR                = 14;
 
-        public static final String MOTOR_CAN_BUS = CANbus.ROBORIO;
+        public static final String MOTOR_CAN_BUS = CANbus.CANIVORE;
     }
 
     public static class Shroud

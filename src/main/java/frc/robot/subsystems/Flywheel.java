@@ -84,6 +84,9 @@ public class Flywheel extends SubsystemBase
         leadMotor.setupCoastMode();
         followMotor.setupCoastMode();
 
+        leadMotor.setSafetyEnabled(false);
+        followMotor.setSafetyEnabled(false);
+
         leadMotor.setupPIDController(0, kP, kI, kD, kS, kV, kA);
 
         followMotor.setupFollower(LEADMOTOR, false);
