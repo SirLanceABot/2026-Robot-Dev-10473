@@ -78,9 +78,6 @@ public class Flywheel extends SubsystemBase
         leadMotor.setupFactoryDefaults();
         followMotor.setupFactoryDefaults();
 
-        leadMotor.setSafetyEnabled(true);
-        followMotor.setSafetyEnabled(true);
-
         leadMotor.setupCoastMode();
         followMotor.setupCoastMode();
 
@@ -89,7 +86,7 @@ public class Flywheel extends SubsystemBase
 
         leadMotor.setupPIDController(0, kP, kI, kD, kS, kV, kA);
 
-        followMotor.setupFollower(LEADMOTOR, false);
+        followMotor.setupFollower(LEADMOTOR, true);
     }
 
     private void configShotMap()
@@ -129,7 +126,7 @@ public class Flywheel extends SubsystemBase
 
     private void stop()
     {
-        set(0.0);
+        leadMotor.setVoltage(0.0);
     }
 
     private void shoot(double speed)
@@ -199,6 +196,11 @@ public class Flywheel extends SubsystemBase
     public Command shootCommand(DoubleSupplier speed)
     {
         return runOnce(() -> shoot(speed.getAsDouble()));
+    }
+
+    public Command basicShootCommand(double speed)
+    {
+        return runOnce(() -> leadMotor.set(speed));
     }
 
     /**

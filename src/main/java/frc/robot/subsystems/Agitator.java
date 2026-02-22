@@ -79,7 +79,7 @@ public class Agitator extends SubsystemBase
      */
     private void stop()
     {
-        motor.setControlVelocity(0.0);
+        motor.setVoltage(0.0);
     }
 
     /**
@@ -89,7 +89,7 @@ public class Agitator extends SubsystemBase
 
     public Command forwardCommand()
     {
-        return run(() -> motor.setControlVelocity(8));
+        return run(() -> motor.setControlVelocity(28));
     }
 
     /**
@@ -99,7 +99,7 @@ public class Agitator extends SubsystemBase
 
     public Command reverseCommand()
     {
-        return run(() -> motor.setControlVelocity(-8));
+        return run(() -> motor.setControlVelocity(-12));
     }
 
     /**

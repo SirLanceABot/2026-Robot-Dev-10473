@@ -74,15 +74,23 @@ public class Shroud extends SubsystemBase
     private void configMotors()
     {
         angleMotor.setupFactoryDefaults();
-       angleMotor.setPosition(0.0);
+        angleMotor.setPosition(0.0);
 
-       angleMotor.setupBrakeMode();
+        angleMotor.setupBrakeMode();
+
+        angleMotor.setInverted(true);
+
+        angleMotor.setSafetyEnabled(false);
         
         angleMotor.setupPIDController(0, kP, kI, kD);
 
         // Hard Limits
         angleMotor.setupForwardHardLimitSwitch(true, true);
         angleMotor.setupReverseHardLimitSwitch(true, true);
+
+        angleMotor.setupForwardSoftLimit(4.0, true);
+        angleMotor.setupReverseSoftLimit(0.1, true);
+
     }
 
     /**
@@ -148,8 +156,19 @@ public class Shroud extends SubsystemBase
         return runOnce(() -> angleMotor.set(0.0));
     }
 
+    public Command setCommand(double speed)
+    {
+        return runOnce(() -> angleMotor.set(speed));
+    }
+
     // *** OVERRIDEN METHODS ***
     // Put all methods that are Overridden here
+
+    @Override
+    public void periodic()
+    {
+        System.out.println(angleMotor.getPosition());
+    }
 
     @Override
     public String toString()
