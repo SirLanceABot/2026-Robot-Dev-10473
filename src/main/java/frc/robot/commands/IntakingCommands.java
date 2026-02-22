@@ -33,7 +33,7 @@ public class IntakingCommands
     // Put all class variables and instance variables here
 
     private static Agitator agitator = null;
-    private static Drivetrain drivetrain = null;
+    private static CommandSwerveDrivetrain drivetrain = null;
     private static Flywheel flywheel = null;
     private static LEDs leds = null;
     private static Pivot pivot = null;
