@@ -166,9 +166,7 @@ public class Shroud extends SubsystemBase
 
     @Override
     public void periodic()
-    {
-        System.out.println(angleMotor.getPosition());
-    }
+    {}
 
     @Override
     public String toString()
