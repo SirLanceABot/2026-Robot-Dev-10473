@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.generated.TunerConstants;
 import frc.robot.sensors.Camera;
 import frc.robot.subsystems.Agitator;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.LEDs;
@@ -63,7 +63,7 @@ public class RobotContainer
     private Roller roller = null;
     private Pivot pivot = null;
     private Shroud shroud = null;
-    private Drivetrain drivetrain = null;
+    private CommandSwerveDrivetrain drivetrain = null;
     private LEDs leds = null;
     private Camera camera = null;
 
@@ -144,7 +144,7 @@ public class RobotContainer
         return shroud;
     }
 
-    public Drivetrain getDrivetrain()
+    public CommandSwerveDrivetrain getDrivetrain()
     {
         return drivetrain;
     }

@@ -15,7 +15,7 @@ import frc.robot.commands.IntakingCommands;
 import frc.robot.commands.ScoringCommands;
 import frc.robot.sensors.Camera;
 import frc.robot.subsystems.Agitator;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Pivot;
@@ -44,7 +44,7 @@ public final class OperatorBindings
     private static Roller roller;
     private static Pivot pivot;
     private static Shroud shroud;
-    private static Drivetrain drivetrain;
+    private static CommandSwerveDrivetrain drivetrain;
     private static LEDs leds;
 
     private static Camera camera;

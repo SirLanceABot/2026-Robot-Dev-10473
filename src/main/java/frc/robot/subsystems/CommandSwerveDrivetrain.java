@@ -37,7 +37,7 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
  * https://v6.docs.ctr-electronics.com/en/stable/docs/tuner/tuner-swerve/index.html
  * @author Mason Bellinger
  */
- public class Drivetrain extends TunerSwerveDrivetrain implements Subsystem 
+ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem 
  {
     private static final double kSimLoopPeriod = 0.004; // 4 ms
     private Notifier m_simNotifier = null;
@@ -144,7 +144,7 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
      * @param drivetrainConstants   Drivetrain-wide constants for the swerve drive
      * @param modules               Constants for each specific module
      */
-    public Drivetrain(
+    public CommandSwerveDrivetrain(
         SwerveDrivetrainConstants drivetrainConstants,
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
@@ -167,7 +167,7 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
      *                                CAN FD, and 100 Hz on CAN 2.0.
      * @param modules                 Constants for each specific module
      */
-    public Drivetrain(
+    public CommandSwerveDrivetrain(
         SwerveDrivetrainConstants drivetrainConstants,
         double odometryUpdateFrequency,
         SwerveModuleConstants<?, ?, ?>... modules
@@ -197,7 +197,7 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
      *                                  and radians
      * @param modules                   Constants for each specific module
      */
-    public Drivetrain(
+    public CommandSwerveDrivetrain(
         SwerveDrivetrainConstants drivetrainConstants,
         double odometryUpdateFrequency,
         Matrix<N3, N1> odometryStandardDeviation,

@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.PoseEstimator;
 
 public class PathPlannerLance
@@ -43,7 +43,7 @@ public class PathPlannerLance
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
 
-    private static Drivetrain drivetrain;
+    private static CommandSwerveDrivetrain drivetrain;
     private static Field2d field;
     private static PoseEstimator poseEstimator;
 

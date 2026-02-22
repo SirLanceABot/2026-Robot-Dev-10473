@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
 import frc.robot.pathplanner.PathPlannerLance;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 /**
  * Implements code to send data to elastic
@@ -39,7 +39,7 @@ public class ElasticLance
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
 
-    private static Drivetrain drivetrain = null;
+    private static CommandSwerveDrivetrain drivetrain = null;
 
     private static Field2d autofield = new Field2d();
 

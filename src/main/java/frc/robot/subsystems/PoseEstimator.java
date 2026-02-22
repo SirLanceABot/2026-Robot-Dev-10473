@@ -46,7 +46,7 @@ public class PoseEstimator extends SubsystemBase
 
     //Subsystems
     private final Pigeon2 gyro;
-    private final Drivetrain drivetrain;
+    private final CommandSwerveDrivetrain drivetrain;
     private final Camera camera;
 
     private final SwerveDrivePoseEstimator poseEstimator;
@@ -78,7 +78,7 @@ public class PoseEstimator extends SubsystemBase
     /** 
      * Creates a new PoseEstimator. 
      */
-    public PoseEstimator(Drivetrain drivetrain, Camera camera)
+    public PoseEstimator(CommandSwerveDrivetrain drivetrain, Camera camera)
     {
         super("PoseEstimator");
         System.out.println("  Constructor Started:  " + fullClassName);

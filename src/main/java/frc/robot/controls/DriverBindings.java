@@ -13,7 +13,7 @@ import frc.robot.RobotContainer;
 import frc.robot.commands.GeneralCommands;
 import frc.robot.sensors.Camera;
 import frc.robot.subsystems.Agitator;
-import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Flywheel;
 import frc.robot.subsystems.LEDs;
@@ -43,7 +43,7 @@ public final class DriverBindings
     private static Roller roller;
     private static Pivot pivot;
     private static Shroud shroud;
-    private static Drivetrain drivetrain;
+    private static CommandSwerveDrivetrain drivetrain;
     private static LEDs leds;
 
     private static Camera camera;
@@ -56,7 +56,7 @@ public final class DriverBindings
     private static DoubleSupplier leftXAxis;
     private static DoubleSupplier rightXAxis;
     private static DoubleSupplier scaleFactorSupplier;
-    private static double scaleFactor = 0.5;
+    private static double scaleFactor = 1;
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
