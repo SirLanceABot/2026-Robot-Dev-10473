@@ -1,21 +1,13 @@
 package frc.robot.elastic;
 
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
-import frc.robot.pathplanner.PathPlannerLance;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 /**
@@ -99,25 +91,4 @@ public class ElasticLance
         }
     }
 
-    /**
-     * Helper to extract poses from paths
-     * 
-     * @param pathPlannerPaths {@link List}<{@link PathPlannerPath}> The paths to
-     *            extract poses from
-     * @return {@link List}<{@link Pose2d}> The extracted poses from the input paths
-     * @author Unknown
-     * @implNote ~stolen~ taken from last year's code:
-     *           https://github.com/SirLanceABot/2025-Robot-Dev-10473/commit/1e412475e1989f0d6bb7df463b50acd20b2d4c8c
-     */
-    private static List<Pose2d> extractPosesFromPaths(List<PathPlannerPath> pathPlannerPaths)
-    {
-        List<Pose2d> poses = new ArrayList<>();
-        for (PathPlannerPath path : pathPlannerPaths)
-        {
-            poses.addAll(path.getAllPathPoints().stream()
-                    .map(point -> new Pose2d(point.position.getX(), point.position.getY(), new Rotation2d()))
-                    .collect(Collectors.toList()));
-        }
-        return poses;
-    }
 }

@@ -60,7 +60,6 @@ public class PoseEstimator extends SubsystemBase
     private final NetworkTable ASTable;
     private final double fieldXDimension = 16.540988;       //where are these values from?
     private final double fieldYDimension = 8.069326;
-    private final double[] defaultPosition = {0.0, 0.0, 0.0};
 
     private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
@@ -225,7 +224,7 @@ public class PoseEstimator extends SubsystemBase
      * @param target Target position
      * @return Distance from target
      */
-    public DoubleSupplier getDistanceToTarget(Pose2d robotPose, Pose2d target)
+    public DoubleSupplier getDistanceToTarget(Pose2d robotPose, Pose2d target)      //do we use this or the other ones?
     {
         DoubleSupplier deltay = () -> (target.getY() - robotPose.getY());
         DoubleSupplier deltax = () -> (target.getX() - robotPose.getX());

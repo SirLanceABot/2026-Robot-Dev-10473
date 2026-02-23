@@ -68,7 +68,6 @@ public class GeneralCommands
             return Commands.parallel(
                     agitator.forwardCommand(),
                     flywheel.shootCommand(() -> 15.0),
-                    // LEDsController.setLEDCommand(leds, ColorPattern.kGradient, Color.kRed, Color.kGreen),
                     pivot.extendCommand(),
                     roller.intakeFuelCommand(),
                     shroud.goToCommand(45)
@@ -85,7 +84,6 @@ public class GeneralCommands
             return Commands.parallel(
                     agitator.stopCommand(),
                     flywheel.stopCommand(),
-                    // LEDsController.setLEDCommand(leds, ColorPattern.kDefault),
                     pivot.retractCommand(),
                     roller.stopCommand(),
                     shroud.goToCommand(0)
