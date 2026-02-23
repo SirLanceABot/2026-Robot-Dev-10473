@@ -67,7 +67,7 @@ public class ScoringCommands
         poseEstimator = robotContainer.getPoseEstimator();
 
         if (leds != null)
-            leds.createView(0, 199);
+            view = leds.createView(0, 199);
         viewController = new LEDsController(view);
 
         System.out.println("  Constructor Finished: " + fullClassName);
