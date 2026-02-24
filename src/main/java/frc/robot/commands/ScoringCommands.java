@@ -44,7 +44,7 @@ public class ScoringCommands
     private static PoseEstimator poseEstimator;
 
     private static LEDs.LEDView view = null;
-    private static LEDsController viewController = null;
+    private static LEDsController ledViewController = null;
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
@@ -68,7 +68,7 @@ public class ScoringCommands
 
         if (leds != null)
             view = leds.createView(0, 199);
-        viewController = new LEDsController(view);
+        ledViewController = new LEDsController(view);
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -85,7 +85,7 @@ public class ScoringCommands
         if (agitator != null && flywheel != null && leds != null && shroud != null)
         {
             return Commands.parallel(
-                    viewController.setGradientCommand(Color.kBlue, Color.kRed),
+                    ledViewController.setGradientCommand(Color.kBlue, Color.kRed),
                     flywheel.shootCommand(() -> 15.0).until(flywheel.isAtSetSpeed(15)),
                     shroud.goToCommand(2.0))
                     .andThen(agitator.forwardCommand());
@@ -103,7 +103,7 @@ public class ScoringCommands
     {
         if (agitator != null && flywheel != null)
         {
-            return viewController.setSolidCommand(Color.kRed)
+            return ledViewController.setSolidCommand(Color.kRed)
                     .andThen(flywheel.stopCommand())
                     .andThen(agitator.stopCommand());
         } else
@@ -120,21 +120,20 @@ public class ScoringCommands
      */
     public static Command stationaryScoreCommand()
     {
-        if (flywheel != null && shroud != null && agitator != null && drivetrain != null && poseEstimator != null)
+        if(flywheel != null && shroud != null && agitator != null && drivetrain != null && poseEstimator != null)
         {
             double distance = poseEstimator.getDistanceToAllianceHub().getAsDouble();
-            return viewController.setRainbowCommand()
-                    .andThen(drivetrain.lockWheelsCommand())
-                    .andThen(
-                            drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5,
-                                    poseEstimator.getAngleToAllianceHub()))
-                    .andThen(
-                            shroud.setAngleFromDistanceCommand(distance))
-                    .andThen(
-                            flywheel.shootFromDistanceCommand(distance))
-                    .until(flywheel.isAtSetSpeed(flywheel.getShotSpeed(distance)))
+
+            return drivetrain.lockWheelsCommand().withTimeout(0.1)
+                .andThen(Commands.parallel(
+                    ledViewController.setRainbowCommand(),
+                    drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, poseEstimator.getAngleToAllianceHub()),
+                    shroud.setAngleFromDistanceCommand(distance),
+                    flywheel.shootFromDistanceCommand(distance)
+                        .until(flywheel.isAtSetSpeed(flywheel.getShotSpeed(distance)))))
                     .andThen(agitator.forwardCommand());
-        } else
+        }
+        else
             return Commands.none();
     }
 }

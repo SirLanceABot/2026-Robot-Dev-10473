@@ -104,6 +104,7 @@ public class Agitator extends SubsystemBase
 
     /**
      * This command jitters the motor
+     * NOT TESTED (!!!!!!!!!!!!)
      * @return {@link Command}
      */
 
@@ -113,6 +114,7 @@ public class Agitator extends SubsystemBase
         .andThen(Commands.race(reverseCommand(), Commands.waitSeconds(0.1)));
     }
 
+    //only for testing
     public Command basicSetCommand(double speed)
     {
         return Commands.runOnce(() -> motor.set(speed));

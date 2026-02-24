@@ -77,6 +77,7 @@ public class Roller extends SubsystemBase
         motor.setControlVelocity(MOTOR);;
     }
 
+    //only used for testing
     public Command basicSetCommand(double speed)
     {
         return run( () -> motor.set(speed));

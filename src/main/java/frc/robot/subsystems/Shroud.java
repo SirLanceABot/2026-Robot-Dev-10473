@@ -10,7 +10,6 @@ import frc.robot.motors.SparkFlexLance;
 
 /**
  * Class controling the angle of the shroud 
- * @author Mukul Kedia
  */
 public class Shroud extends SubsystemBase
 {
@@ -84,10 +83,11 @@ public class Shroud extends SubsystemBase
         
         angleMotor.setupPIDController(0, kP, kI, kD);
 
-        // Hard Limits
+        //Hard Limits
         angleMotor.setupForwardHardLimitSwitch(true, true);
         angleMotor.setupReverseHardLimitSwitch(true, true);
 
+        //Soft Limits
         angleMotor.setupForwardSoftLimit(4.0, true);
         angleMotor.setupReverseSoftLimit(0.1, true);
 
@@ -95,7 +95,7 @@ public class Shroud extends SubsystemBase
 
     /**
      * Moves the shroud to the specified position (rotations)
-     * @param degrees {@link Double} The degrees the shroud should be set to
+     * @param degrees {@link Double} The position the shroud should be set to
      */
     private void goTo(double position)
     {
@@ -104,7 +104,7 @@ public class Shroud extends SubsystemBase
 
     /**
      * Moves the shroud to the specified position (in rotations)
-     * @param position {@link double} The degrees the shroud should be set to
+     * @param position {@link double} The position the shroud should be set to (use constants)
      * @return {@link Command} The command to move the shroud
      */
     public Command goToCommand(double position)
@@ -114,7 +114,7 @@ public class Shroud extends SubsystemBase
 
     /**
      * Moves the shroud to the appropriate angle for the 
-     * @param distance {@link Double} The degree
+     * @param distance {@link Double} Distance in meters
      * @return {@link Command} Distance to angle command
      */
     public Command setAngleFromDistanceCommand(double distance)
