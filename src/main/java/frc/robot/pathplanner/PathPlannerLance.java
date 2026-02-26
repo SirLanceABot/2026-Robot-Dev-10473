@@ -55,9 +55,10 @@ public class PathPlannerLance
         drivetrain = robotContainer.getDrivetrain();
         poseEstimator = robotContainer.getPoseEstimator();
 
+        configAutoBuilder();
         configAutoChooser();
         // getAutonomousCommand();
-        // configAutoBuilder();
+        
 
         FollowPathCommand.warmupCommand().schedule();
         PathfindingCommand.warmupCommand().schedule();

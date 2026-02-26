@@ -41,8 +41,8 @@ public class RobotContainer
     private boolean useFullRobot = false;
 
     private boolean useExampleSubsystem = false;
-    private boolean useFlywheel = false;
-    private boolean useAgitator = false;
+    private boolean useFlywheel = true;
+    private boolean useAgitator = true;
     private boolean useRoller = false;
     private boolean usePivot = false;
     private boolean useShroud = false;
@@ -53,7 +53,7 @@ public class RobotContainer
     private boolean usePoseEstimator = false;
 
     private boolean useDriverController = false;
-    private boolean useOperatorController = false;
+    private boolean useOperatorController = true;
     
 
     // Robot components

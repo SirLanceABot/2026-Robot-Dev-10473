@@ -44,11 +44,11 @@ public class Flywheel extends SubsystemBase
     private InterpolatingDoubleTreeMap distanceToSpeedMap = new InterpolatingDoubleTreeMap();
 
     // PID constants
-    private final double kP = 0.401;
+    private final double kP = 0.17;
     private final double kI = 0.0;
     private final double kD = 0.0;
-    private final double kS = 0.0;
-    private final double kV = 0.2;
+    private final double kS = 0.1;
+    private final double kV = 0.105;
     private final double kA = 0.0;
 
 
@@ -103,16 +103,18 @@ public class Flywheel extends SubsystemBase
         distanceToSpeedMap.put(8.0, 10473.0);
         distanceToSpeedMap.put(9.0, 10473.0);
         distanceToSpeedMap.put(10.0, 10473.0);
-        distanceToSpeedMap.put(11.0, 10473.0);
-        distanceToSpeedMap.put(12.0, 10473.0);
-        distanceToSpeedMap.put(13.0, 10473.0);
-        distanceToSpeedMap.put(14.0, 10473.0);
-        distanceToSpeedMap.put(15.0, 10473.0);
-        distanceToSpeedMap.put(16.0, 10473.0);
-        distanceToSpeedMap.put(17.0, 10473.0);
-        distanceToSpeedMap.put(18.0, 10473.0);
-        distanceToSpeedMap.put(19.0, 10473.0);
-        distanceToSpeedMap.put(20.0, 10473.0);
+
+        //we're B team ;-;
+        // distanceToSpeedMap.put(11.0, 10473.0);
+        // distanceToSpeedMap.put(12.0, 10473.0);
+        // distanceToSpeedMap.put(13.0, 10473.0);
+        // distanceToSpeedMap.put(14.0, 10473.0);
+        // distanceToSpeedMap.put(15.0, 10473.0);
+        // distanceToSpeedMap.put(16.0, 10473.0);
+        // distanceToSpeedMap.put(17.0, 10473.0);
+        // distanceToSpeedMap.put(18.0, 10473.0);
+        // distanceToSpeedMap.put(19.0, 10473.0);
+        // distanceToSpeedMap.put(20.0, 10473.0);
     }
 
     /**

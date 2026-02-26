@@ -214,20 +214,28 @@ public final class OperatorBindings
     private static void configDpadUp()
     {
         Trigger dpadUp = controller.povUp();
+        dpadUp
+            .onTrue(flywheel.shootCommand(() -> 115));
     }
 
     private static void configDpadDown()
     {
         Trigger dpadDown = controller.povDown();
+        dpadDown
+            .onTrue(flywheel.stopCommand());
     }
 
     private static void configDpadLeft()
     {
-        Trigger dpadLeft = controller.povLeft();;
+        Trigger dpadLeft = controller.povLeft();
+        dpadLeft
+            .onTrue(agitator.forwardCommand());
     }
 
     private static void configDpadRight()
     {
         Trigger dpadRight = controller.povRight();
+        dpadRight
+            .onTrue(agitator.stopCommand());
     }
 }
