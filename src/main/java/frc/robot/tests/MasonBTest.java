@@ -5,6 +5,7 @@ import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Pivot;
@@ -36,8 +37,8 @@ public class MasonBTest implements Test
     // private final Drivetrain drivetrain;
     private final Shroud shroud;
     private final Pivot pivot;
-    // private final Roller roller;
-    private final Joystick joystick = new Joystick(0);
+    private final Roller roller;
+    // private final Joystick joystick = new Joystick(0);
     private final CommandXboxController controller = new CommandXboxController(0);
 
 
@@ -58,7 +59,7 @@ public class MasonBTest implements Test
         // drivetrain = robotContainer.getDrivetrain();
         shroud = robotContainer.getShroud();
         pivot = robotContainer.getPivot();
-        // roller = robotContainer.getRoller();
+        roller = robotContainer.getRoller();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -77,10 +78,20 @@ public class MasonBTest implements Test
      */
     public void init()
     {
+        Trigger aButton = controller.a();
+        Trigger bButton = controller.b();
         // controller.a().whileTrue(drivetrain.lockWheelsCommand());
-        controller.a().onTrue(pivot.extendCommand());
-        controller.b().onTrue(pivot.retractCommand());
-        controller.x().onTrue(pivot.stopCommand());
+        // controller.a().onTrue(pivot.extendCommand());
+        // controller.b().onTrue(pivot.retractCommand());
+        // controller.x().onTrue(pivot.stopCommand());
+        aButton
+            // .whileTrue(roller.basicSetCommand(0.1))
+            // .onFalse(roller.basicSetCommand(0.0));
+            .whileTrue(pivot.setCommand(0.05))
+            .onFalse(pivot.setCommand(0.0));
+        bButton
+            .whileTrue(pivot.setCommand(-0.05))
+            .onFalse(pivot.setCommand(0.0));
 
         // drivetrain.setDefaultCommand(drivetrain.driveCommand(() -> -joystick.getRawAxis(1), () -> -joystick.getRawAxis(0), () -> joystick.getRawAxis(4), () -> 0.5));
     }
@@ -90,7 +101,7 @@ public class MasonBTest implements Test
      */
     public void periodic()
     {
-        
+        // roller.intakeFuelCommand();
         // System.out.println(shroud.getLimitSwitchState().getAsBoolean());
         // CommandSwerveDrivetrain.driveCommand(() -> -joystick.getRawAxis(1), () -> -joystick.getRawAxis(0), () -> joystick.getRawAxis(4), () -> 0.5).schedule();
         // drivetrain.pointWheelsCommand(() -> -joystick.getRawAxis(1), () -> -joystick.getRawAxis(0)).schedule();

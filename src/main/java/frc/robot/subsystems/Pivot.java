@@ -157,6 +157,11 @@ public class Pivot extends SubsystemBase
         leadMotor.setControlPosition(EXTENDED);
     }
 
+    public Command setCommand(double speed)
+    {
+        return run(() -> set(speed));
+    }
+
     /**
      * Retract the pivot arm
      * @return Retract command
