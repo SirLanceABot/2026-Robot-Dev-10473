@@ -46,7 +46,7 @@ public class RobotContainer
     private boolean usePivot = false;
     private boolean useShroud = false;
     private boolean useCamera = false;
-    private boolean useDrivetrain = false;
+    private boolean useDrivetrain = true;
 
     private boolean usePoseEstimator = false;
 

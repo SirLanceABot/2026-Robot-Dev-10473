@@ -95,16 +95,16 @@ public class Flywheel extends SubsystemBase
         //TODO: Tune these values with the real bot
         distanceToSpeedMap.put(1.0, 10473.0);
         distanceToSpeedMap.put(2.0, 10473.0);
-        distanceToSpeedMap.put(3.0, 10473.0);
-        distanceToSpeedMap.put(4.0, 10473.0);
-        distanceToSpeedMap.put(5.0, 10473.0);
-        distanceToSpeedMap.put(6.0, 10473.0);
-        distanceToSpeedMap.put(7.0, 10473.0);
-        distanceToSpeedMap.put(8.0, 10473.0);
-        distanceToSpeedMap.put(9.0, 10473.0);
-        distanceToSpeedMap.put(10.0, 10473.0);
+        distanceToSpeedMap.put(3.0, 100.0);
 
-        //we're B team ;-;
+        //3m is our maximum distance
+        // distanceToSpeedMap.put(4.0, 10473.0);
+        // distanceToSpeedMap.put(5.0, 10473.0);
+        // distanceToSpeedMap.put(6.0, 10473.0);
+        // distanceToSpeedMap.put(7.0, 10473.0);
+        // distanceToSpeedMap.put(8.0, 10473.0);
+        // distanceToSpeedMap.put(9.0, 10473.0);
+        // distanceToSpeedMap.put(10.0, 10473.0);
         // distanceToSpeedMap.put(11.0, 10473.0);
         // distanceToSpeedMap.put(12.0, 10473.0);
         // distanceToSpeedMap.put(13.0, 10473.0);
@@ -168,7 +168,7 @@ public class Flywheel extends SubsystemBase
      */
     public double getShotSpeed(double distance)
     {
-        distance = Math.max(1.0, Math.min(20.0, distance));
+        distance = Math.max(0.0, Math.min(3.0, distance));
         return distanceToSpeedMap.get(distance);
     }
 
@@ -200,6 +200,7 @@ public class Flywheel extends SubsystemBase
         return runOnce(() -> shoot(speed.getAsDouble()));
     }
 
+    //do not use, only for testing
     public Command basicShootCommand(double speed)
     {
         return runOnce(() -> leadMotor.set(speed));

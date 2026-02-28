@@ -69,8 +69,7 @@ public class ScoringCommands
     }
 
     /**
-     * Set shroud to position 2, set flywheel to a speed of 15 RPS, and activates
-     * the agitator
+     * Shoots at a fixed rate in the direction we are facing, in order to pass fuel
      * 
      * @author Jackson D.
      * @return Pass Command
@@ -81,8 +80,8 @@ public class ScoringCommands
         {
             return Commands.parallel(
                     view.setGradientCommand(Color.kBlue, Color.kRed),
-                    flywheel.shootCommand(() -> 15.0).until(flywheel.isAtSetSpeed(15)),
-                    shroud.goToCommand(2.0))
+                    flywheel.shootCommand(() -> 80).until(flywheel.isAtSetSpeed(15)))
+                    // shroud.goToCommand(2.0))
                     .andThen(agitator.forwardCommand());
         } else
             return Commands.none();
@@ -106,7 +105,7 @@ public class ScoringCommands
     }
 
     /**
-     * Command to stop driving, rotate towards the hub, set the flywheel and shroud
+     * Command to stop driving, rotate towards the hub, set the flywheel
      * appropriately, and score.
      * NOT TESTED(!!!!!!!)
      * 
@@ -123,7 +122,7 @@ public class ScoringCommands
                 .andThen(Commands.parallel(
                     view.setRainbowCommand(),
                     drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, poseEstimator.getAngleToAllianceHub()),
-                    shroud.setAngleFromDistanceCommand(distance),
+                    // shroud.setAngleFromDistanceCommand(distance),
                     flywheel.shootFromDistanceCommand(distance)
                         .until(flywheel.isAtSetSpeed(flywheel.getShotSpeed(distance)))))
                     .andThen(agitator.forwardCommand());

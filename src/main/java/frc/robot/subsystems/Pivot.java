@@ -36,6 +36,7 @@ public class Pivot extends SubsystemBase
     private final TalonFXLance leadMotor = new TalonFXLance(LEADMOTOR, MOTOR_CAN_BUS, "Pivot Lead Motor");
     private final TalonFXLance followMotor = new TalonFXLance(FOLLOWMOTOR, MOTOR_CAN_BUS, "Pivot Follow Motor");
 
+    //TODO: fine-tune these values
     private static final double RETRACTED = 0.0;
     private static final double EXTENDED = 10.0;
     private static final double TOLERANCE = 0.2;
@@ -95,7 +96,7 @@ public class Pivot extends SubsystemBase
 
     public void stop()
     {
-        set(0.0);
+        leadMotor.setVoltage(0.0);
     }
 
     /**
@@ -106,30 +107,6 @@ public class Pivot extends SubsystemBase
     {
         return leadMotor.getPosition();
     }
-
-    // public BooleanSupplier isAtSetPosition(double targetPosition)
-    // {
-    //     double currentPosition = getPosition();
-
-    //     return () ->
-    //     {
-    //         if((currentPosition + TOLERANCE > targetPosition) && (currentPosition - TOLERANCE < targetPosition))
-    //             return true;
-    //         else
-    //             return false;
-    //     };
-    // }
-
-    // public BooleanSupplier isAtSetPosition(double targetPosition)
-    // {
-    //     return () -> 
-    //     {
-    //         if(MathUtil.isNear(targetPosition, getPosition(), TOLERANCE))
-    //             return true;
-    //         else
-    //             return false;
-    //     };
-    // }
 
     /**
      * @return Pivot is retracted
@@ -168,8 +145,6 @@ public class Pivot extends SubsystemBase
      */
     public Command retractCommand()
     {
-        // return run(() -> retract()).until(() -> isAtSetPosition(RETRACTED).getAsBoolean())
-        //         .andThen(stopCommand());
         return run(() -> retract()).until(isRetracted())
                 .andThen(stopCommand());
     }
@@ -180,8 +155,6 @@ public class Pivot extends SubsystemBase
      */
     public Command extendCommand()
     {
-        // return run(() -> extend()).until(() -> isAtSetPosition(EXTENDED).getAsBoolean())
-        //         .andThen(stopCommand());
         return run(() -> extend()).until(isExtended())
                 .andThen(stopCommand());
     }

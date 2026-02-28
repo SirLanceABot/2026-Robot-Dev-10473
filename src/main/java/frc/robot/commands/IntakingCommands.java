@@ -64,12 +64,12 @@ public class IntakingCommands
     }
 
     /**
-     * Extend pivot, then score
+     * Intake and activate LEDs
      * 
      * @author Jackson D.
      * @return Simple score command
      */
-    public static Command simpleIntakeCommand()
+    public static Command intakeCommand()
     {
         if (pivot != null && roller != null)
         {
@@ -80,8 +80,10 @@ public class IntakingCommands
             return Commands.none();
     }
 
+
+
     /**
-     * Retracts the pivot and turns off the roller
+     * Turn off rollers and reset LEDs to default
      * 
      * @author Jackson D.
      * @return Intake stop command
@@ -92,7 +94,7 @@ public class IntakingCommands
         {
             return Commands.parallel(
                     view.setSolidCommand(Color.kRed),
-                    pivot.retractCommand(),
+                    // pivot.retractCommand(),
                     roller.stopCommand());
         } else
             return Commands.none();

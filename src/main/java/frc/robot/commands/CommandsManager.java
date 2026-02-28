@@ -59,7 +59,7 @@ public final class CommandsManager
         NamedCommands.registerCommand("Eject Fuel Command", GeneralCommands.ejectFuelCommand());
 
         //IntakingCommands
-        NamedCommands.registerCommand("Simple Intake Command", IntakingCommands.simpleIntakeCommand());
+        NamedCommands.registerCommand("Simple Intake Command", IntakingCommands.intakeCommand());
         NamedCommands.registerCommand("Stop Intaking Command", IntakingCommands.stopIntakingCommand());
 
         //ScoringCommands
