@@ -319,12 +319,15 @@ public class LEDs
     {
         for (LEDView existing : views)
         {
+            if (existing.startIndex == startIndex && existing.endIndex == endIndex)
+            {
+                return existing;
+            }
+
             if (startIndex <= existing.endIndex && endIndex >= existing.startIndex)
             {
-                throw new IllegalArgumentException(
-                        "View [" + startIndex + ", " + endIndex +
-                                "] overlaps with existing view [" + existing.startIndex + ", " + existing.endIndex
-                                + "]");
+                throw new IllegalArgumentException(String.format("View [%s, %s] overlaps with existing view [%s, %s]",
+                        startIndex, endIndex, existing.startIndex, existing.endIndex));
             }
         }
 

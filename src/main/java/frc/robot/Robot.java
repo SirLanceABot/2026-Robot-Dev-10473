@@ -91,6 +91,10 @@ public class Robot extends TimedRobot
         CommandScheduler.getInstance().run();
 
         ElasticLance.updateSmartDashboard();
+
+        LEDs leds = robotContainer.getLEDs();
+        if (leds != null)
+            leds.periodic();
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
