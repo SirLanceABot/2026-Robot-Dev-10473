@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot;
 
 import static frc.robot.Constants.LEDs.*;
 
@@ -14,14 +14,13 @@ import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * Class controling the LED strip
  * 
  * @author Mukul Kedia
  */
-public class LEDs extends SubsystemBase
+public class LEDs
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -290,7 +289,6 @@ public class LEDs extends SubsystemBase
      */
     public LEDs()
     {
-        super("LEDs");
         System.out.println("  Constructor Started:  " + fullClassName);
 
         configLEDStrip();
@@ -350,10 +348,9 @@ public class LEDs extends SubsystemBase
         views.remove(view);
     }
 
-    // *** OVERRIDEN METHODS ***
-    // Put all methods that are Overridden here
-
-    @Override
+    /**
+     * Updates the dirty LEDViews and the LED strip
+     */
     public void periodic()
     {
         boolean dirty = false;
