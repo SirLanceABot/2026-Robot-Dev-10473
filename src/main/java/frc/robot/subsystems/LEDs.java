@@ -1,11 +1,11 @@
-package frc.robot;
+package frc.robot.subsystems;
 
 import static frc.robot.Constants.LEDs.*;
 
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.AddressableLED;
@@ -17,10 +17,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 /**
- * Class controling the LED strip
+ * Class controlling the LED strip
  * 
  * @author Mukul Kedia
  */
+// TODO: Default Color
+// TODO: Brightness
 public final class LEDs
 {
     // This string gets the full name of the class, including the package name
@@ -32,8 +34,6 @@ public final class LEDs
     static
     {
         System.out.println("Loading: " + fullClassName);
-
-        configLEDStrip();
     }
 
     // *** INNER ENUMS and INNER CLASSES ***
@@ -44,22 +44,14 @@ public final class LEDs
      */
     public static final class LEDView
     {
-        private static final int MAX_HISTORY = 100;
-
         private final int startIndex;
         private final int endIndex;
         private final AddressableLEDBufferView bufferView;
-        private final List<PatternState> history = new ArrayList<>();
-        private LEDPattern pattern = LEDPattern.solid(Color.kBlack);
-        private boolean isAnimated = false;
+        private LEDPattern basePattern = LEDPattern.solid(Color.kBlack);
+        private boolean baseIsAnimated = false;
+        private LEDPattern activePattern = basePattern;
+        private boolean activeIsAnimated = false;
         private boolean isDirty = true;
-
-        /**
-         * Helper class to store history states
-         */
-        private record PatternState(LEDPattern pattern, boolean isAnimated)
-        {
-        }
 
         /**
          * Creates the LED view
@@ -83,24 +75,19 @@ public final class LEDs
          * @param isAnimated {@link Boolean} Whether the pattern needs to be updated
          *            constantly
          */
-        private void setPattern(final LEDPattern pattern, final boolean isAnimated)
+        private void setPattern(final LEDPattern pattern, final boolean isAnimated, final boolean isModifier)
         {
             Objects.requireNonNull(pattern);
 
-            if (this.pattern.equals(pattern) && this.isAnimated == isAnimated)
-            {
-                return;
-            }
-
-            if (history.size() >= MAX_HISTORY)
-            {
-                history.remove(0);
-            }
-            history.add(new PatternState(this.pattern, this.isAnimated));
-
-            this.pattern = pattern;
-            this.isAnimated = isAnimated;
+            this.activePattern = pattern;
+            this.activeIsAnimated = isAnimated;
             this.isDirty = true;
+
+            if (!isModifier)
+            {
+                this.basePattern = pattern;
+                this.baseIsAnimated = isAnimated;
+            }
         }
 
         /**
@@ -121,7 +108,7 @@ public final class LEDs
         private void setSolid(final Color color)
         {
             Objects.requireNonNull(color);
-            setPattern(LEDPattern.solid(color), false);
+            setPattern(LEDPattern.solid(color), false, false);
         }
 
         /**
@@ -133,6 +120,7 @@ public final class LEDs
          */
         public Command setSolidCommand(final Color color)
         {
+            Objects.requireNonNull(color);
             return Commands.runOnce(() -> setSolid(color));
         }
 
@@ -146,10 +134,12 @@ public final class LEDs
             Objects.requireNonNull(colors);
             if (colors.length < 2)
                 throw new IllegalArgumentException("There must be more than 2 colors");
+            for (Color color : colors)
+                Objects.requireNonNull(color);
             setPattern(
                     LEDPattern.gradient(LEDPattern.GradientType.kContinuous, colors)
                             .scrollAtRelativeSpeed(Units.Percent.per(Units.Second).of(100)),
-                    true);
+                    true, false);
         }
 
         /**
@@ -161,6 +151,11 @@ public final class LEDs
          */
         public Command setGradientCommand(final Color... colors)
         {
+            Objects.requireNonNull(colors);
+            if (colors.length < 2)
+                throw new IllegalArgumentException("There must be more than 2 colors");
+            for (Color color : colors)
+                Objects.requireNonNull(color);
             return Commands.runOnce(() -> setGradient(colors));
         }
 
@@ -172,7 +167,7 @@ public final class LEDs
             setPattern(
                     LEDPattern.rainbow(255, 255)
                             .scrollAtRelativeSpeed(Units.Percent.per(Units.Second).of(100)),
-                    true);
+                    true, false);
         }
 
         /**
@@ -193,7 +188,7 @@ public final class LEDs
          */
         private void setBlink(final double seconds)
         {
-            setPattern(this.pattern.blink(Units.Seconds.of(seconds)), true);
+            setPattern(this.basePattern.blink(Units.Seconds.of(seconds)), true, true);
         }
 
         /**
@@ -215,7 +210,7 @@ public final class LEDs
          */
         private void setBlink(final double offSeconds, final double onSeconds)
         {
-            setPattern(this.pattern.blink(Units.Seconds.of(offSeconds), Units.Seconds.of(onSeconds)), true);
+            setPattern(this.basePattern.blink(Units.Seconds.of(offSeconds), Units.Seconds.of(onSeconds)), true, true);
         }
 
         /**
@@ -237,7 +232,7 @@ public final class LEDs
          */
         private void setBreathe(final double seconds)
         {
-            setPattern(this.pattern.breathe(Units.Seconds.of(seconds)), true);
+            setPattern(this.basePattern.breathe(Units.Seconds.of(seconds)), true, true);
         }
 
         /**
@@ -253,49 +248,24 @@ public final class LEDs
         }
 
         /**
-         * Undos the last change to the LED view's pattern
+         * Removes the current modifier of the LED view
          */
-        public void undo()
+        public void removeModifier()
         {
-            if (!history.isEmpty())
-            {
-                int lastIndex = history.size() - 1;
-                PatternState previousState = history.get(lastIndex);
-
-                this.pattern = previousState.pattern;
-                this.isAnimated = previousState.isAnimated;
-                this.isDirty = true;
-
-                history.remove(lastIndex);
-            }
+            activePattern = basePattern;
+            activeIsAnimated = baseIsAnimated;
+            isDirty = true;
         }
 
         /**
-         * Undos the last change to the LED view's pattern
+         * Removes the current modifier of the LED view
          * 
-         * @return {@link Command} The command to undo the last change
+         * @return {@link Command} The command to remove the current modifer of the LED
+         *         view
          */
-        public Command undoCommand()
+        public Command removeModifierCommand()
         {
-            return Commands.runOnce(() -> undo());
-        }
-
-        /**
-         * Clears the LED view's history
-         */
-        public void clear()
-        {
-            history.clear();
-        }
-
-        /**
-         * Clears the LED view's history
-         * 
-         * @return {@link Command} The command to undo the last change
-         */
-        public Command clearCommand()
-        {
-            return Commands.runOnce(() -> clear());
+            return Commands.runOnce(() -> removeModifier());
         }
     }
 
@@ -304,22 +274,10 @@ public final class LEDs
 
     private static AddressableLED led = null;
     private static AddressableLEDBuffer ledBuffer;
-    private static final List<LEDView> views = new ArrayList<>();
+    private static final List<LEDView> views = new CopyOnWriteArrayList<>();
 
     // *** CLASS METHODS & INSTANCE METHODS ***
     // Put all class methods and instance methods here
-
-    /**
-     * Configures the LED strip for use
-     */
-    private static void configLEDStrip()
-    {
-        led = new AddressableLED(LED_PORT < 0 || LED_PORT > 9 ? 0 : LED_PORT);
-        ledBuffer = new AddressableLEDBuffer(LED_LENGTH < 1 || LED_LENGTH > 5460 ? 1 : LED_LENGTH);
-
-        led.setLength(ledBuffer.getLength());
-        led.start();
-    }
 
     /**
      * Creates a LED view
@@ -330,6 +288,11 @@ public final class LEDs
      */
     public static LEDView createView(final int startIndex, final int endIndex)
     {
+        if (led == null)
+        {
+            throw new IllegalStateException("LEDs not initialized");
+        }
+
         if (startIndex < 0 || endIndex >= ledBuffer.getLength() || startIndex > endIndex)
         {
             throw new IllegalArgumentException("Invalid LED view bounds");
@@ -363,11 +326,40 @@ public final class LEDs
      */
     public static void deleteView(final LEDView view)
     {
-        view.pattern = LEDPattern.solid(Color.kBlack);
-        view.pattern.applyTo(view.bufferView);
-        led.setData(ledBuffer);
+        if (led == null)
+        {
+            throw new IllegalStateException("LEDs not initialized");
+        }
 
-        views.remove(view);
+        Objects.requireNonNull(view);
+        if (!views.remove(view))
+        {
+            throw new IllegalArgumentException("View not found");
+        }
+
+        LEDPattern.solid(Color.kBlack).applyTo(view.bufferView);
+        led.setData(ledBuffer);
+    }
+
+    /**
+     * Initializes the LED strip
+     * 
+     * @implNote Not called automatically as this is not a subsystem
+     */
+    public static void init()
+    {
+        if (led != null)
+        {
+            throw new IllegalStateException("LEDs already initialized");
+        }
+
+        led = new AddressableLED(LED_PORT);
+        ledBuffer = new AddressableLEDBuffer(LED_LENGTH);
+
+        led.setLength(ledBuffer.getLength());
+        led.start();
+
+        System.out.println("  LEDs initalized:   " + fullClassName);
     }
 
     /**
@@ -377,13 +369,18 @@ public final class LEDs
      */
     public static void periodic()
     {
+        if (led == null)
+        {
+            throw new IllegalStateException("LEDs not initialized");
+        }
+
         boolean dirty = false;
 
         for (LEDView view : views)
         {
-            if (view.isAnimated || view.isDirty)
+            if (view.activeIsAnimated || view.isDirty)
             {
-                view.pattern.applyTo(view.bufferView);
+                view.activePattern.applyTo(view.bufferView);
                 view.isDirty = false;
                 dirty = true;
             }
@@ -393,5 +390,30 @@ public final class LEDs
         {
             led.setData(ledBuffer);
         }
+    }
+
+    /**
+     * Cleans up the LED strip
+     * 
+     * @implNote Not called automatically as this is not a subsystem
+     */
+    public static void exit()
+    {
+        if (led == null)
+        {
+            throw new IllegalStateException("LEDs already cleaned up");
+        }
+
+        LEDPattern.solid(Color.kBlack).applyTo(ledBuffer);
+        led.setData(ledBuffer);
+
+        led.stop();
+        led.close();
+
+        led = null;
+        ledBuffer = null;
+        views.clear();
+
+        System.out.println("  LEDs deinitalized: " + fullClassName);
     }
 }

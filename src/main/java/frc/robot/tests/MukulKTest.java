@@ -4,7 +4,7 @@ import java.lang.invoke.MethodHandles;
 
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.LEDs;
+import frc.robot.subsystems.LEDs;
 import frc.robot.RobotContainer;
 
 @SuppressWarnings("unused")
@@ -54,6 +54,8 @@ public class MukulKTest implements Test
      */
     public void init()
     {
+        LEDs.init();
+
         var leftView = LEDs.createView(0, 99);
         var rightView = LEDs.createView(100, 199);
         controller.a().onTrue(leftView.setSolidCommand(Color.kWhite));
@@ -67,6 +69,7 @@ public class MukulKTest implements Test
      */
     public void periodic()
     {
+        LEDs.periodic();
     }
 
     /**
@@ -74,5 +77,6 @@ public class MukulKTest implements Test
      */
     public void exit()
     {
+        LEDs.exit();
     }
 }
