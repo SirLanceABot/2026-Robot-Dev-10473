@@ -4,6 +4,7 @@ import static frc.robot.Constants.LEDs.*;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import edu.wpi.first.units.Units;
@@ -39,29 +40,23 @@ public class LEDs
     /**
      * An LED view with helpers to create and set patterns
      */
-    public class LEDView
+    public static class LEDView
     {
+        private static final int MAX_HISTORY = 100;
+
         private final int startIndex;
         private final int endIndex;
         private final AddressableLEDBufferView bufferView;
+        private final List<PatternState> history = new ArrayList<>();
         private LEDPattern pattern = LEDPattern.solid(Color.kBlack);
-        private ArrayList<PatternState> history = new ArrayList<>();
         private boolean isAnimated = false;
-        private boolean needsUpdate = true;
+        private boolean isDirty = true;
 
         /**
          * Helper class to store history states
          */
-        private class PatternState
+        private record PatternState(LEDPattern pattern, boolean isAnimated)
         {
-            LEDPattern pattern;
-            boolean isAnimated;
-
-            PatternState(LEDPattern p, boolean a)
-            {
-                this.pattern = p;
-                this.isAnimated = a;
-            }
         }
 
         /**
@@ -70,11 +65,11 @@ public class LEDs
          * @param startIndex {@link Integer} The start index of the view
          * @param endIndex {@link Integer} The end index of the view
          */
-        private LEDView(int startIndex, int endIndex)
+        private LEDView(int startIndex, int endIndex, AddressableLEDBufferView bufferView)
         {
             this.startIndex = startIndex;
             this.endIndex = endIndex;
-            this.bufferView = ledBuffer.createView(startIndex, endIndex);
+            this.bufferView = bufferView;
         }
 
         /**
@@ -91,11 +86,20 @@ public class LEDs
                 throw new IllegalArgumentException("Pattern cannot be null");
             }
 
+            if (this.pattern.equals(pattern) && this.isAnimated == isAnimated)
+            {
+                return;
+            }
+
+            if (history.size() >= MAX_HISTORY)
+            {
+                history.remove(0);
+            }
             history.add(new PatternState(this.pattern, this.isAnimated));
 
             this.pattern = pattern;
             this.isAnimated = isAnimated;
-            this.needsUpdate = true;
+            this.isDirty = true;
         }
 
         /**
@@ -257,7 +261,7 @@ public class LEDs
 
                 this.pattern = previousState.pattern;
                 this.isAnimated = previousState.isAnimated;
-                this.needsUpdate = true;
+                this.isDirty = true;
 
                 history.remove(lastIndex);
             }
@@ -271,6 +275,24 @@ public class LEDs
         public Command undoCommand()
         {
             return Commands.runOnce(() -> undo());
+        }
+
+        /**
+         * Clears the LED view's history
+         */
+        public void clear()
+        {
+            history.clear();
+        }
+
+        /**
+         * Clears the LED view's history
+         * 
+         * @return {@link Command} The command to undo the last change
+         */
+        public Command clearCommand()
+        {
+            return Commands.runOnce(() -> clear());
         }
     }
 
@@ -317,6 +339,11 @@ public class LEDs
      */
     public LEDView createView(int startIndex, int endIndex)
     {
+        if (startIndex < 0 || endIndex >= ledBuffer.getLength() || startIndex > endIndex)
+        {
+            throw new IllegalArgumentException("Invalid LED view bounds");
+        }
+
         for (LEDView existing : views)
         {
             if (existing.startIndex == startIndex && existing.endIndex == endIndex)
@@ -331,7 +358,8 @@ public class LEDs
             }
         }
 
-        LEDView view = new LEDView(startIndex, endIndex);
+        AddressableLEDBufferView bufferView = ledBuffer.createView(startIndex, endIndex);
+        LEDView view = new LEDView(startIndex, endIndex, bufferView);
         views.add(view);
 
         return view;
@@ -353,6 +381,8 @@ public class LEDs
 
     /**
      * Updates the dirty LEDViews and the LED strip
+     * 
+     * @implNote Not called automatically as this is not a subsystem
      */
     public void periodic()
     {
@@ -360,10 +390,10 @@ public class LEDs
 
         for (LEDView view : views)
         {
-            if (view.isAnimated || view.needsUpdate)
+            if (view.isAnimated || view.isDirty)
             {
                 view.pattern.applyTo(view.bufferView);
-                view.needsUpdate = false;
+                view.isDirty = false;
                 dirty = true;
             }
         }
