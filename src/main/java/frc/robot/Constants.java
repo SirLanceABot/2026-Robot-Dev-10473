@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.lang.invoke.MethodHandles;
 
+import edu.wpi.first.wpilibj.util.Color;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -87,6 +89,7 @@ public final class Constants
     {
         public static final int LED_PORT                   = 10473;
         public static final int LED_LENGTH                 = 10473;
+        public static final Color DEFAULT_COLOR            = Color.kRed;
     }
     
     public static class Camera

@@ -42,7 +42,7 @@ public class ScoringCommands
 
     private static PoseEstimator poseEstimator;
 
-    private static LEDs.LEDView view = null;
+    private static LEDsController viewController = null;
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
@@ -63,7 +63,12 @@ public class ScoringCommands
 
         poseEstimator = robotContainer.getPoseEstimator();
 
-        view = LEDs.createView(0, 199);
+        LEDs leds = robotContainer.getLEDs();
+
+        LEDs.LEDView view = null;
+        if (leds != null)
+            view = leds.createView(0, 199);
+        viewController = new LEDsController(view);
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -79,7 +84,7 @@ public class ScoringCommands
         if (agitator != null && flywheel != null && shroud != null)
         {
             return Commands.parallel(
-                    view.setGradientCommand(Color.kBlue, Color.kRed),
+                    viewController.setGradientCommand(Color.kBlue, Color.kRed),
                     flywheel.shootCommand(() -> 80).until(flywheel.isAtSetSpeed(15)))
                     // shroud.goToCommand(2.0))
                     .andThen(agitator.forwardCommand());
@@ -97,7 +102,7 @@ public class ScoringCommands
     {
         if (agitator != null && flywheel != null)
         {
-            return view.setSolidCommand(Color.kRed)
+            return viewController.setSolidCommand(Color.kRed)
                     .andThen(flywheel.stopCommand())
                     .andThen(agitator.stopCommand());
         } else
@@ -120,7 +125,7 @@ public class ScoringCommands
 
             return drivetrain.lockWheelsCommand().withTimeout(0.1)
                 .andThen(Commands.parallel(
-                    view.setRainbowCommand(),
+                    viewController.setRainbowCommand(),
                     drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, poseEstimator.getAngleToAllianceHub()),
                     // shroud.setAngleFromDistanceCommand(distance),
                     flywheel.shootFromDistanceCommand(distance)

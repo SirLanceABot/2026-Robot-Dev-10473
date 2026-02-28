@@ -17,14 +17,18 @@ import frc.robot.subsystems.Roller;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.Shroud;
+import frc.robot.subsystems.LEDs;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * This class is where the bulk of the robot should be declared. Since
+ * Command-based is a
+ * "declarative" paradigm, very little robot logic should actually be handled in
+ * the {@link Robot}
+ * periodic methods (other than the scheduler calls). Instead, the structure of
+ * the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-public class RobotContainer 
+public class RobotContainer
 {
     // This string gets the full name of the class including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -46,13 +50,13 @@ public class RobotContainer
     private boolean usePivot = false;
     private boolean useShroud = false;
     private boolean useCamera = false;
-    private boolean useDrivetrain = true;
+    private boolean useDrivetrain = false;
+    private boolean useLEDs = false;
 
     private boolean usePoseEstimator = false;
 
     private boolean useDriverController = false;
     private boolean useOperatorController = false;
-    
 
     // Robot components
     private ExampleSubsystem exampleSubsystem = null;
@@ -63,48 +67,53 @@ public class RobotContainer
     private Shroud shroud = null;
     private CommandSwerveDrivetrain drivetrain = null;
     private Camera camera = null;
+    private LEDs leds = null;
 
     private PoseEstimator poseEstimator = null;
 
     private CommandXboxController driverController = null;
     private CommandXboxController operatorController = null;
 
-
-    /** The container for the robot. Contains subsystems, OI devices, and commands. */
-    RobotContainer() 
+    /**
+     * The container for the robot. Contains subsystems, OI devices, and commands.
+     */
+    RobotContainer()
     {
         // Instantiate ONLY the components selected above
-        if(useFullRobot || useExampleSubsystem)
+        if (useFullRobot || useExampleSubsystem)
             exampleSubsystem = new ExampleSubsystem();
 
-        if(useFullRobot || useFlywheel)
+        if (useFullRobot || useFlywheel)
             flywheel = new Flywheel();
 
-        if(useFullRobot || useAgitator)
+        if (useFullRobot || useAgitator)
             agitator = new Agitator();
 
-        if(useFullRobot || useRoller)
+        if (useFullRobot || useRoller)
             roller = new Roller();
-        
-        if(useFullRobot || usePivot)
+
+        if (useFullRobot || usePivot)
             pivot = new Pivot();
 
-        if(useFullRobot || useShroud)
+        if (useFullRobot || useShroud)
             shroud = new Shroud();
-        
-        if(useFullRobot || useDrivetrain)
+
+        if (useFullRobot || useDrivetrain)
             drivetrain = TunerConstants.createDrivetrain();
 
-        if(useFullRobot || useCamera)
+        if (useFullRobot || useCamera)
             camera = new Camera(Constants.Camera.CAMERA_NAME);
 
-        if(useFullRobot || usePoseEstimator)
+        if (useFullRobot || useLEDs)
+            leds = new LEDs();
+
+        if (useFullRobot || usePoseEstimator)
             poseEstimator = new PoseEstimator(drivetrain, camera);
 
-        if(useFullRobot || useDriverController)
+        if (useFullRobot || useDriverController)
             driverController = new CommandXboxController(Constants.Controllers.DRIVER_CONTROLLER_PORT);
 
-        if(useFullRobot || useOperatorController)
+        if (useFullRobot || useOperatorController)
             operatorController = new CommandXboxController(Constants.Controllers.OPERATOR_CONTROLLER_PORT);
     }
 
@@ -146,6 +155,11 @@ public class RobotContainer
     public Camera getCamera()
     {
         return camera;
+    }
+
+    public LEDs getLEDs()
+    {
+        return leds;
     }
 
     public PoseEstimator getPoseEstimator()

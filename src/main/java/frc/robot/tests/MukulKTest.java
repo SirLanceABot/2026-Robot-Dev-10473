@@ -26,6 +26,7 @@ public class MukulKTest implements Test
 
     private final RobotContainer robotContainer;
     private final CommandXboxController controller = new CommandXboxController(0);
+    private LEDs leds = null;
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
@@ -42,6 +43,7 @@ public class MukulKTest implements Test
         System.out.println("  Constructor Started:  " + fullClassName);
 
         this.robotContainer = robotContainer;
+        this.leds = robotContainer.getLEDs();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -54,10 +56,8 @@ public class MukulKTest implements Test
      */
     public void init()
     {
-        LEDs.init();
-
-        var leftView = LEDs.createView(0, 99);
-        var rightView = LEDs.createView(100, 199);
+        var leftView = leds.createView(0, 99);
+        var rightView = leds.createView(100, 199);
         controller.a().onTrue(leftView.setSolidCommand(Color.kWhite));
         controller.b().onTrue(rightView.setRainbowCommand());
         controller.x().onTrue(leftView.setBlinkCommand(0.5));
@@ -69,7 +69,6 @@ public class MukulKTest implements Test
      */
     public void periodic()
     {
-        LEDs.periodic();
     }
 
     /**
@@ -77,6 +76,5 @@ public class MukulKTest implements Test
      */
     public void exit()
     {
-        LEDs.exit();
     }
 }
