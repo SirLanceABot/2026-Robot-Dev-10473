@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.46958481613285974,
-        "y": 0.6512336892052202
+        "x": 3.514436536180309,
+        "y": 7.3219335705812565
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.7494003542776699,
-        "y": 1.0698869897530188
+        "x": 3.72779877500875,
+        "y": 7.191639460806043
       },
       "isLocked": false,
-      "linkedName": "Center_Outpost_Intake"
+      "linkedName": "Left_Trench"
     },
     {
       "anchor": {
@@ -20,31 +20,18 @@
         "y": 5.619985734664765
       },
       "prevControl": {
-        "x": 3.2999511652788187,
-        "y": 5.358550795838616
+        "x": 3.323327033461707,
+        "y": 5.78116004394093
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Center_Shoot"
+      "linkedName": "Left_Bump"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Stop Intaking Command",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "Stationary Score Command",
-      "waypointRelativePos": 1.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -58,10 +45,10 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Center_Paths",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.591537820480016
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

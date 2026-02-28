@@ -58,37 +58,37 @@ public class GeneralCommands
         System.out.println("  Constructor Finished: " + fullClassName);
     }
 
-    public static Command simpleIntakeAndScoreCommand()
-    {
-        if (agitator != null && flywheel != null && pivot != null && roller != null && shroud != null)
-        {
-            return Commands.parallel(
-                    agitator.forwardCommand(),
-                    flywheel.shootCommand(() -> 15.0),
-                    pivot.extendCommand(),
-                    roller.intakeFuelCommand(),
-                    shroud.goToCommand(45)
-                );
-        }
-        else
-            return Commands.none();
-    }
+    // public static Command simpleIntakeAndScoreCommand()
+    // {
+    //     if (agitator != null && flywheel != null && pivot != null && roller != null && shroud != null)
+    //     {
+    //         return Commands.parallel(
+    //                 agitator.forwardCommand(),
+    //                 flywheel.shootCommand(() -> 15.0),
+    //                 pivot.extendCommand(),
+    //                 roller.intakeFuelCommand(),
+    //                 shroud.goToCommand(45)
+    //             );
+    //     }
+    //     else
+    //         return Commands.none();
+    // }
 
-    public static Command simpleIntakeAndScoreStopCommand()
-    {
-        if (agitator != null && flywheel != null && pivot != null && roller != null && shroud != null)
-        {
-            return Commands.parallel(
-                    agitator.stopCommand(),
-                    flywheel.stopCommand(),
-                    pivot.retractCommand(),
-                    roller.stopCommand(),
-                    shroud.goToCommand(0)
-                );
-        }
-        else
-            return Commands.none();
-    }
+    // public static Command simpleIntakeAndScoreStopCommand()
+    // {
+    //     if (agitator != null && flywheel != null && pivot != null && roller != null && shroud != null)
+    //     {
+    //         return Commands.parallel(
+    //                 agitator.stopCommand(),
+    //                 flywheel.stopCommand(),
+    //                 pivot.retractCommand(),
+    //                 roller.stopCommand(),
+    //                 shroud.goToCommand(0)
+    //             );
+    //     }
+    //     else
+    //         return Commands.none();
+    // }
 
     public static Command stopAllCommand()
     {

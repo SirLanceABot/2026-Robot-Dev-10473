@@ -59,13 +59,13 @@ public final class CommandsManager
         NamedCommands.registerCommand("Eject Fuel Command", GeneralCommands.ejectFuelCommand());
 
         //IntakingCommands
-        NamedCommands.registerCommand("Simple Intake Command", IntakingCommands.intakeCommand());
-        NamedCommands.registerCommand("Stop Intaking Command", IntakingCommands.stopIntakingCommand());
+        NamedCommands.registerCommand("Intake Roller Command", IntakingCommands.intakeCommand());
+        NamedCommands.registerCommand("Stop Intake Roller Command", IntakingCommands.stopIntakeCommand());
 
         //ScoringCommands
         NamedCommands.registerCommand("Pass Command", ScoringCommands.passCommand());
         NamedCommands.registerCommand("Stationary Score Command", ScoringCommands.stationaryScoreCommand());
-        NamedCommands.registerCommand("Stop Scoring Command", ScoringCommands.stopScoringCommand());
+        NamedCommands.registerCommand("Stop Score Command", ScoringCommands.stopScoreCommand());
 
         SmartDashboard.putData("Command Scheduler", CommandScheduler.getInstance());
     }

@@ -75,7 +75,7 @@ public class IntakingCommands
      */
     public static Command intakeCommand()
     {
-        if (pivot != null && roller != null)
+        if(pivot != null && roller != null)
         {
             return viewController.setGradientCommand(Color.kYellow, Color.kRed)
                     .andThen(pivot.extendCommand())
@@ -84,17 +84,15 @@ public class IntakingCommands
             return Commands.none();
     }
 
-
-
     /**
      * Turn off rollers and reset LEDs to default
      * 
      * @author Jackson D.
      * @return Intake stop command
      */
-    public static Command stopIntakingCommand()
+    public static Command stopIntakeCommand()
     {
-        if (pivot != null && roller != null)
+        if(roller != null)
         {
             return Commands.parallel(
                     viewController.setSolidCommand(Color.kRed),
@@ -102,5 +100,29 @@ public class IntakingCommands
                     roller.stopCommand());
         } else
             return Commands.none();
+    }
+
+    public static Command extendIntakeCommand()
+    {
+        if(pivot != null)
+        {
+            return pivot.extendCommand();
+        }
+        else
+        {
+            return Commands.none();
+        }
+    }
+
+    public static Command retractIntakeCommand()
+    {
+        if(pivot != null)
+        {
+            return pivot.retractCommand();
+        }
+        else
+        {
+            return Commands.none();
+        }
     }
 }

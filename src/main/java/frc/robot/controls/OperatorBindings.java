@@ -147,27 +147,21 @@ public final class OperatorBindings
     {
         Trigger bButton = controller.b();
         bButton
-            .onTrue(ScoringCommands.stopScoringCommand());
+            .onTrue(ScoringCommands.stopScoreCommand());
     }
 
     private static void configXButton()
     {
         Trigger xButton = controller.x();
-        if(roller != null)
-        {
-            xButton
-                .onTrue(roller.intakeFuelCommand());
-        }
+        xButton
+            .onTrue(IntakingCommands.intakeCommand());
     }
 
     private static void configYButton()
     {
         Trigger yButton = controller.y();
-        if(roller != null)
-        {
-            yButton
-                .onTrue(roller.stopCommand());
-        }
+        yButton
+            .onTrue(IntakingCommands.stopIntakeCommand());
     }
 
     private static void configLeftBumper()
@@ -192,6 +186,8 @@ public final class OperatorBindings
     private static void configStartButton()
     {
         Trigger startButton = controller.start();
+        startButton
+            .onTrue(GeneralCommands.ejectFuelCommand());
     }
 
     private static void configLeftTrigger()
@@ -217,19 +213,19 @@ public final class OperatorBindings
     private static void configDpadUp()
     {
         Trigger dpadUp = controller.povUp();
-        dpadUp
-            .onTrue(flywheel.shootCommand(() -> 87.5));
         // dpadUp
-        //     .onTrue(pivot.extendCommand());
+        //     .onTrue(flywheel.shootCommand(() -> 87.5));
+        dpadUp
+            .onTrue(IntakingCommands.retractIntakeCommand());
     }
 
     private static void configDpadDown()
     {
         Trigger dpadDown = controller.povDown();
-        dpadDown
-            .onTrue(flywheel.stopCommand());
         // dpadDown
-        //     .onTrue(pivot.retractCommand());
+        //     .onTrue(flywheel.stopCommand());
+        dpadDown
+            .onTrue(IntakingCommands.extendIntakeCommand());
     }
 
     private static void configDpadLeft()

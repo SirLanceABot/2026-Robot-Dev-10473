@@ -98,7 +98,7 @@ public class ScoringCommands
      * @author Jackson D.
      * @return Scoring stop command
      */
-    public static Command stopScoringCommand()
+    public static Command stopScoreCommand()
     {
         if (agitator != null && flywheel != null)
         {
