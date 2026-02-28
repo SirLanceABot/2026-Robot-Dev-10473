@@ -5,7 +5,6 @@ import java.lang.invoke.MethodHandles;
 // import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.LEDs;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -35,7 +34,6 @@ public class GeneralCommands
     private static Agitator agitator;
     private static CommandSwerveDrivetrain drivetrain;
     private static Flywheel flywheel;
-    private static LEDs leds;
     private static Pivot pivot;
     private static Roller roller;
     private static Shroud shroud;
@@ -53,7 +51,6 @@ public class GeneralCommands
         agitator = robotContainer.getAgitator();
         drivetrain = robotContainer.getDrivetrain();
         flywheel = robotContainer.getFlywheel();
-        leds = robotContainer.getLEDs();
         pivot = robotContainer.getPivot();
         roller = robotContainer.getRoller();
         shroud = robotContainer.getShroud();

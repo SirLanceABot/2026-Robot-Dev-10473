@@ -44,7 +44,6 @@ public final class DriverBindings
     private static Pivot pivot;
     private static Shroud shroud;
     private static CommandSwerveDrivetrain drivetrain;
-    private static LEDs leds;
 
     private static Camera camera;
     private static PoseEstimator poseEstimator;
@@ -78,7 +77,6 @@ public final class DriverBindings
         agitator = robotContainer.getAgitator();
         pivot = robotContainer.getPivot();
         shroud = robotContainer.getShroud();
-        leds = robotContainer.getLEDs();
 
         camera = robotContainer.getCamera();
         poseEstimator = robotContainer.getPoseEstimator();

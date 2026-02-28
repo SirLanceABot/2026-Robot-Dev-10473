@@ -35,13 +35,11 @@ public class IntakingCommands
     private static Agitator agitator = null;
     private static CommandSwerveDrivetrain drivetrain = null;
     private static Flywheel flywheel = null;
-    private static LEDs leds = null;
     private static Pivot pivot = null;
     private static Roller roller = null;
     private static Shroud shroud = null;
 
     private static LEDs.LEDView view = null;
-    private static LEDsController viewController = null;
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
@@ -56,14 +54,11 @@ public class IntakingCommands
         agitator = robotContainer.getAgitator();
         drivetrain = robotContainer.getDrivetrain();
         flywheel = robotContainer.getFlywheel();
-        leds = robotContainer.getLEDs();
         pivot = robotContainer.getPivot();
         roller = robotContainer.getRoller();
         shroud = robotContainer.getShroud();
 
-        if (leds != null)
-            view = leds.createView(0, 199);
-        viewController = new LEDsController(view);
+        view = LEDs.createView(0, 199);
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -78,7 +73,7 @@ public class IntakingCommands
     {
         if (pivot != null && roller != null)
         {
-            return viewController.setGradientCommand(Color.kYellow, Color.kRed)
+            return view.setGradientCommand(Color.kYellow, Color.kRed)
                     .andThen(pivot.extendCommand())
                     .andThen(roller.intakeFuelCommand());
         } else
@@ -96,7 +91,7 @@ public class IntakingCommands
         if (pivot != null && roller != null)
         {
             return Commands.parallel(
-                    viewController.setSolidCommand(Color.kRed),
+                    view.setSolidCommand(Color.kRed),
                     pivot.retractCommand(),
                     roller.stopCommand());
         } else

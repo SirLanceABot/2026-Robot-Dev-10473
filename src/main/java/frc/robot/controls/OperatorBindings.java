@@ -45,7 +45,6 @@ public final class OperatorBindings
     private static Pivot pivot;
     private static Shroud shroud;
     private static CommandSwerveDrivetrain drivetrain;
-    private static LEDs leds;
 
     private static Camera camera;
     private static PoseEstimator poseEstimator;
@@ -76,7 +75,6 @@ public final class OperatorBindings
         roller = robotContainer.getRoller();
         pivot = robotContainer.getPivot();
         shroud = robotContainer.getShroud();
-        leds = robotContainer.getLEDs();
 
         camera = robotContainer.getCamera();
         poseEstimator = robotContainer.getPoseEstimator();
