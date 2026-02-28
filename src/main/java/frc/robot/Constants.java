@@ -87,8 +87,8 @@ public final class Constants
 
     public static class LEDs
     {
-        public static final int LED_PORT                   = 10473;
-        public static final int LED_LENGTH                 = 10473;
+        public static final int LED_PORT                   = 0;
+        public static final int LED_LENGTH                 = 200;
         public static final Color DEFAULT_COLOR            = Color.kRed;
     }
     

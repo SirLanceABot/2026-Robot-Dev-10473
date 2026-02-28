@@ -51,7 +51,7 @@ public class RobotContainer
     private boolean useShroud = false;
     private boolean useCamera = false;
     private boolean useDrivetrain = false;
-    private boolean useLEDs = false;
+    private boolean useLEDs = true;
 
     private boolean usePoseEstimator = false;
 
