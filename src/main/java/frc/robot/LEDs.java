@@ -302,8 +302,8 @@ public final class LEDs
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
 
-    private static final AddressableLED led = new AddressableLED(LED_PORT);
-    private static final AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LED_LENGTH);
+    private static AddressableLED led = null;
+    private static AddressableLEDBuffer ledBuffer;
     private static final List<LEDView> views = new ArrayList<>();
 
     // *** CLASS METHODS & INSTANCE METHODS ***
@@ -314,6 +314,9 @@ public final class LEDs
      */
     private static void configLEDStrip()
     {
+        led = new AddressableLED(LED_PORT < 0 || LED_PORT > 9 ? 0 : LED_PORT);
+        ledBuffer = new AddressableLEDBuffer(LED_LENGTH < 1 || LED_LENGTH > 5460 ? 1 : LED_LENGTH);
+
         led.setLength(ledBuffer.getLength());
         led.start();
     }
