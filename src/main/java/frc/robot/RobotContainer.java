@@ -45,7 +45,6 @@ public class RobotContainer
     private boolean useRoller = false;
     private boolean usePivot = false;
     private boolean useShroud = false;
-    private boolean useLEDs = false;
     private boolean useCamera = false;
     private boolean useDrivetrain = false;
 
@@ -63,7 +62,6 @@ public class RobotContainer
     private Pivot pivot = null;
     private Shroud shroud = null;
     private CommandSwerveDrivetrain drivetrain = null;
-    private LEDs leds = null;
     private Camera camera = null;
 
     private PoseEstimator poseEstimator = null;
@@ -96,9 +94,6 @@ public class RobotContainer
         
         if(useFullRobot || useDrivetrain)
             drivetrain = TunerConstants.createDrivetrain();
-
-        if(useFullRobot || useLEDs)
-            leds = new LEDs();
 
         if(useFullRobot || useCamera)
             camera = new Camera(Constants.Camera.CAMERA_NAME);
@@ -146,11 +141,6 @@ public class RobotContainer
     public CommandSwerveDrivetrain getDrivetrain()
     {
         return drivetrain;
-    }
-
-    public LEDs getLEDs()
-    {
-        return leds;
     }
 
     public Camera getCamera()

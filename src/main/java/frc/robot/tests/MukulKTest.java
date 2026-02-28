@@ -21,22 +21,20 @@ public class MukulKTest implements Test
         System.out.println("Loading: " + fullClassName);
     }
 
-    // *** INNER ENUMS and INNER CLASSES ***
-    // Put all inner enums and inner classes here
-
     // *** CLASS & INSTANCE VARIABLES ***
     // Put all class and instance variables here.
+
     private final RobotContainer robotContainer;
     private final CommandXboxController controller = new CommandXboxController(0);
-    private final LEDs leds;
-    // private final Shroud shroud;
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
 
     /**
      * Use this class to test your code using Test mode
-     * <p>Modify the {@link frc.robot.TestMode} class to run your test code
+     * <p>
+     * Modify the {@link frc.robot.TestMode} class to run your test code
+     * 
      * @param robotContainer The container of all robot components
      */
     public MukulKTest(RobotContainer robotContainer)
@@ -44,8 +42,6 @@ public class MukulKTest implements Test
         System.out.println("  Constructor Started:  " + fullClassName);
 
         this.robotContainer = robotContainer;
-        leds = robotContainer.getLEDs();
-        // shroud = robotContainer.getShroud();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }
@@ -53,36 +49,30 @@ public class MukulKTest implements Test
     // *** CLASS METHODS & INSTANCE METHODS ***
     // Put all class methods and instance methods here
 
-    // *** OVERRIDDEN METHODS ***
-    // Put all methods that are Overridden here
-
     /**
      * This method runs one time before the periodic() method.
      */
     public void init()
     {
-        LEDs.LEDView leftView = leds.createView(0, 99);
-        LEDs.LEDView rightView = leds.createView(100, 199);
+        var leftView = LEDs.createView(0, 99);
+        var rightView = LEDs.createView(100, 199);
         controller.a().onTrue(leftView.setSolidCommand(Color.kWhite));
         controller.b().onTrue(rightView.setRainbowCommand());
         controller.x().onTrue(leftView.setBlinkCommand(0.5));
         controller.y().onTrue(rightView.setBreatheCommand(0.5));
-
-        // controller.a().onTrue(shroud.goToCommand(12.5));
-        // controller.b().onTrue(shroud.goToCommand(38.0));
-        // controller.x().onTrue(shroud.goToCommand(76.0));
-        // controller.y().onTrue(shroud.goToCommand(90.0));
     }
 
     /**
      * This method runs periodically (every 20ms).
      */
     public void periodic()
-    {}
-    
+    {
+    }
+
     /**
      * This method runs one time after the periodic() method.
      */
     public void exit()
-    {}
+    {
+    }
 }

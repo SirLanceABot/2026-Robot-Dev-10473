@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
  * 
  * @author Mukul Kedia
  */
-public class LEDs
+public final class LEDs
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
@@ -32,6 +32,8 @@ public class LEDs
     static
     {
         System.out.println("Loading: " + fullClassName);
+
+        configLEDStrip();
     }
 
     // *** INNER ENUMS and INNER CLASSES ***
@@ -40,7 +42,7 @@ public class LEDs
     /**
      * An LED view with helpers to create and set patterns
      */
-    public static class LEDView
+    public static final class LEDView
     {
         private static final int MAX_HISTORY = 100;
 
@@ -65,8 +67,10 @@ public class LEDs
          * @param startIndex {@link Integer} The start index of the view
          * @param endIndex {@link Integer} The end index of the view
          */
-        private LEDView(int startIndex, int endIndex, AddressableLEDBufferView bufferView)
+        private LEDView(final int startIndex, final int endIndex, final AddressableLEDBufferView bufferView)
         {
+            Objects.requireNonNull(bufferView);
+
             this.startIndex = startIndex;
             this.endIndex = endIndex;
             this.bufferView = bufferView;
@@ -79,12 +83,9 @@ public class LEDs
          * @param isAnimated {@link Boolean} Whether the pattern needs to be updated
          *            constantly
          */
-        private void setPattern(LEDPattern pattern, boolean isAnimated)
+        private void setPattern(final LEDPattern pattern, final boolean isAnimated)
         {
-            if (pattern == null)
-            {
-                throw new IllegalArgumentException("Pattern cannot be null");
-            }
+            Objects.requireNonNull(pattern);
 
             if (this.pattern.equals(pattern) && this.isAnimated == isAnimated)
             {
@@ -117,9 +118,9 @@ public class LEDs
          * 
          * @param color {@link Color} The color to set the LED view to
          */
-        private void setSolid(Color color)
+        private void setSolid(final Color color)
         {
-            Objects.requireNonNull(color, "Color cannot be null");
+            Objects.requireNonNull(color);
             setPattern(LEDPattern.solid(color), false);
         }
 
@@ -130,7 +131,7 @@ public class LEDs
          * @return {@link Command} The command to set the leds in the LED view to a
          *         solid color
          */
-        public Command setSolidCommand(Color color)
+        public Command setSolidCommand(final Color color)
         {
             return Commands.runOnce(() -> setSolid(color));
         }
@@ -140,9 +141,11 @@ public class LEDs
          * 
          * @param colors {@link Color} The colors to set the LED view to
          */
-        private void setGradient(Color... colors)
+        private void setGradient(final Color... colors)
         {
-            Objects.requireNonNull(colors, "Colors cannot be null");
+            Objects.requireNonNull(colors);
+            if (colors.length < 2)
+                throw new IllegalArgumentException("There must be more than 2 colors");
             setPattern(
                     LEDPattern.gradient(LEDPattern.GradientType.kContinuous, colors)
                             .scrollAtRelativeSpeed(Units.Percent.per(Units.Second).of(100)),
@@ -156,7 +159,7 @@ public class LEDs
          * @return {@link Command} The command to set the leds in the LED view to a
          *         scrolling gradient
          */
-        public Command setGradientCommand(Color... colors)
+        public Command setGradientCommand(final Color... colors)
         {
             return Commands.runOnce(() -> setGradient(colors));
         }
@@ -188,7 +191,7 @@ public class LEDs
          * 
          * @param seconds {@link Double} The amount of seconds between each blink
          */
-        private void setBlink(double seconds)
+        private void setBlink(final double seconds)
         {
             setPattern(this.pattern.blink(Units.Seconds.of(seconds)), true);
         }
@@ -199,7 +202,7 @@ public class LEDs
          * @param seconds {@link Double} The amount of seconds between each blink
          * @return {@link Command} The command to set the leds in the LED view to blink
          */
-        public Command setBlinkCommand(double seconds)
+        public Command setBlinkCommand(final double seconds)
         {
             return Commands.runOnce(() -> setBlink(seconds));
         }
@@ -210,7 +213,7 @@ public class LEDs
          * @param offSeconds {@link Double} The amount of seconds to stay off
          * @param onSeconds {@link Double} The amount of seconds to stay on
          */
-        private void setBlink(double offSeconds, double onSeconds)
+        private void setBlink(final double offSeconds, final double onSeconds)
         {
             setPattern(this.pattern.blink(Units.Seconds.of(offSeconds), Units.Seconds.of(onSeconds)), true);
         }
@@ -222,7 +225,7 @@ public class LEDs
          * @param onSeconds {@link Double} The amount of seconds to stay on
          * @return {@link Command} The command to set the leds in the LED view to blink
          */
-        public Command setBlinkCommand(double offSeconds, double onSeconds)
+        public Command setBlinkCommand(final double offSeconds, final double onSeconds)
         {
             return Commands.runOnce(() -> setBlink(offSeconds, onSeconds));
         }
@@ -232,7 +235,7 @@ public class LEDs
          * 
          * @param seconds {@link Double} The amount of seconds between each breathe
          */
-        private void setBreathe(double seconds)
+        private void setBreathe(final double seconds)
         {
             setPattern(this.pattern.breathe(Units.Seconds.of(seconds)), true);
         }
@@ -244,7 +247,7 @@ public class LEDs
          * @return {@link Command} The command to set the leds in the LED view to
          *         breathe
          */
-        public Command setBreatheCommand(double seconds)
+        public Command setBreatheCommand(final double seconds)
         {
             return Commands.runOnce(() -> setBreathe(seconds));
         }
@@ -299,24 +302,9 @@ public class LEDs
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
 
-    private final AddressableLED led = new AddressableLED(LED_PORT);
-    private final AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LED_LENGTH);
-    private final ArrayList<LEDView> views = new ArrayList<>();
-
-    // *** CLASS CONSTRUCTORS ***
-    // Put all class constructors here
-
-    /**
-     * Creates the LEDs subsystem
-     */
-    public LEDs()
-    {
-        System.out.println("  Constructor Started:  " + fullClassName);
-
-        configLEDStrip();
-
-        System.out.println("  Constructor Finished: " + fullClassName);
-    }
+    private static final AddressableLED led = new AddressableLED(LED_PORT);
+    private static final AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LED_LENGTH);
+    private static final List<LEDView> views = new ArrayList<>();
 
     // *** CLASS METHODS & INSTANCE METHODS ***
     // Put all class methods and instance methods here
@@ -324,7 +312,7 @@ public class LEDs
     /**
      * Configures the LED strip for use
      */
-    private void configLEDStrip()
+    private static void configLEDStrip()
     {
         led.setLength(ledBuffer.getLength());
         led.start();
@@ -337,7 +325,7 @@ public class LEDs
      * @param endIndex {@link Integer} The end index of the view
      * @return {@link LEDView} The created view
      */
-    public LEDView createView(int startIndex, int endIndex)
+    public static LEDView createView(final int startIndex, final int endIndex)
     {
         if (startIndex < 0 || endIndex >= ledBuffer.getLength() || startIndex > endIndex)
         {
@@ -370,7 +358,7 @@ public class LEDs
      * 
      * @param view {@link LEDView} The view to delete
      */
-    public void deleteView(LEDView view)
+    public static void deleteView(final LEDView view)
     {
         view.pattern = LEDPattern.solid(Color.kBlack);
         view.pattern.applyTo(view.bufferView);
@@ -380,11 +368,11 @@ public class LEDs
     }
 
     /**
-     * Updates the dirty LEDViews and the LED strip
+     * Updates the dirty LED views and the LED strip
      * 
      * @implNote Not called automatically as this is not a subsystem
      */
-    public void periodic()
+    public static void periodic()
     {
         boolean dirty = false;
 
