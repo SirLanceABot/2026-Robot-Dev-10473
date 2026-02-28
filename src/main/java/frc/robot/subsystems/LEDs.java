@@ -4,6 +4,7 @@ import static frc.robot.Constants.LEDs.*;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,33 +17,34 @@ import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /**
  * Class controlling the LED strip
  * 
  * @author Mukul Kedia
  */
-public final class LEDs extends SubsystemBase implements AutoCloseable
+public final class LEDs implements Subsystem, AutoCloseable
 {
     // This string gets the full name of the class, including the package name
     private static final String fullClassName = MethodHandles.lookup().lookupClass().getCanonicalName();
 
     // *** STATIC INITIALIZATION BLOCK ***
-    // This block of code is run first when the class is loaded
 
+    /**
+     * Run whe the class is first loaded
+     */
     static
     {
         System.out.println("Loading: " + fullClassName);
     }
 
-    // *** INNER ENUMS and INNER CLASSES ***
-    // Put all inner enums and inner classes here
+    // *** INNER CLASS ***
 
     /**
      * An LED view with helpers to create and set patterns
      */
-    public static final class LEDView
+    public static final class LEDView implements AutoCloseable
     {
         private final int startIndex;
         private final int endIndex;
@@ -55,6 +57,7 @@ public final class LEDs extends SubsystemBase implements AutoCloseable
 
         private Dimensionless brightness = Units.Percent.of(1.0);
         private boolean isDirty = true;
+        private boolean toBeRemoved = false;
 
         /**
          * Creates the LED view
@@ -69,6 +72,16 @@ public final class LEDs extends SubsystemBase implements AutoCloseable
             this.startIndex = startIndex;
             this.endIndex = endIndex;
             this.bufferView = bufferView;
+        }
+
+        /**
+         * Runs once during try with resource constructions or when called manually
+         */
+        public void close()
+        {
+            LEDPattern.solid(Color.kBlack).applyTo(this.bufferView);
+            this.isDirty = true;
+            this.toBeRemoved = true;
         }
 
         /**
@@ -328,15 +341,13 @@ public final class LEDs extends SubsystemBase implements AutoCloseable
         }
     }
 
-    // *** CLASS VARIABLES & INSTANCE VARIABLES ***
-    // Put all class variables and instance variables here
+    // *** INSTANCE VARIABLES ***
 
-    private final AddressableLED led = new AddressableLED(LED_PORT);
-    private final AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LED_LENGTH);
-    private final List<LEDView> views = new ArrayList<>();
+    private AddressableLED led = new AddressableLED(LED_PORT);
+    private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(LED_LENGTH);
+    private List<LEDView> views = new ArrayList<>();
 
-    // *** CLASS CONSTRUCTORS ***
-    // Put all class constructors here
+    // *** CLASS CONSTRUCTOR ***
 
     /**
      * Creates the LEDs subsystem
@@ -350,8 +361,7 @@ public final class LEDs extends SubsystemBase implements AutoCloseable
         System.out.println("  Constructor Finished: " + fullClassName);
     }
 
-    // *** CLASS METHODS & INSTANCE METHODS ***
-    // Put all class methods and instance methods here
+    // *** INSTANCE METHODS ***
 
     /**
      * Configures the LED strip for use
@@ -397,36 +407,27 @@ public final class LEDs extends SubsystemBase implements AutoCloseable
         return view;
     }
 
-    /**
-     * Deletes a LED view
-     * 
-     * @param view {@link LEDView} The view to delete
-     */
-    public void deleteView(final LEDView view)
-    {
-        Objects.requireNonNull(view);
-        if (!views.remove(view))
-        {
-            throw new IllegalArgumentException("View not found");
-        }
-
-        LEDPattern.solid(Color.kBlack).applyTo(view.bufferView);
-        led.setData(ledBuffer);
-    }
-
-    // *** OVERRIDEN METHODS ***
-    // Put all methods that are Overridden here
+    // *** IMPLEMENTED METHODS ***
 
     /**
      * Runs periodically every 20ms
      */
-    @Override
     public void periodic()
     {
         boolean dirty = false;
 
-        for (LEDView view : views)
+        Iterator<LEDView> iterator = views.iterator();
+        while (iterator.hasNext())
         {
+            LEDView view = iterator.next();
+
+            if (view.toBeRemoved)
+            {
+                iterator.remove();
+                dirty = true;
+                continue;
+            }
+
             if (view.activeIsAnimated || view.isDirty)
             {
                 view.activePattern.atBrightness(view.brightness).applyTo(view.bufferView);
@@ -442,15 +443,24 @@ public final class LEDs extends SubsystemBase implements AutoCloseable
     }
 
     /**
-     * Runs once right before garbage collection
+     * Runs once during try with resource constructions or when called manually
      */
-    @Override
     public void close()
     {
+        for (LEDView view : views)
+        {
+            view.close();
+        }
+        views.clear();
+
         LEDPattern.solid(Color.kBlack).applyTo(ledBuffer);
         led.setData(ledBuffer);
 
         led.stop();
         led.close();
+
+        led = null;
+        ledBuffer = null;
+        views = null;
     }
 }
