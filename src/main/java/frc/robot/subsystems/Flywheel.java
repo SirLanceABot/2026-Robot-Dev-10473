@@ -93,9 +93,12 @@ public class Flywheel extends SubsystemBase
     {
         //for distance in meters
         //TODO: Tune these values with the real bot
-        distanceToSpeedMap.put(1.0, 10473.0);
-        distanceToSpeedMap.put(2.0, 10473.0);
-        distanceToSpeedMap.put(3.0, 100.0);
+        distanceToSpeedMap.put(0.5, 999.0);
+        distanceToSpeedMap.put(1.0, 999.0);
+        distanceToSpeedMap.put(1.5, 999.0);
+        distanceToSpeedMap.put(2.0, 999.0);
+        distanceToSpeedMap.put(2.5, 88.0);
+        distanceToSpeedMap.put(3.0, 95.5);
 
         //3m is our maximum distance
         // distanceToSpeedMap.put(4.0, 10473.0);

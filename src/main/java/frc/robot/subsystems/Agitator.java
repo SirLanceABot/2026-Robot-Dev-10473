@@ -89,8 +89,7 @@ public class Agitator extends SubsystemBase
 
     public Command forwardCommand()
     {
-        //TODO: Fine-tune value
-        return run(() -> motor.setControlVelocity(60));
+        return run(() -> motor.setControlVelocity(70));
     }
 
     /**
@@ -101,7 +100,7 @@ public class Agitator extends SubsystemBase
     public Command reverseCommand()
     {
         //TODO: Fine-tune value
-        return run(() -> motor.setControlVelocity(-30));
+        return run(() -> motor.setControlVelocity(-50));
     }
 
     /**
