@@ -52,10 +52,11 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
     //TODO Needs to be tuned :(
     private final SwerveRequest.FieldCentricFacingAngle angleLockDrive = new SwerveRequest.FieldCentricFacingAngle()
-            .withMaxAbsRotationalRate(Math.PI) // Max Rotation Speed
+            .withMaxAbsRotationalRate(7) // Max Rotation Speed
             .withDeadband(MaxSpeed * 0.05) // Movement Speed Deadband
-            .withRotationalDeadband(0.01) // Rotational Speed Deadband
-            .withHeadingPID(6.0, 0.0, 0.0); // PID for rotation
+            .withRotationalDeadband(0.1) // Rotational Speed Deadband
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+            .withHeadingPID(7.0, 0.0, 0.0); // PID for rotation
 
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -305,9 +306,10 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
     public Command angleLockDriveCommand(DoubleSupplier leftYAxis, DoubleSupplier leftXAxis, DoubleSupplier scaleFactor, DoubleSupplier angleToLockAt)
     {
         return applyRequest(() -> angleLockDrive
-            .withTargetDirection(new Rotation2d(angleToLockAt.getAsDouble()))
             .withVelocityX(leftYAxis.getAsDouble())
             .withVelocityY(leftXAxis.getAsDouble())
+            .withTargetDirection(new Rotation2d(angleToLockAt.getAsDouble()))
+            .withTargetRateFeedforward(0)
         );
     }
 

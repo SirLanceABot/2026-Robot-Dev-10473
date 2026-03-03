@@ -258,14 +258,14 @@ public class PoseEstimator extends SubsystemBase
     {
         DoubleSupplier deltay = () -> (target.getY() - robotPose.getY());
         DoubleSupplier deltax = () -> (target.getX() - robotPose.getX());
-        return () -> Math.atan2(deltay.getAsDouble(), deltax.getAsDouble());        //why are these inverted?
+        return () -> Math.atan2(-deltay.getAsDouble(), -deltax.getAsDouble());        //why are these inverted?
     }
 
     public DoubleSupplier getAngleToBlueTarget(Pose2d robotPose, Pose2d target)
     {
         DoubleSupplier deltay = () -> (target.getY() - robotPose.getY());
         DoubleSupplier deltax = () -> (target.getX() - robotPose.getX());
-        return () -> Math.atan2(-deltay.getAsDouble(), -deltax.getAsDouble());      //why are these inverted?
+        return () -> Math.atan2(deltay.getAsDouble(), deltax.getAsDouble());      //why are these inverted?
     }
 
     /**

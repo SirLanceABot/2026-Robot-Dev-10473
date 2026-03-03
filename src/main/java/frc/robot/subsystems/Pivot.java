@@ -87,6 +87,9 @@ public class Pivot extends SubsystemBase
 
         leadMotor.setupForwardHardLimitSwitch(true, true);
         leadMotor.setupReverseHardLimitSwitch(true, true);
+
+        leadMotor.setupForwardSoftLimit(9.5, true);
+        leadMotor.setupReverseSoftLimit(0.2, true);
     }
 
     /**
@@ -191,7 +194,6 @@ public class Pivot extends SubsystemBase
     @Override
     public void periodic()
     {
-        System.out.println("pivot pos: " + getPosition());
         // This method will be called once per scheduler run
         // Use this for sensors that need to be read periodically.
         // Use this for data that needs to be logged.

@@ -217,35 +217,34 @@ public final class OperatorBindings
     private static void configDpadUp()
     {
         Trigger dpadUp = controller.povUp();
-        dpadUp
-            .onTrue(flywheel.shootCommand(() -> 106.0));
-            // .onTrue(pivot.retractCommand());
         // dpadUp
-        //     .onTrue(IntakingCommands.retractIntakeCommand());
+            // .onTrue(flywheel.shootCommand(() -> 106.0));
+        dpadUp
+            .onTrue(IntakingCommands.retractIntakeCommand());
     }
 
     private static void configDpadDown()
     {
         Trigger dpadDown = controller.povDown();
-        dpadDown
-            .onTrue(flywheel.stopCommand());
         // dpadDown
-        //     .onTrue(IntakingCommands.extendIntakeCommand());
+        //     .onTrue(flywheel.stopCommand());
+        dpadDown
+            .onTrue(IntakingCommands.extendIntakeCommand());
     }
 
     private static void configDpadLeft()
     {
         Trigger dpadLeft = controller.povLeft();
-        dpadLeft
-            .onTrue(agitator.forwardCommand());
+        // dpadLeft
+        //     .onTrue(agitator.forwardCommand());
             // .onTrue(pivot.shootPositionCommand());
     }
 
     private static void configDpadRight()
     {
         Trigger dpadRight = controller.povRight();
-        dpadRight
+        // dpadRight
             // .onTrue(roller.basicSetCommand(0.4));
-            .onTrue(agitator.stopCommand());
+            // .onTrue(agitator.stopCommand());
     }
 }

@@ -47,8 +47,8 @@ public final class DriverBindings
     private static Camera camera;
     private static PoseEstimator poseEstimator;
 
-    private static final double CRAWL_SPEED = 0.5;
-    private static final double WALK_SPEED = 1.5;
+    private static final double CRAWL_SPEED = 1.0;
+    private static final double WALK_SPEED = 2.0;
     private static final double RUN_SPEED = 3.0;
     private static DoubleSupplier leftYAxis;
     private static DoubleSupplier leftXAxis;

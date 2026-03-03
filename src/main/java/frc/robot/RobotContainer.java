@@ -41,22 +41,22 @@ public class RobotContainer
     }
 
     // Select the robot components to use
-    private boolean useFullRobot = false;
+    private boolean useFullRobot = true;
 
     private boolean useExampleSubsystem = false;
-    private boolean useFlywheel = true;
-    private boolean useAgitator = true;
-    private boolean useRoller = true;
-    private boolean usePivot = true;
+    private boolean useFlywheel = false;
+    private boolean useAgitator = false;
+    private boolean useRoller = false;
+    private boolean usePivot = false;
     private boolean useShroud = false;
     private boolean useCamera = false;
-    private boolean useDrivetrain = true;
+    private boolean useDrivetrain = false;
     private boolean useLEDs = false;
 
     private boolean usePoseEstimator = false;
 
-    private boolean useDriverController = true;
-    private boolean useOperatorController = true;
+    private boolean useDriverController = false;
+    private boolean useOperatorController = false;
 
     // Robot components
     private ExampleSubsystem exampleSubsystem = null;
@@ -104,7 +104,7 @@ public class RobotContainer
         if (useFullRobot || useCamera)
             camera = new Camera(Constants.Camera.CAMERA_NAME);
 
-        if (useFullRobot || useLEDs)
+        if (useLEDs)
             leds = new LEDs();
 
         if (useFullRobot || usePoseEstimator)

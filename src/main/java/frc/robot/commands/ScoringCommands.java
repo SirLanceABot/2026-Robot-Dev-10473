@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import java.lang.invoke.MethodHandles;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -104,7 +105,8 @@ public class ScoringCommands
         {
             return viewController.setSolidCommand(Color.kRed)
                     .andThen(flywheel.stopCommand())
-                    .andThen(agitator.stopCommand());
+                    .andThen(Commands.parallel(agitator.stopCommand()));
+                                                // ,pivot.extendCommand());
         } else
             return Commands.none();
     }
@@ -121,16 +123,16 @@ public class ScoringCommands
     {
         if(flywheel != null && pivot != null && agitator != null && drivetrain != null && poseEstimator != null)
         {
-            double distance = poseEstimator.getDistanceToAllianceHub().getAsDouble();
+            DoubleSupplier distance = (poseEstimator).getDistanceToAllianceHub();
 
             return drivetrain.lockWheelsCommand().withTimeout(0.1)
                 .andThen(Commands.parallel(
                     viewController.setRainbowCommand(),
-                    drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, poseEstimator.getAngleToAllianceHub()),
-                    pivot.shootPositionCommand(),
+                    drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, () -> poseEstimator.getAngleToAllianceHub().getAsDouble()).withTimeout(0.75),
+                    // pivot.shootPositionCommand(),
                     // shroud.setAngleFromDistanceCommand(distance),
-                    flywheel.shootFromDistanceCommand(distance)
-                        .until(flywheel.isAtSetSpeed(flywheel.getShotSpeed(distance)))))
+                    flywheel.shootFromDistanceCommand(distance.getAsDouble())
+                        .until(flywheel.isAtSetSpeed(flywheel.getShotSpeed(distance.getAsDouble())))))
                     .andThen(agitator.forwardCommand());
         }
         else

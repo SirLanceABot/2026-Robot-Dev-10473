@@ -174,7 +174,7 @@ public class Flywheel extends SubsystemBase
      */
     public double getShotSpeed(double distance)
     {
-        distance = Math.max(0.0, Math.min(3.0, distance));
+        // distance = Math.max(0.0, Math.min(4.0, distance));
         return distanceToSpeedMap.get(distance);
     }
 
@@ -228,6 +228,7 @@ public class Flywheel extends SubsystemBase
     @Override
     public void periodic()
     {
+        System.out.println(getVelocity());
         // This method will be called once per scheduler run
         // Use this for sensors that need to be read periodically.
         // Use this for data that needs to be logged.
