@@ -7,8 +7,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.PoseEstimator;
 
 /**
  * Implements code to send data to elastic
@@ -31,7 +34,11 @@ public class ElasticLance
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
 
+    private static Color shootDistanceColor = new Color();
+
     private static CommandSwerveDrivetrain drivetrain = null;
+    private static Flywheel flywheel = null;
+    private static PoseEstimator poseEstimator = null;
 
     private static Field2d autofield = new Field2d();
 
@@ -49,18 +56,9 @@ public class ElasticLance
         System.out.println("  Constructor Started:  " + fullClassName);
 
         drivetrain = robotContainer.getDrivetrain();
+        flywheel = robotContainer.getFlywheel();
 
         System.out.println("  Constructor Finished: " + fullClassName);
-    }
-
-    /**
-     * Inits the SmartDashboard
-     * 
-     * @implNote Runs once
-     */
-    public static void initSmartDashboard()
-    {
-        initAutoField();
     }
 
     /**
@@ -74,21 +72,24 @@ public class ElasticLance
         SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
     }
 
-    /**
-     * Initalizes the Auto Field Widget
-     * 
-     * @author Unknown
-     * @implNote ~stolen~ taken from last year's code:
-     *           https://github.com/SirLanceABot/2025-Robot-Dev-10473/commit/1e412475e1989f0d6bb7df463b50acd20b2d4c8c
-     */
-    private static void initAutoField()
+    public static void updateShootDistanceColorBox()
     {
-        if (drivetrain != null)
+        if(poseEstimator != null)
         {
-            SmartDashboard.putData("AutoField", autofield);
-            Pose2d pose = drivetrain.getState().Pose;
-            autofield.setRobotPose(pose);
+            if(poseEstimator.getDistanceToAllianceHub().getAsDouble() < 3.0)
+            {
+                shootDistanceColor = Color.kGreen;
+            }
+            else
+            {
+                shootDistanceColor = Color.kOrange;
+            }
         }
-    }
+        else
+        {
+            shootDistanceColor = Color.kRed;
+        }
 
+        SmartDashboard.putString("Within Shooter Distance", shootDistanceColor.toHexString());
+    }
 }

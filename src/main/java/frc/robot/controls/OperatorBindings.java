@@ -203,42 +203,51 @@ public final class OperatorBindings
     private static void configLeftStick()
     {
         Trigger leftStick = controller.leftStick();
+        leftStick
+            .onTrue(roller.intakeFuelCommand());
     }
 
     private static void configRightStick()
     {
         Trigger rightStick = controller.rightStick();
+        rightStick
+            .onTrue(roller.stopCommand());
     }
 
     private static void configDpadUp()
     {
         Trigger dpadUp = controller.povUp();
-        // dpadUp
-        //     .onTrue(flywheel.shootCommand(() -> 87.5));
         dpadUp
-            .onTrue(IntakingCommands.retractIntakeCommand());
+            // .onTrue(flywheel.shootCommand(() -> 105.0));
+            .onTrue(pivot.retractCommand());
+        // dpadUp
+        //     .onTrue(IntakingCommands.retractIntakeCommand());
     }
 
     private static void configDpadDown()
     {
         Trigger dpadDown = controller.povDown();
-        // dpadDown
-        //     .onTrue(flywheel.stopCommand());
         dpadDown
-            .onTrue(IntakingCommands.extendIntakeCommand());
+            // .onTrue(flywheel.stopCommand());
+            // .onTrue(pivot.extendCommand());
+            .onTrue(roller.stopCommand());
+        // dpadDown
+        //     .onTrue(IntakingCommands.extendIntakeCommand());
     }
 
     private static void configDpadLeft()
     {
         Trigger dpadLeft = controller.povLeft();
-        // dpadLeft
-        //     .onTrue(agitator.forwardCommand());
+        dpadLeft
+            // .onTrue(agitator.forwardCommand());
+            .onTrue(pivot.shootPositionCommand());
     }
 
     private static void configDpadRight()
     {
         Trigger dpadRight = controller.povRight();
-        // dpadRight
+        dpadRight
+            .onTrue(roller.basicSetCommand(0.4));
         //     .onTrue(agitator.stopCommand());
     }
 }

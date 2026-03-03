@@ -91,7 +91,7 @@ public class Roller extends SubsystemBase
     public Command intakeFuelCommand()
     {
         //TODO: fine-tune these values
-        return runOnce(() -> motor.setControlVelocity(20));
+        return runOnce(() -> motor.set(0.5));
     }
 
     public Command reverseCommand()

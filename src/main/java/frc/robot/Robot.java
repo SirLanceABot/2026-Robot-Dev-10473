@@ -16,6 +16,7 @@ import frc.robot.controls.OperatorBindings;
 import frc.robot.elastic.ElasticLance;
 // import frc.robot.loggers.DataLogFile;
 import frc.robot.motors.MotorControllerLance;
+import frc.robot.pathplanner.PathPlannerLance;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -67,11 +68,11 @@ public class Robot extends TimedRobot
 
 
         // 5. Configure PathPlanner
+        PathPlannerLance.configPathPlanner(robotContainer);
 
 
         // 6. Configure Elastic
         ElasticLance.configElastic(robotContainer);
-        ElasticLance.initSmartDashboard();
     }
 
     /**

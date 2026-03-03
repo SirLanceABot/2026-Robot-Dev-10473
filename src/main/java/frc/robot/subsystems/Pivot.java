@@ -38,10 +38,11 @@ public class Pivot extends SubsystemBase
 
     //TODO: fine-tune these values
     private static final double RETRACTED = 0.0;
-    private static final double EXTENDED = 10.0;
+    private static final double SHOOT = 4.09;
+    private static final double EXTENDED = 9.97;
     private static final double TOLERANCE = 0.2;
 
-    private static final double kP = 3.5;
+    private static final double kP = 0.45;
     private static final double kI = 0.0;
     private static final double kD = 0.0;
 
@@ -76,6 +77,9 @@ public class Pivot extends SubsystemBase
 
         leadMotor.setPosition(0.0);
         followMotor.setPosition(0.0);
+
+        leadMotor.setSafetyEnabled(false);
+        followMotor.setSafetyEnabled(false);
 
         leadMotor.setupPIDController(0, kP, kI, kD);
 
@@ -116,6 +120,11 @@ public class Pivot extends SubsystemBase
         return () -> (getPosition() - TOLERANCE) < RETRACTED;
     } 
 
+    public BooleanSupplier isAtShootPosition()
+    {
+        return () -> ((getPosition() + TOLERANCE) > SHOOT) && ((getPosition() - TOLERANCE) < SHOOT);
+    }
+
     /**
      * @return Pivot is extended
      */
@@ -127,6 +136,11 @@ public class Pivot extends SubsystemBase
     private void retract()
     {
         leadMotor.setControlPosition(RETRACTED);
+    }
+
+    private void shootPosition()
+    {
+        leadMotor.setControlPosition(SHOOT);
     }
 
     private void extend()
@@ -146,6 +160,12 @@ public class Pivot extends SubsystemBase
     public Command retractCommand()
     {
         return run(() -> retract()).until(isRetracted())
+                .andThen(stopCommand());
+    }
+
+    public Command shootPositionCommand()
+    {
+        return run(() -> shootPosition()).until(isAtShootPosition())
                 .andThen(stopCommand());
     }
 
@@ -171,6 +191,7 @@ public class Pivot extends SubsystemBase
     @Override
     public void periodic()
     {
+        System.out.println("pivot pos: " + getPosition());
         // This method will be called once per scheduler run
         // Use this for sensors that need to be read periodically.
         // Use this for data that needs to be logged.

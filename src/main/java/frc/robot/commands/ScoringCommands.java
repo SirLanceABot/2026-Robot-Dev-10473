@@ -81,7 +81,7 @@ public class ScoringCommands
      */
     public static Command passCommand()
     {
-        if (agitator != null && flywheel != null && shroud != null)
+        if (agitator != null && flywheel != null)
         {
             return Commands.parallel(
                     viewController.setGradientCommand(Color.kBlue, Color.kRed),
@@ -119,7 +119,7 @@ public class ScoringCommands
      */
     public static Command stationaryScoreCommand()
     {
-        if(flywheel != null && shroud != null && agitator != null && drivetrain != null && poseEstimator != null)
+        if(flywheel != null && pivot != null && agitator != null && drivetrain != null && poseEstimator != null)
         {
             double distance = poseEstimator.getDistanceToAllianceHub().getAsDouble();
 
@@ -127,6 +127,7 @@ public class ScoringCommands
                 .andThen(Commands.parallel(
                     viewController.setRainbowCommand(),
                     drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, poseEstimator.getAngleToAllianceHub()),
+                    pivot.shootPositionCommand(),
                     // shroud.setAngleFromDistanceCommand(distance),
                     flywheel.shootFromDistanceCommand(distance)
                         .until(flywheel.isAtSetSpeed(flywheel.getShotSpeed(distance)))))

@@ -92,17 +92,20 @@ public class Flywheel extends SubsystemBase
     private void configShotMap()
     {
         //for distance in meters
+        //this is only with the shroud all the way down 
         //TODO: Tune these values with the real bot
-        distanceToSpeedMap.put(0.5, 999.0);
-        distanceToSpeedMap.put(1.0, 999.0);
-        distanceToSpeedMap.put(1.5, 999.0);
-        distanceToSpeedMap.put(2.0, 999.0);
-        distanceToSpeedMap.put(2.5, 88.0);
-        distanceToSpeedMap.put(3.0, 95.5);
 
-        //3m is our maximum distance
-        // distanceToSpeedMap.put(4.0, 10473.0);
-        // distanceToSpeedMap.put(5.0, 10473.0);
+        //2m is our minimum distance
+        // distanceToSpeedMap.put(1.0, 999.0);
+        // distanceToSpeedMap.put(1.5, 999.0);
+
+        distanceToSpeedMap.put(2.0, 78.0);
+        distanceToSpeedMap.put(2.5, 84.5);
+        distanceToSpeedMap.put(3.0, 91.0);
+        distanceToSpeedMap.put(3.5, 97.5);
+        distanceToSpeedMap.put(4.0, 10473.0);
+
+
         // distanceToSpeedMap.put(6.0, 10473.0);
         // distanceToSpeedMap.put(7.0, 10473.0);
         // distanceToSpeedMap.put(8.0, 10473.0);

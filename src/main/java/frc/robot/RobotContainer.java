@@ -44,19 +44,19 @@ public class RobotContainer
     private boolean useFullRobot = false;
 
     private boolean useExampleSubsystem = false;
-    private boolean useFlywheel = false;
-    private boolean useAgitator = false;
-    private boolean useRoller = false;
-    private boolean usePivot = false;
+    private boolean useFlywheel = true;
+    private boolean useAgitator = true;
+    private boolean useRoller = true;
+    private boolean usePivot = true;
     private boolean useShroud = false;
     private boolean useCamera = false;
-    private boolean useDrivetrain = false;
+    private boolean useDrivetrain = true;
     private boolean useLEDs = false;
 
     private boolean usePoseEstimator = false;
 
-    private boolean useDriverController = false;
-    private boolean useOperatorController = false;
+    private boolean useDriverController = true;
+    private boolean useOperatorController = true;
 
     // Robot components
     private ExampleSubsystem exampleSubsystem = null;
@@ -95,7 +95,7 @@ public class RobotContainer
         if (useFullRobot || usePivot)
             pivot = new Pivot();
 
-        if (useFullRobot || useShroud)
+        if (useShroud)
             shroud = new Shroud();
 
         if (useFullRobot || useDrivetrain)
