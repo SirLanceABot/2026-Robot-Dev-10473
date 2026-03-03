@@ -103,7 +103,7 @@ public class Flywheel extends SubsystemBase
         distanceToSpeedMap.put(2.5, 84.5);
         distanceToSpeedMap.put(3.0, 91.0);
         distanceToSpeedMap.put(3.5, 97.5);
-        distanceToSpeedMap.put(4.0, 10473.0);
+        distanceToSpeedMap.put(4.0, 106.0);
 
 
         // distanceToSpeedMap.put(6.0, 10473.0);

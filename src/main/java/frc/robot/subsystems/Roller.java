@@ -33,11 +33,11 @@ public class Roller extends SubsystemBase
     // Put all class variables and instance variables here
     private final TalonFXLance motor = new TalonFXLance(MOTOR, MOTOR_CAN_BUS, "Roller Motor");
 
-    private final double kP = 0.0;
+    private final double kP = 0.3;
     private final double kI = 0.0;
     private final double kD = 0.0;
-    private final double kS = 0.0;
-    private final double kV = 0.0;
+    private final double kS = 0.144;
+    private final double kV = 0.12;
     private final double kA = 0.0;
 
 
@@ -91,13 +91,13 @@ public class Roller extends SubsystemBase
     public Command intakeFuelCommand()
     {
         //TODO: fine-tune these values
-        return runOnce(() -> motor.set(0.5));
+        return runOnce(() -> motor.setControlVelocity(43));
     }
 
     public Command reverseCommand()
     {
         //TODO: fine-tune
-        return runOnce(() -> motor.setControlVelocity(-10));
+        return runOnce(() -> motor.setControlVelocity(-40));
     }
 
 
