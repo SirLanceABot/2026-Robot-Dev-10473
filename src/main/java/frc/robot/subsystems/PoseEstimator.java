@@ -226,6 +226,7 @@ public class PoseEstimator extends SubsystemBase
      */
     public DoubleSupplier getDistanceToTarget(Pose2d robotPose, Pose2d target)      //do we use this or the other ones?
     {
+    
         DoubleSupplier deltay = () -> (target.getY() - robotPose.getY());
         DoubleSupplier deltax = () -> (target.getX() - robotPose.getX());
         return () -> Math.hypot(deltax.getAsDouble(), deltay.getAsDouble());
@@ -233,12 +234,20 @@ public class PoseEstimator extends SubsystemBase
 
     public DoubleSupplier getDistancetoRedHub()
     {
-        return getDistanceToTarget(estimatedPose, redHubPose);
+        Pose2d robotPose = drivetrain.getState().Pose;
+        DoubleSupplier deltay = () -> (redHubPose.getY() - robotPose.getY());
+        DoubleSupplier deltax = () -> (redHubPose.getX() - robotPose.getX());
+        DoubleSupplier dist = () -> Math.hypot(deltax.getAsDouble(), deltay.getAsDouble());
+        return dist;
     }
 
     public DoubleSupplier getDistanceToBlueHub()
     {
-        return getDistanceToTarget(estimatedPose, blueHubPose);
+        Pose2d robotPose = drivetrain.getState().Pose;
+        DoubleSupplier deltay = () -> (blueHubPose.getY() - robotPose.getY());
+        DoubleSupplier deltax = () -> (blueHubPose.getX() - robotPose.getX());
+        DoubleSupplier dist = () -> Math.hypot(deltax.getAsDouble(), deltay.getAsDouble());
+        return dist;
     }
 
     /**
@@ -377,6 +386,7 @@ public class PoseEstimator extends SubsystemBase
             //Sets estimated pose in AdvantageScore
             poseEstimatorEntry.set(estimatedPose);
         }
+
     }
 
     @Override

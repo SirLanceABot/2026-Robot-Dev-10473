@@ -172,10 +172,10 @@ public class Flywheel extends SubsystemBase
      * @param distance Distance from target
      * @return Shot speed
      */
-    public double getShotSpeed(double distance)
+    public DoubleSupplier getShotSpeed(DoubleSupplier distance)
     {
         // distance = Math.max(0.0, Math.min(4.0, distance));
-        return distanceToSpeedMap.get(distance);
+        return () -> distanceToSpeedMap.get(distance.getAsDouble());
     }
 
     /**
@@ -203,7 +203,7 @@ public class Flywheel extends SubsystemBase
      */
     public Command shootCommand(DoubleSupplier speed)
     {
-        return runOnce(() -> shoot(speed.getAsDouble()));
+        return run(() -> shoot(speed.getAsDouble()));
     }
 
     //do not use, only for testing
@@ -217,10 +217,10 @@ public class Flywheel extends SubsystemBase
      * @param distance Distance in feet
      * @return Shoot from distance command
      */
-    public Command shootFromDistanceCommand(double distance)
-    {
-        return runOnce(() -> shoot(getShotSpeed(distance)));
-    }
+    // public Command shootFromDistanceCommand(DoubleSupplier distance)
+    // {
+    //     return shootCommand(() -> getShotSpeed(distance.getAsDouble()));
+    // }
 
     // *** OVERRIDEN METHODS ***
     // Put all methods that are Overridden here
@@ -228,7 +228,7 @@ public class Flywheel extends SubsystemBase
     @Override
     public void periodic()
     {
-        System.out.println(getVelocity());
+        // System.out.println(getVelocity());
         // This method will be called once per scheduler run
         // Use this for sensors that need to be read periodically.
         // Use this for data that needs to be logged.

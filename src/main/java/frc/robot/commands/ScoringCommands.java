@@ -123,7 +123,7 @@ public class ScoringCommands
     {
         if(flywheel != null && pivot != null && agitator != null && drivetrain != null && poseEstimator != null)
         {
-            DoubleSupplier distance = (poseEstimator).getDistanceToAllianceHub();
+            DoubleSupplier distance = poseEstimator.getDistanceToAllianceHub();
 
             return drivetrain.lockWheelsCommand().withTimeout(0.1)
                 .andThen(Commands.parallel(
@@ -131,8 +131,9 @@ public class ScoringCommands
                     drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, () -> poseEstimator.getAngleToAllianceHub().getAsDouble()).withTimeout(0.75),
                     // pivot.shootPositionCommand(),
                     // shroud.setAngleFromDistanceCommand(distance),
-                    flywheel.shootFromDistanceCommand(distance.getAsDouble())
-                        .until(flywheel.isAtSetSpeed(flywheel.getShotSpeed(distance.getAsDouble())))))
+                    flywheel.shootCommand(flywheel.getShotSpeed(distance)), 
+                    Commands.run(() -> System.out.println("Distance " + distance.getAsDouble()))   ))
+                        // .until(flywheel.isAtSetSpeed(shotSpeed.getAsDouble()))
                     .andThen(agitator.forwardCommand());
         }
         else

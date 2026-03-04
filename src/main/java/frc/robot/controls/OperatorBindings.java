@@ -238,6 +238,7 @@ public final class OperatorBindings
         // dpadLeft
         //     .onTrue(agitator.forwardCommand());
             // .onTrue(pivot.shootPositionCommand());
+                
     }
 
     private static void configDpadRight()

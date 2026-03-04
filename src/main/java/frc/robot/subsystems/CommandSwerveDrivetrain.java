@@ -326,7 +326,7 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
             var alliance = DriverStation.getAlliance();
             if(alliance.isPresent())
             {
-                System.out.println("Alliance: " + alliance.get());
+                // System.out.println("Alliance: " + alliance.get());
                 return alliance.get() == DriverStation.Alliance.Red;
             }
             else
