@@ -232,36 +232,36 @@ public class PoseEstimator extends SubsystemBase
         return () -> Math.hypot(deltax.getAsDouble(), deltay.getAsDouble());
     }
 
-    public DoubleSupplier getDistancetoRedHub()
-    {
-        Pose2d robotPose = drivetrain.getState().Pose;
-        DoubleSupplier deltay = () -> (redHubPose.getY() - robotPose.getY());
-        DoubleSupplier deltax = () -> (redHubPose.getX() - robotPose.getX());
-        DoubleSupplier dist = () -> Math.hypot(deltax.getAsDouble(), deltay.getAsDouble());
-        return dist;
-    }
+    // public DoubleSupplier getDistancetoRedHub()
+    // {
+    //     Pose2d robotPose = drivetrain.getState().Pose;
+    //     DoubleSupplier deltay = () -> (redHubPose.getY() - robotPose.getY());
+    //     DoubleSupplier deltax = () -> (redHubPose.getX() - robotPose.getX());
+    //     DoubleSupplier dist = () -> Math.hypot(deltax.getAsDouble(), deltay.getAsDouble());
+    //     return dist;
+    // }
 
-    public DoubleSupplier getDistanceToBlueHub()
-    {
-        Pose2d robotPose = drivetrain.getState().Pose;
-        DoubleSupplier deltay = () -> (blueHubPose.getY() - robotPose.getY());
-        DoubleSupplier deltax = () -> (blueHubPose.getX() - robotPose.getX());
-        DoubleSupplier dist = () -> Math.hypot(deltax.getAsDouble(), deltay.getAsDouble());
-        return dist;
-    }
+    // public DoubleSupplier getDistanceToBlueHub()
+    // {
+    //     Pose2d robotPose = drivetrain.getState().Pose;
+    //     DoubleSupplier deltay = () -> (blueHubPose.getY() - robotPose.getY());
+    //     DoubleSupplier deltax = () -> (blueHubPose.getX() - robotPose.getX());
+    //     DoubleSupplier dist = () -> Math.hypot(deltax.getAsDouble(), deltay.getAsDouble());
+    //     return dist;
+    // }
 
     /**
      * Gets the distance from the current robot pose to your alliance's hub.
      * NOT TESTED(!!!!!!!!!)
      * @return Distance from hub
      */
-    public DoubleSupplier getDistanceToAllianceHub()
-    {
-        if(drivetrain.isRedAllianceSupplier().getAsBoolean())
-            return getDistancetoRedHub();
-        else
-            return getDistanceToBlueHub();
-    }
+    // public DoubleSupplier getDistanceToAllianceHub()
+    // {
+    //     if(drivetrain.isRedAllianceSupplier().getAsBoolean())
+    //         return getDistancetoRedHub();
+    //     else
+    //         return getDistanceToBlueHub();
+    // }
 
     public DoubleSupplier getAngleToRedTarget(Pose2d robotPose, Pose2d target)
     {

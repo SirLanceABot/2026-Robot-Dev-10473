@@ -172,10 +172,10 @@ public class Flywheel extends SubsystemBase
      * @param distance Distance from target
      * @return Shot speed
      */
-    public DoubleSupplier getShotSpeed(DoubleSupplier distance)
+    public double getShotSpeed(double distance)
     {
-        // distance = Math.max(0.0, Math.min(4.0, distance));
-        return () -> distanceToSpeedMap.get(distance.getAsDouble());
+        distance = Math.max(0.0, Math.min(4.0, distance));
+        return distanceToSpeedMap.get(distance);
     }
 
     /**
@@ -207,10 +207,10 @@ public class Flywheel extends SubsystemBase
     }
 
     //do not use, only for testing
-    public Command basicShootCommand(double speed)
-    {
-        return runOnce(() -> leadMotor.set(speed));
-    }
+    // public Command basicShootCommand(double speed)
+    // {
+    //     return runOnce(() -> leadMotor.set(speed));
+    // }
 
     /**
      * Shoot the flywheel at the appropriate speed for the given distance

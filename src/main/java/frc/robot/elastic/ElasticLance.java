@@ -72,24 +72,24 @@ public class ElasticLance
         SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
     }
 
-    public static void updateShootDistanceColorBox()
-    {
-        if(poseEstimator != null)
-        {
-            if(poseEstimator.getDistanceToAllianceHub().getAsDouble() < 3.0)
-            {
-                shootDistanceColor = Color.kGreen;
-            }
-            else
-            {
-                shootDistanceColor = Color.kOrange;
-            }
-        }
-        else
-        {
-            shootDistanceColor = Color.kRed;
-        }
+    // public static void updateShootDistanceColorBox()
+    // {
+    //     if(poseEstimator != null)
+    //     {
+    //         if(poseEstimator.getDistanceToAllianceHub().getAsDouble() < 3.0)
+    //         {
+    //             shootDistanceColor = Color.kGreen;
+    //         }
+    //         else
+    //         {
+    //             shootDistanceColor = Color.kOrange;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         shootDistanceColor = Color.kRed;
+    //     }
 
-        SmartDashboard.putString("Within Shooter Distance", shootDistanceColor.toHexString());
-    }
+    //     SmartDashboard.putString("Within Shooter Distance", shootDistanceColor.toHexString());
+    // }
 }
