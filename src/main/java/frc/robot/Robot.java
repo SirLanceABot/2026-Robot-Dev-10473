@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.lang.invoke.MethodHandles;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 // import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,6 +42,10 @@ public class Robot extends TimedRobot
     private Command autonomousCommand = null;
     private boolean isPreMatch = true;
     private TestMode testMode = null;
+
+    private Command selectedCommand = null;
+    private Command path = Commands.none();
+    private String autoName = "Simple_Shoot_Center";
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -102,7 +108,14 @@ public class Robot extends TimedRobot
         // Put code to run here before the match starts, but not between auto and teleop
         if(isPreMatch)
         {
+            autonomousCommand = PathPlannerLance.getAutonomousCommand();
+            autoName = autonomousCommand.getName();
 
+            if(AutoBuilder.isConfigured())
+            {
+                    path = AutoBuilder.buildAuto(autoName);
+                    PathPlannerLance.initializePose(autoName);
+            }
         }
     }
 
@@ -113,7 +126,18 @@ public class Robot extends TimedRobot
         // Put code to run here before the match starts, but not between auto and teleop
         if(isPreMatch)
         {
-
+            selectedCommand = PathPlannerLance.getAutonomousCommand();
+            if(!selectedCommand.getName().equalsIgnoreCase(autonomousCommand.getName()))
+            {
+                autonomousCommand = selectedCommand;
+                autoName = autonomousCommand.getName();
+                
+                if(AutoBuilder.isConfigured())
+                {
+                    PathPlannerLance.initializePose(autoName);
+                    path = AutoBuilder.buildAuto(autoName);
+                }
+            }
         }
     }
 
@@ -127,8 +151,18 @@ public class Robot extends TimedRobot
     public void autonomousInit() 
     {
         // DataLogManager.start();
-
         isPreMatch = false;
+
+        if(autonomousCommand != null)
+        {
+            PathPlannerLance.initializePose(autonomousCommand.getName());
+        }
+
+        if(path != null)
+        {
+            path.schedule();
+            System.out.println("Scheduled Auto Command");
+        }
     }
 
     /** This function is called periodically during Autonomous mode. */
