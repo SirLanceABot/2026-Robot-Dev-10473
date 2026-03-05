@@ -105,8 +105,8 @@ public class ScoringCommands
         {
             return viewController.setSolidCommand(Color.kRed)
                     .andThen(flywheel.stopCommand())
-                    .andThen(Commands.parallel(agitator.stopCommand()));
-                                                // ,pivot.extendCommand());
+                    .andThen(Commands.parallel(agitator.stopCommand())
+                                                ,pivot.extendCommand());
         } else
             return Commands.none();
     }
@@ -128,14 +128,12 @@ public class ScoringCommands
 
             return drivetrain.lockWheelsCommand().withTimeout(0.1)
                     .andThen(Commands.parallel(
-                        viewController.setRainbowCommand(),
+                        viewController.setRainbowCommand().withTimeout(0.01),
                         drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, () -> poseEstimator.getAngleToAllianceHub().getAsDouble()).withTimeout(0.75),
-                        // pivot.shootPositionCommand(),
+                        pivot.shootPositionCommand().withTimeout(0.1),
                         // shroud.setAngleFromDistanceCommand(distance),
-                        flywheel.shootCommand(() -> (shotSpeed.getAsDouble()))
-                            .until(flywheel.isAtSetSpeed(shotSpeed.getAsDouble())), 
-                        Commands.run(() -> System.out.println("Distance " + distance.getAsDouble()))
-                    ))       
+                        flywheel.shootCommand(() -> (shotSpeed.getAsDouble())).withTimeout(0.3)))
+                            // .until(flywheel.isAtSetSpeed(shotSpeed.getAsDouble())))    
                     .andThen(agitator.forwardCommand());
         }
         else

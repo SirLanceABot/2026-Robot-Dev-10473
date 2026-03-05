@@ -74,7 +74,7 @@ public class Roller extends SubsystemBase
 
     public void stop()
     {
-        motor.setControlVelocity(MOTOR);;
+        motor.setVoltage(0.0);
     }
 
     //only used for testing
@@ -91,13 +91,13 @@ public class Roller extends SubsystemBase
     public Command intakeFuelCommand()
     {
         //TODO: fine-tune these values
-        return runOnce(() -> motor.setControlVelocity(38));
+        return runOnce(() -> motor.setControlVelocity(40));
     }
 
     public Command reverseCommand()
     {
         //TODO: fine-tune
-        return runOnce(() -> motor.setControlVelocity(-40));
+        return runOnce(() -> motor.setControlVelocity(-60));
     }
 
 

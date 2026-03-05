@@ -80,7 +80,7 @@ public class RobotContainer
     RobotContainer()
     {
         // Instantiate ONLY the components selected above
-        if (useFullRobot || useExampleSubsystem)
+        if (useExampleSubsystem)
             exampleSubsystem = new ExampleSubsystem();
 
         if (useFullRobot || useFlywheel)

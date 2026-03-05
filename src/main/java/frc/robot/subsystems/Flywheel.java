@@ -39,7 +39,7 @@ public class Flywheel extends SubsystemBase
     private final TalonFXLance leadMotor = new TalonFXLance(LEADMOTOR, MOTOR_CAN_BUS, "Flywheel Lead Motor");
     private final TalonFXLance followMotor = new TalonFXLance(FOLLOWMOTOR, MOTOR_CAN_BUS, "Flywheel Follow Motor");
 
-    private final double TOLERANCE = 0.3;
+    private final double TOLERANCE = 5.0;
 
     private InterpolatingDoubleTreeMap distanceToSpeedMap = new InterpolatingDoubleTreeMap();
 
@@ -174,7 +174,7 @@ public class Flywheel extends SubsystemBase
      */
     public double getShotSpeed(double distance)
     {
-        distance = Math.max(0.0, Math.min(4.0, distance));
+        distance = Math.max(2.0, Math.min(4.0, distance));
         return distanceToSpeedMap.get(distance);
     }
 

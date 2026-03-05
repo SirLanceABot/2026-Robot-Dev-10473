@@ -78,7 +78,6 @@ public class IntakingCommands
         if(pivot != null && roller != null)
         {
             return viewController.setGradientCommand(Color.kYellow, Color.kRed)
-                    .andThen(pivot.extendCommand())
                     .andThen(roller.intakeFuelCommand());
         } else
             return Commands.none();
