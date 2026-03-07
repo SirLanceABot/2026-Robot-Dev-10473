@@ -113,9 +113,9 @@ public class GeneralCommands
         if(roller != null && agitator != null && flywheel != null)
         {
             return Commands.parallel(
-                roller.reverseCommand(),
-                agitator.reverseCommand(),
-                flywheel.reverseCommand()
+                // roller.reverseCommand(),
+                agitator.reverseCommand()
+                // flywheel.reverseCommand()
             );
         }
         else

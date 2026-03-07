@@ -193,7 +193,7 @@ public class Flywheel extends SubsystemBase
      */
     public Command reverseCommand()
     {
-        return runOnce(() -> set(15.0));
+        return runOnce(() -> set(60.0));
     }
 
     /**

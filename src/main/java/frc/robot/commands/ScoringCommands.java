@@ -82,13 +82,14 @@ public class ScoringCommands
      */
     public static Command passCommand()
     {
-        if (agitator != null && flywheel != null)
+        if (agitator != null && flywheel != null && pivot != null)
         {
             return Commands.parallel(
                     viewController.setGradientCommand(Color.kBlue, Color.kRed),
-                    flywheel.shootCommand(() -> 80).until(flywheel.isAtSetSpeed(15)))
-                    // shroud.goToCommand(2.0))
-                    .andThen(agitator.forwardCommand());
+                    flywheel.shootCommand(() -> 80).withTimeout(0.3))
+                    .andThen(Commands.parallel(
+                                agitator.forwardCommand(), 
+                                pivot.shootPositionCommand()));
         } else
             return Commands.none();
     }
@@ -130,11 +131,12 @@ public class ScoringCommands
                     .andThen(Commands.parallel(
                         viewController.setRainbowCommand().withTimeout(0.01),
                         drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, () -> poseEstimator.getAngleToAllianceHub().getAsDouble()).withTimeout(0.75),
-                        pivot.shootPositionCommand().withTimeout(0.1),
                         // shroud.setAngleFromDistanceCommand(distance),
                         flywheel.shootCommand(() -> (shotSpeed.getAsDouble())).withTimeout(0.3)))
                             // .until(flywheel.isAtSetSpeed(shotSpeed.getAsDouble())))    
-                    .andThen(agitator.forwardCommand());
+                    .andThen(Commands.parallel(
+                                agitator.forwardCommand(), 
+                                pivot.shootPositionCommand()));
         }
         else
             return Commands.none();

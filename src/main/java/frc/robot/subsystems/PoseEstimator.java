@@ -19,6 +19,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
@@ -356,6 +357,11 @@ public class PoseEstimator extends SubsystemBase
 
                     //not sure on this value
                     if(robotRotation > 360.0)
+                    {
+                        rejectUpdate = true;
+                    }
+
+                    if(DriverStation.isAutonomous())
                     {
                         rejectUpdate = true;
                     }
