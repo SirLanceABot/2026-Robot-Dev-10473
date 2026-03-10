@@ -8,20 +8,36 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.764317912218269,
-        "y": 0.22086595492289351
+        "x": 5.612479240806644,
+        "y": 0.19934756820877864
       },
       "isLocked": false,
       "linkedName": "Right_Intake"
     },
     {
       "anchor": {
-        "x": 2.7720521945432983,
-        "y": 1.0816014234875444
+        "x": 3.2131791221826815,
+        "y": 0.8018623962040328
       },
       "prevControl": {
-        "x": 3.0840688018979834,
-        "y": 0.22086595492289351
+        "x": 3.900475904089605,
+        "y": 0.25423944479052507
+      },
+      "nextControl": {
+        "x": 2.7900451417280903,
+        "y": 1.1390062404935126
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.739774614472124,
+        "y": 2.340427046263345
+      },
+      "prevControl": {
+        "x": 2.712397922666397,
+        "y": 2.5889235588058237
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,11 +46,11 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 0.0
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": -1.120731432430702
     },
     {
-      "waypointRelativePos": 0.6660746003552404,
+      "waypointRelativePos": 1.35,
       "rotationDegrees": 0.0
     }
   ],
@@ -49,7 +65,7 @@
     },
     {
       "name": "Stationary Score Command",
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 2.0,
       "endWaypointRelativePos": null,
       "command": null
     }

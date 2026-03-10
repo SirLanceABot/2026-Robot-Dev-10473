@@ -132,11 +132,10 @@ public class ScoringCommands
                         viewController.setRainbowCommand().withTimeout(0.01),
                         drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, () -> poseEstimator.getAngleToAllianceHub().getAsDouble()).withTimeout(0.75),
                         // shroud.setAngleFromDistanceCommand(distance),
-                        flywheel.shootCommand(() -> (shotSpeed.getAsDouble())).withTimeout(0.3)))
-                            // .until(flywheel.isAtSetSpeed(shotSpeed.getAsDouble())))    
+                        flywheel.shootCommand(() -> (shotSpeed.getAsDouble())).withTimeout(0.3)))   
                     .andThen(Commands.parallel(
                                 agitator.forwardCommand(), 
-                                pivot.shootPositionCommand()));
+                                pivot.shootPositionCommand())).withTimeout(10.0);
         }
         else
             return Commands.none();

@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 3.514436536180309,
-        "y": 5.619985734664765
+        "x": 2.8688849347568213,
+        "y": 5.880201660735468
       },
       "prevControl": {
-        "x": 2.9697485901225025,
-        "y": 6.061081661359602
+        "x": 2.324196988699015,
+        "y": 6.321297587430305
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Center_Shoot"
+      "linkedName": "Left_Shoot"
     }
   ],
   "rotationTargets": [],
@@ -55,7 +55,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -63.113844607616485
   },
   "reversed": false,
   "folder": "Center_Paths",
