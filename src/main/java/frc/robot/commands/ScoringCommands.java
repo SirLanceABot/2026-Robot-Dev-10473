@@ -84,10 +84,11 @@ public class ScoringCommands
         {
             return Commands.parallel(
                     viewController.setGradientCommand(Color.kBlue, Color.kRed),
-                    flywheel.shootCommand(() -> 80).withTimeout(0.3))
+                    flywheel.shootCommand(() -> 80).withTimeout(0.3), 
+                    pivot.shootPositionCommand())
                     .andThen(Commands.parallel(
                                 agitator.forwardCommand(), 
-                                pivot.shootPositionCommand()));
+                                pivot.shimmyCommand()));
         } else
             return Commands.none();
     }
@@ -104,8 +105,8 @@ public class ScoringCommands
         {
             return viewController.setSolidCommand(Color.kRed)
                     .andThen(flywheel.stopCommand())
-                    .andThen(Commands.parallel(agitator.stopCommand())
-                                                ,pivot.extendCommand());
+                    .andThen(Commands.parallel(agitator.stopCommand()), 
+                                pivot.extendCommand());
         } else
             return Commands.none();
     }
@@ -129,10 +130,11 @@ public class ScoringCommands
                         viewController.setRainbowCommand().withTimeout(0.01),
                         drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, () -> poseEstimator.getAngleToAllianceHub().getAsDouble()).withTimeout(0.75),
                         // shroud.setAngleFromDistanceCommand(distance),
-                        flywheel.shootCommand(() -> (shotSpeed.getAsDouble())).withTimeout(0.3)))   
+                        flywheel.shootCommand(() -> (shotSpeed.getAsDouble())).withTimeout(0.3),
+                        pivot.shootPositionCommand()))   
                     .andThen(Commands.parallel(
                                 agitator.forwardCommand(), 
-                                pivot.shootPositionCommand())).withTimeout(10.0);
+                                pivot.shimmyCommand())).withTimeout(10.0);
         }
         else
             return Commands.none();

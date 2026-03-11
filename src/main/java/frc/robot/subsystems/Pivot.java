@@ -7,6 +7,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.motors.TalonFXLance;
 
@@ -170,6 +171,18 @@ public class Pivot extends SubsystemBase
     {
         return run(() -> shootPosition()).until(isAtShootPosition())
                 .andThen(stopCommand());
+    }
+
+    /**
+     * Shiimies the pivot in order to feed fuel into the agitator
+     * @return Shimmy Command
+     * @author Jackson D.
+     */
+    public Command shimmyCommand()
+    {
+        return run(() -> leadMotor.setControlPosition(SHOOT))
+                    .andThen(Commands.waitSeconds(0.2))
+                    .andThen(() -> leadMotor.setControlPosition(SHOOT - 0.5));
     }
 
     /**
