@@ -54,12 +54,12 @@ public class PoseEstimator extends SubsystemBase
     private Pose2d estimatedPose = new Pose2d();
 
     //Hub Positions
-    Pose2d redHubPose = new Pose2d(new Translation2d(11.92, 4.030), new Rotation2d(0));     //where are these values from?
+    Pose2d redHubPose = new Pose2d(new Translation2d(11.92, 4.030), new Rotation2d(0));
     Pose2d blueHubPose = new Pose2d(new Translation2d(4.62, 4.030), new Rotation2d(0));
 
     //AdvantageScope
     private final NetworkTable ASTable;
-    private final double fieldXDimension = 16.540988;       //where are these values from?
+    private final double fieldXDimension = 16.540988;       
     private final double fieldYDimension = 8.069326;
 
     private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
@@ -85,8 +85,6 @@ public class PoseEstimator extends SubsystemBase
         this.drivetrain = drivetrain;
         this.gyro = drivetrain.getPigeon2();
         this.camera = camera;
-
-        
 
         ASTable = NetworkTableInstance.getDefault().getTable(Constants.NetworkTableLance.ADVANTAGE_SCOPE_TABLE);
         //AdvantageScope starting position
@@ -186,7 +184,7 @@ public class PoseEstimator extends SubsystemBase
 
     /**
      * Returns the location of an AprilTag with a given ID.
-     * NOT TESTED(!!!!!!!!!!!!)
+     * NOT TESTED
      * @param ID AprilTag ID
      * @return AprilTag 2D location
      */
@@ -207,7 +205,6 @@ public class PoseEstimator extends SubsystemBase
 
     /**
      * Gets the position of your alliance's hub
-     * NOT TESTED(!!!!!!!!!!!)
      * @return Alliance hub position
      */
     public Pose2d getAllianceHubPose()
@@ -220,12 +217,11 @@ public class PoseEstimator extends SubsystemBase
 
     /**
      * Gets the distance from the current robot pose to the given target.
-     * NOT TESTED(!!!!!!!!)
      * @param robotPose Current robot position
      * @param target Target position
      * @return Distance from target
      */
-    public DoubleSupplier getDistanceToTarget(Pose2d robotPose, Pose2d target)      //do we use this or the other ones?
+    public DoubleSupplier getDistanceToTarget(Pose2d robotPose, Pose2d target)
     {
     
         DoubleSupplier deltay = () -> (target.getY() - robotPose.getY());
@@ -233,54 +229,53 @@ public class PoseEstimator extends SubsystemBase
         return () -> Math.hypot(deltax.getAsDouble(), deltay.getAsDouble());
     }
 
-    // public DoubleSupplier getDistancetoRedHub()
-    // {
-    //     Pose2d robotPose = drivetrain.getState().Pose;
-    //     DoubleSupplier deltay = () -> (redHubPose.getY() - robotPose.getY());
-    //     DoubleSupplier deltax = () -> (redHubPose.getX() - robotPose.getX());
-    //     DoubleSupplier dist = () -> Math.hypot(deltax.getAsDouble(), deltay.getAsDouble());
-    //     return dist;
-    // }
+    public DoubleSupplier getDistancetoRedHub()
+    {
+        Pose2d robotPose = drivetrain.getState().Pose;
+        DoubleSupplier deltay = () -> (redHubPose.getY() - robotPose.getY());
+        DoubleSupplier deltax = () -> (redHubPose.getX() - robotPose.getX());
+        DoubleSupplier dist = () -> Math.hypot(deltax.getAsDouble(), deltay.getAsDouble());
+        return dist;
+    }
 
-    // public DoubleSupplier getDistanceToBlueHub()
-    // {
-    //     Pose2d robotPose = drivetrain.getState().Pose;
-    //     DoubleSupplier deltay = () -> (blueHubPose.getY() - robotPose.getY());
-    //     DoubleSupplier deltax = () -> (blueHubPose.getX() - robotPose.getX());
-    //     DoubleSupplier dist = () -> Math.hypot(deltax.getAsDouble(), deltay.getAsDouble());
-    //     return dist;
-    // }
+    public DoubleSupplier getDistanceToBlueHub()
+    {
+        Pose2d robotPose = drivetrain.getState().Pose;
+        DoubleSupplier deltay = () -> (blueHubPose.getY() - robotPose.getY());
+        DoubleSupplier deltax = () -> (blueHubPose.getX() - robotPose.getX());
+        DoubleSupplier dist = () -> Math.hypot(deltax.getAsDouble(), deltay.getAsDouble());
+        return dist;
+    }
 
     /**
      * Gets the distance from the current robot pose to your alliance's hub.
-     * NOT TESTED(!!!!!!!!!)
+     * NOT TESTED
      * @return Distance from hub
      */
-    // public DoubleSupplier getDistanceToAllianceHub()
-    // {
-    //     if(drivetrain.isRedAllianceSupplier().getAsBoolean())
-    //         return getDistancetoRedHub();
-    //     else
-    //         return getDistanceToBlueHub();
-    // }
+    public DoubleSupplier getDistanceToAllianceHub()
+    {
+        if(drivetrain.isRedAllianceSupplier().getAsBoolean())
+            return getDistancetoRedHub();
+        else
+            return getDistanceToBlueHub();
+    }
 
     public DoubleSupplier getAngleToRedTarget(Pose2d robotPose, Pose2d target)
     {
         DoubleSupplier deltay = () -> (target.getY() - robotPose.getY());
         DoubleSupplier deltax = () -> (target.getX() - robotPose.getX());
-        return () -> Math.atan2(-deltay.getAsDouble(), -deltax.getAsDouble());        //why are these inverted?
+        return () -> Math.atan2(-deltay.getAsDouble(), -deltax.getAsDouble());
     }
 
     public DoubleSupplier getAngleToBlueTarget(Pose2d robotPose, Pose2d target)
     {
         DoubleSupplier deltay = () -> (target.getY() - robotPose.getY());
         DoubleSupplier deltax = () -> (target.getX() - robotPose.getX());
-        return () -> Math.atan2(deltay.getAsDouble(), deltax.getAsDouble());      //why are these inverted?
+        return () -> Math.atan2(deltay.getAsDouble(), deltax.getAsDouble());
     }
 
     /**
      * Gets the angle to face a given target, based on your alliance.
-     * NOT TESTED(!!!!!!!!!!)
      * @param robotPose Current robot position
      * @param target Target position
      * @return Angle to target, in radians
@@ -305,7 +300,6 @@ public class PoseEstimator extends SubsystemBase
 
     /**
      * Gets the angle from the current robot pose to your current alliance's hub
-     * NOT TESTED(!!!!!!!!!)
      * @return Angle to hub, in radians
      */
     public DoubleSupplier getAngleToAllianceHub()

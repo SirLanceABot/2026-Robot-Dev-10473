@@ -5,14 +5,10 @@ import java.lang.invoke.MethodHandles;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.LEDs;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Agitator;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Roller;
-import frc.robot.subsystems.Shroud;
 
 public class IntakingCommands
 {
@@ -32,12 +28,12 @@ public class IntakingCommands
     // *** CLASS VARIABLES & INSTANCE VARIABLES ***
     // Put all class variables and instance variables here
 
-    private static Agitator agitator = null;
-    private static CommandSwerveDrivetrain drivetrain = null;
-    private static Flywheel flywheel = null;
+    // private static Agitator agitator = null;
+    // private static CommandSwerveDrivetrain drivetrain = null;
+    // private static Flywheel flywheel = null;
     private static Pivot pivot = null;
     private static Roller roller = null;
-    private static Shroud shroud = null;
+    // private static Shroud shroud = null;
 
     private static LEDsController viewController = null;
 
@@ -51,12 +47,12 @@ public class IntakingCommands
     {
         System.out.println("  Constructor Started:  " + fullClassName);
 
-        agitator = robotContainer.getAgitator();
-        drivetrain = robotContainer.getDrivetrain();
-        flywheel = robotContainer.getFlywheel();
+        // agitator = robotContainer.getAgitator();
+        // drivetrain = robotContainer.getDrivetrain();
+        // flywheel = robotContainer.getFlywheel();
         pivot = robotContainer.getPivot();
         roller = robotContainer.getRoller();
-        shroud = robotContainer.getShroud();
+        // shroud = robotContainer.getShroud();
         LEDs leds = robotContainer.getLEDs();
 
         LEDs.LEDView view = null;

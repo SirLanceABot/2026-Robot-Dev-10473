@@ -2,17 +2,13 @@ package frc.robot.commands;
 
 import java.lang.invoke.MethodHandles;
 
-// import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Agitator;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Flywheel;
-// import frc.robot.subsystems.LEDs.ColorPattern;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Roller;
-import frc.robot.subsystems.Shroud;
 
 public class GeneralCommands
 {
@@ -32,11 +28,11 @@ public class GeneralCommands
     // Put all class variables and instance variables here
 
     private static Agitator agitator;
-    private static CommandSwerveDrivetrain drivetrain;
+    // private static CommandSwerveDrivetrain drivetrain;
     private static Flywheel flywheel;
     private static Pivot pivot;
     private static Roller roller;
-    private static Shroud shroud;
+    // private static Shroud shroud;
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
@@ -49,11 +45,11 @@ public class GeneralCommands
         System.out.println("  Constructor Started:  " + fullClassName);
 
         agitator = robotContainer.getAgitator();
-        drivetrain = robotContainer.getDrivetrain();
+        // drivetrain = robotContainer.getDrivetrain();
         flywheel = robotContainer.getFlywheel();
         pivot = robotContainer.getPivot();
         roller = robotContainer.getRoller();
-        shroud = robotContainer.getShroud();
+        // shroud = robotContainer.getShroud();
 
         System.out.println("  Constructor Finished: " + fullClassName);
     }

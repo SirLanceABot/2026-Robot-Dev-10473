@@ -6,15 +6,13 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.subsystems.LEDs;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Flywheel;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.PoseEstimator;
-import frc.robot.subsystems.Roller;
-import frc.robot.subsystems.Shroud;
 
 public class ScoringCommands
 {
@@ -38,8 +36,8 @@ public class ScoringCommands
     private static CommandSwerveDrivetrain drivetrain;
     private static Flywheel flywheel;
     private static Pivot pivot;
-    private static Roller roller;
-    private static Shroud shroud;
+    // private static Roller roller;
+    // private static Shroud shroud;
 
     private static PoseEstimator poseEstimator;
 
@@ -59,8 +57,8 @@ public class ScoringCommands
         drivetrain = robotContainer.getDrivetrain();
         flywheel = robotContainer.getFlywheel();
         pivot = robotContainer.getPivot();
-        roller = robotContainer.getRoller();
-        shroud = robotContainer.getShroud();
+        // roller = robotContainer.getRoller();
+        // shroud = robotContainer.getShroud();
 
         poseEstimator = robotContainer.getPoseEstimator();
 
@@ -115,7 +113,6 @@ public class ScoringCommands
     /**
      * Command to stop driving, rotate towards the hub, set the flywheel
      * appropriately, and score.
-     * NOT TESTED(!!!!!!!)
      * 
      * @return Stationary score command
      * @author Jackson D.

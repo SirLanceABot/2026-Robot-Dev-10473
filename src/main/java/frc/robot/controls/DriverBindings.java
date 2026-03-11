@@ -11,15 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.RobotContainer;
 import frc.robot.commands.GeneralCommands;
-import frc.robot.sensors.Camera;
-import frc.robot.subsystems.Agitator;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.Flywheel;
-import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.PoseEstimator;
-import frc.robot.subsystems.Roller;
-import frc.robot.subsystems.Shroud;
 
 public final class DriverBindings
 {
@@ -37,15 +29,7 @@ public final class DriverBindings
     // Put all class variables and instance variables here
     private static CommandXboxController controller;
 
-    private static Flywheel flywheel;
-    private static Agitator agitator;
-    private static Roller roller;
-    private static Pivot pivot;
-    private static Shroud shroud;
     private static CommandSwerveDrivetrain drivetrain;
-
-    private static Camera camera;
-    private static PoseEstimator poseEstimator;
 
     private static final double CRAWL_SPEED = 2.0;
     private static final double WALK_SPEED = 4.0;
@@ -72,13 +56,6 @@ public final class DriverBindings
         controller = robotContainer.getDriverController();
 
         drivetrain = robotContainer.getDrivetrain();
-        flywheel = robotContainer.getFlywheel();
-        agitator = robotContainer.getAgitator();
-        pivot = robotContainer.getPivot();
-        shroud = robotContainer.getShroud();
-
-        camera = robotContainer.getCamera();
-        poseEstimator = robotContainer.getPoseEstimator();
 
         if(controller != null)
         {
@@ -86,22 +63,22 @@ public final class DriverBindings
             configDefaultCommands();
             configRumble();
 
-            configAButton();
-            configBButton();
-            configXButton();
-            configYButton();
+            // configAButton();
+            // configBButton();
+            // configXButton();
+            // configYButton();
             configLeftBumper();
-            configRightBumper();
+            // configRightBumper();
             configBackButton();
             configStartButton();
             configLeftTrigger();
-            configRightTrigger();
-            configLeftStick();
-            configRightStick();
-            configDpadUp();
-            configDpadDown(); 
-            configDpadLeft();
-            configDpadRight();
+            // configRightTrigger();
+            // configLeftStick();
+            // configRightStick();
+            // configDpadUp();
+            // configDpadDown(); 
+            // configDpadLeft();
+            // configDpadRight();
         }
     }
 
@@ -144,27 +121,25 @@ public final class DriverBindings
             .onFalse(Commands.runOnce(() -> controller.getHID().setRumble(RumbleType.kBothRumble, 0.0)));
     }
 
-    private static void configAButton()
-    {
-        Trigger aButton = controller.a();
-        // aButton
-        //     .whileTrue(drivetrain.angleLockDriveCommand(leftYAxis, leftXAxis, scaleFactorSupplier, () -> (poseEstimator.getAngleToTarget(poseEstimator.getEstimatedPose(), poseEstimator.getAllianceHubPose()).getAsDouble())));
-    }
+    // private static void configAButton()
+    // {
+    //     Trigger aButton = controller.a(); 
+    // }
 
-    private static void configBButton()
-    {
-        Trigger bButton = controller.b();
-    }
+    // private static void configBButton()
+    // {
+    //     Trigger bButton = controller.b();
+    // }
 
-    private static void configXButton()
-    {
-        Trigger xButton = controller.x();
-    }
+    // private static void configXButton()
+    // {
+    //     Trigger xButton = controller.x();
+    // }
 
-    private static void configYButton()
-    {
-        Trigger yButton = controller.y();
-    }
+    // private static void configYButton()
+    // {
+    //     Trigger yButton = controller.y();
+    // }
 
     private static void configLeftBumper()
     {
@@ -173,10 +148,10 @@ public final class DriverBindings
             .onTrue(Commands.runOnce(() -> scaleFactor = (scaleFactor > (CRAWL_SPEED + WALK_SPEED) / 2.0) ? CRAWL_SPEED : WALK_SPEED));
     }
 
-    private static void configRightBumper()
-    {
-        Trigger rightBumper = controller.rightBumper();
-    }
+    // private static void configRightBumper()
+    // {
+    //     Trigger rightBumper = controller.rightBumper();
+    // }
 
     private static void configBackButton()
     {
@@ -202,39 +177,39 @@ public final class DriverBindings
             .onTrue(Commands.runOnce(() -> scaleFactor = (scaleFactor > (WALK_SPEED + RUN_SPEED) / 2.0) ? WALK_SPEED : RUN_SPEED));
     }
 
-    private static void configRightTrigger()
-    {
-        Trigger rightTrigger = controller.rightTrigger();
-    }
+    // private static void configRightTrigger()
+    // {
+    //     Trigger rightTrigger = controller.rightTrigger();
+    // }
 
-    private static void configLeftStick()
-    {
-        Trigger leftStick = controller.leftStick();
-    }
+    // private static void configLeftStick()
+    // {
+    //     Trigger leftStick = controller.leftStick();
+    // }
 
-    private static void configRightStick()
-    {
-        Trigger rightStick = controller.rightStick();
-    }
+    // private static void configRightStick()
+    // {
+    //     Trigger rightStick = controller.rightStick();
+    // }
 
-    private static void configDpadUp()
-    {
-        Trigger dpadUp = controller.povUp();
-    }
+    // private static void configDpadUp()
+    // {
+    //     Trigger dpadUp = controller.povUp();
+    // }
 
-    private static void configDpadDown()
-    {
-        Trigger dpadDown = controller.povDown();
-    }
+    // private static void configDpadDown()
+    // {
+    //     Trigger dpadDown = controller.povDown();
+    // }
 
-    private static void configDpadLeft()
-    {
-        Trigger dpadLeft = controller.povLeft();
-    }
+    // private static void configDpadLeft()
+    // {
+    //     Trigger dpadLeft = controller.povLeft();
+    // }
 
-    private static void configDpadRight()
-    {
-        Trigger dpadRight = controller.povRight();
-    }
+    // private static void configDpadRight()
+    // {
+    //     Trigger dpadRight = controller.povRight();
+    // }
 
 }

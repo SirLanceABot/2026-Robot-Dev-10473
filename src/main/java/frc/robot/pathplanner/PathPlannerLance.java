@@ -1,8 +1,6 @@
 package frc.robot.pathplanner;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Optional;
-import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -16,7 +14,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,7 +38,7 @@ public class PathPlannerLance
     // Put all class variables and instance variables here
 
     private static CommandSwerveDrivetrain drivetrain;
-    private static Field2d field;
+    // private static Field2d field;
     private static PoseEstimator poseEstimator;
 
     private static SendableChooser<Command> autoChooser;
@@ -65,19 +62,20 @@ public class PathPlannerLance
 
     }
 
-    private static BooleanSupplier shouldFlipPath()
-    {
-        return 
-        () -> 
-        {
-            Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
-            if(alliance.isPresent()) 
-            {
-                return alliance.get() == DriverStation.Alliance.Red;
-            }
-            return false;
-        };
-    }
+    //not being used currently
+    // private static BooleanSupplier shouldFlipPath()
+    // {
+    //     return 
+    //     () -> 
+    //     {
+    //         Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
+    //         if(alliance.isPresent()) 
+    //         {
+    //             return alliance.get() == DriverStation.Alliance.Red;
+    //         }
+    //         return false;
+    //     };
+    // }
 
     private static void configAutoChooser()
     {

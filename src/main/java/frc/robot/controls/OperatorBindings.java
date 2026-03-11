@@ -2,7 +2,6 @@ package frc.robot.controls;
 
 import java.lang.invoke.MethodHandles;
 import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -13,14 +12,6 @@ import frc.robot.RobotContainer;
 import frc.robot.commands.GeneralCommands;
 import frc.robot.commands.IntakingCommands;
 import frc.robot.commands.ScoringCommands;
-import frc.robot.sensors.Camera;
-import frc.robot.subsystems.Agitator;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Flywheel;
-import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.PoseEstimator;
-import frc.robot.subsystems.Roller;
-import frc.robot.subsystems.Shroud;
 
 public final class OperatorBindings 
 {
@@ -38,20 +29,10 @@ public final class OperatorBindings
     // Put all class variables and instance variables here
     private static CommandXboxController controller;
 
-    private static Flywheel flywheel;
-    private static Agitator agitator;
-    private static Roller roller;
-    private static Pivot pivot;
-    private static Shroud shroud;
-    private static CommandSwerveDrivetrain drivetrain;
-
-    private static Camera camera;
-    private static PoseEstimator poseEstimator;
-
-    private static DoubleSupplier leftYAxis;
-    private static DoubleSupplier leftXAxis;
-    private static DoubleSupplier rightXAxis;
-    private static DoubleSupplier rightYAxis;
+    // private static DoubleSupplier leftYAxis;
+    // private static DoubleSupplier leftXAxis;
+    // private static DoubleSupplier rightXAxis;
+    // private static DoubleSupplier rightYAxis;
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
@@ -68,19 +49,9 @@ public final class OperatorBindings
 
         controller = robotContainer.getOperatorController();
 
-        drivetrain = robotContainer.getDrivetrain();
-        flywheel = robotContainer.getFlywheel();
-        agitator = robotContainer.getAgitator();
-        roller = robotContainer.getRoller();
-        pivot = robotContainer.getPivot();
-        shroud = robotContainer.getShroud();
-
-        camera = robotContainer.getCamera();
-        poseEstimator = robotContainer.getPoseEstimator();
-
         if(controller != null)
         {
-            configSuppliers();
+            // configSuppliers();
             configDefaultCommands();
             configRumble();
 
@@ -89,27 +60,27 @@ public final class OperatorBindings
             configXButton();
             configYButton();
             configLeftBumper();
-            configRightBumper();
+            // configRightBumper();
             configBackButton();
             configStartButton();
-            configLeftTrigger();
-            configRightTrigger();
-            configLeftStick();
-            configRightStick();
+            // configLeftTrigger();
+            // configRightTrigger();
+            // configLeftStick();
+            // configRightStick();
             configDpadUp();
             configDpadDown(); 
-            configDpadLeft();
-            configDpadRight();
+            // configDpadLeft();
+            // configDpadRight();
         }
     }
 
-    private static void configSuppliers()
-    {
-        leftYAxis = () -> -controller.getRawAxis(1);
-        leftXAxis = () -> -controller.getRawAxis(0);
-        rightXAxis = () -> -controller.getRawAxis(4);
-        rightYAxis = () -> -controller.getRawAxis(5);
-    }
+    // private static void configSuppliers()
+    // {
+    //     leftYAxis = () -> -controller.getRawAxis(1);
+    //     leftXAxis = () -> -controller.getRawAxis(0);
+    //     rightXAxis = () -> -controller.getRawAxis(4);
+    //     rightYAxis = () -> -controller.getRawAxis(5);
+    // }
 
     private static void configDefaultCommands()
     {}
@@ -171,10 +142,10 @@ public final class OperatorBindings
             .onTrue(ScoringCommands.passCommand());
     }
 
-    private static void configRightBumper()
-    {
-        Trigger rightBumper = controller.rightBumper();
-    }
+    // private static void configRightBumper()
+    // {
+    //     Trigger rightBumper = controller.rightBumper();
+    // }
 
     private static void configBackButton()
     {
@@ -190,35 +161,29 @@ public final class OperatorBindings
             .onTrue(GeneralCommands.ejectFuelCommand());
     }
 
-    private static void configLeftTrigger()
-    {
-        Trigger leftTrigger = controller.leftTrigger();
-    }
+    // private static void configLeftTrigger()
+    // {
+    //     Trigger leftTrigger = controller.leftTrigger();
+    // }
 
-    private static void configRightTrigger()
-    {
-        Trigger rightTrigger = controller.rightTrigger();
-    }
+    // private static void configRightTrigger()
+    // {
+    //     Trigger rightTrigger = controller.rightTrigger();
+    // }
 
-    private static void configLeftStick()
-    {
-        Trigger leftStick = controller.leftStick();
-        leftStick
-            .onTrue(roller.intakeFuelCommand());
-    }
+    // private static void configLeftStick()
+    // {
+    //     Trigger leftStick = controller.leftStick();
+    // }
 
-    private static void configRightStick()
-    {
-        Trigger rightStick = controller.rightStick();
-        rightStick
-            .onTrue(roller.stopCommand());
-    }
+    // private static void configRightStick()
+    // {
+    //     Trigger rightStick = controller.rightStick();
+    // }
 
     private static void configDpadUp()
     {
         Trigger dpadUp = controller.povUp();
-        // dpadUp
-            // .onTrue(flywheel.shootCommand(() -> 106.0));
         dpadUp
             .onTrue(IntakingCommands.retractIntakeCommand());
     }
@@ -226,26 +191,17 @@ public final class OperatorBindings
     private static void configDpadDown()
     {
         Trigger dpadDown = controller.povDown();
-        // dpadDown
-        //     .onTrue(flywheel.stopCommand());
         dpadDown
             .onTrue(IntakingCommands.extendIntakeCommand());
     }
 
-    private static void configDpadLeft()
-    {
-        Trigger dpadLeft = controller.povLeft();
-        // dpadLeft
-        //     .onTrue(agitator.forwardCommand());
-            // .onTrue(pivot.shootPositionCommand());
-                
-    }
+    // private static void configDpadLeft()
+    // {
+    //     Trigger dpadLeft = controller.povLeft();        
+    // }
 
-    private static void configDpadRight()
-    {
-        Trigger dpadRight = controller.povRight();
-        // dpadRight
-            // .onTrue(roller.basicSetCommand(0.4));
-            // .onTrue(agitator.stopCommand());
-    }
+    // private static void configDpadRight()
+    // {
+    //     Trigger dpadRight = controller.povRight();
+    // }
 }
