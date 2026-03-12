@@ -77,23 +77,26 @@ public class Roller extends SubsystemBase
         motor.setVoltage(0.0);
     }
 
-    //only used for testing
-    public Command basicSetCommand(double speed)
-    {
-        return run( () -> motor.set(speed));
-    }
-
+    /**
+     * Stops the roller
+     */
     public Command stopCommand()
     {
         return runOnce( () -> stop() );
     }
 
-    public Command intakeFuelCommand()
+    /**
+     * Rotates the intake forward
+     */
+    public Command forwardCommand()
     {
         //TODO: fine-tune these values
         return runOnce(() -> motor.setControlVelocity(60));
     }
 
+    /**
+     * Reverses the intake
+     */
     public Command reverseCommand()
     {
         //TODO: fine-tune

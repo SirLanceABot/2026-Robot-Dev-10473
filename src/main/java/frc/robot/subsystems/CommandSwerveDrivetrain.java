@@ -317,7 +317,6 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
     /**
      * If current alliance is red, return true.
-     * NOT TESTED(!!!!!!!!!!!)
      * @return Current alliance is red
      * @author Jackson D.
      */

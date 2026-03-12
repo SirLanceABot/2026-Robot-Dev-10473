@@ -223,41 +223,31 @@ public class PoseEstimator extends SubsystemBase
      */
     public DoubleSupplier getDistanceToTarget(Pose2d robotPose, Pose2d target)
     {
-    
         DoubleSupplier deltay = () -> (target.getY() - robotPose.getY());
         DoubleSupplier deltax = () -> (target.getX() - robotPose.getX());
         return () -> Math.hypot(deltax.getAsDouble(), deltay.getAsDouble());
     }
 
-    public DoubleSupplier getDistancetoRedHub()
+    public DoubleSupplier getDistancetoRedHub(Pose2d robotPose)
     {
-        Pose2d robotPose = drivetrain.getState().Pose;
-        DoubleSupplier deltay = () -> (redHubPose.getY() - robotPose.getY());
-        DoubleSupplier deltax = () -> (redHubPose.getX() - robotPose.getX());
-        DoubleSupplier dist = () -> Math.hypot(deltax.getAsDouble(), deltay.getAsDouble());
-        return dist;
+        return getDistanceToTarget(robotPose, redHubPose);
     }
 
-    public DoubleSupplier getDistanceToBlueHub()
+    public DoubleSupplier getDistanceToBlueHub(Pose2d robotPose)
     {
-        Pose2d robotPose = drivetrain.getState().Pose;
-        DoubleSupplier deltay = () -> (blueHubPose.getY() - robotPose.getY());
-        DoubleSupplier deltax = () -> (blueHubPose.getX() - robotPose.getX());
-        DoubleSupplier dist = () -> Math.hypot(deltax.getAsDouble(), deltay.getAsDouble());
-        return dist;
+        return getDistanceToTarget(robotPose, blueHubPose);
     }
 
     /**
      * Gets the distance from the current robot pose to your alliance's hub.
-     * NOT TESTED
      * @return Distance from hub
      */
-    public DoubleSupplier getDistanceToAllianceHub()
+    public DoubleSupplier getDistanceToAllianceHub(Pose2d robotPose)
     {
         if(drivetrain.isRedAllianceSupplier().getAsBoolean())
-            return getDistancetoRedHub();
+            return getDistancetoRedHub(robotPose);
         else
-            return getDistanceToBlueHub();
+            return getDistanceToBlueHub(robotPose);
     }
 
     public DoubleSupplier getAngleToRedTarget(Pose2d robotPose, Pose2d target)

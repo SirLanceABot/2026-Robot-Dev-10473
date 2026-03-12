@@ -116,6 +116,17 @@ public class ElasticLance
         SmartDashboard.putString("Flywheel Speed", String.valueOf(flywheelSpeed));
     }
 
+    public static void updateHubDistanceBox()
+    {
+        double distance = 0.0;
+        if(poseEstimator != null && drivetrain  != null)
+        {
+            distance = poseEstimator.getDistanceToAllianceHub(drivetrain.getState().Pose).getAsDouble();
+        }
+
+        SmartDashboard.putString("Distance to Hub", String.valueOf(distance));
+    }
+
     public static void updateShootDistanceColorBox()
     {
         if(poseEstimator != null && drivetrain != null)

@@ -56,7 +56,7 @@ public class IntakingCommands
         LEDs leds = robotContainer.getLEDs();
 
         LEDs.LEDView view = null;
-        if (leds != null)
+        if(leds != null)
             view = leds.createView(0, 199);
         viewController = new LEDsController(view);
 
@@ -74,7 +74,7 @@ public class IntakingCommands
         if(pivot != null && roller != null)
         {
             return viewController.setGradientCommand(Color.kYellow, Color.kRed)
-                    .andThen(roller.intakeFuelCommand());
+                    .andThen(roller.forwardCommand());
         } else
             return Commands.none();
     }
@@ -91,7 +91,6 @@ public class IntakingCommands
         {
             return Commands.parallel(
                     viewController.setSolidCommand(Color.kRed),
-                    // pivot.retractCommand(),
                     roller.stopCommand());
         } else
             return Commands.none();

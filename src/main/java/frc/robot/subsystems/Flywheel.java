@@ -93,40 +93,14 @@ public class Flywheel extends SubsystemBase
     {
         //for distance in meters
         //this is only with the shroud all the way down 
-        //TODO: Tune these values with the real bot
-
-        //2m is our minimum distance
-        // distanceToSpeedMap.put(1.0, 999.0);
-        // distanceToSpeedMap.put(1.5, 999.0);
 
         distanceToSpeedMap.put(2.0, 78.0);
         distanceToSpeedMap.put(2.5, 84.5);
         distanceToSpeedMap.put(3.0, 91.0);
         distanceToSpeedMap.put(3.5, 97.5);
         distanceToSpeedMap.put(4.0, 106.0);
-
-
-        // distanceToSpeedMap.put(6.0, 10473.0);
-        // distanceToSpeedMap.put(7.0, 10473.0);
-        // distanceToSpeedMap.put(8.0, 10473.0);
-        // distanceToSpeedMap.put(9.0, 10473.0);
-        // distanceToSpeedMap.put(10.0, 10473.0);
-        // distanceToSpeedMap.put(11.0, 10473.0);
-        // distanceToSpeedMap.put(12.0, 10473.0);
-        // distanceToSpeedMap.put(13.0, 10473.0);
-        // distanceToSpeedMap.put(14.0, 10473.0);
-        // distanceToSpeedMap.put(15.0, 10473.0);
-        // distanceToSpeedMap.put(16.0, 10473.0);
-        // distanceToSpeedMap.put(17.0, 10473.0);
-        // distanceToSpeedMap.put(18.0, 10473.0);
-        // distanceToSpeedMap.put(19.0, 10473.0);
-        // distanceToSpeedMap.put(20.0, 10473.0);
     }
 
-    /**
-     * This sets the speed of the motors.
-     * @param speed The motor speed (-1.0 to 1.0)
-     */
     private void set(double speed)
     {
         leadMotor.set(speed);
@@ -152,7 +126,7 @@ public class Flywheel extends SubsystemBase
     }
 
     /**
-     * @param targetSpeed
+     * @param targetSpeed (RPS)
      * @return Shooter is at target speed (RPS)
      */
     public BooleanSupplier isAtSetSpeed(double targetSpeed)
@@ -206,21 +180,16 @@ public class Flywheel extends SubsystemBase
         return run(() -> shoot(speed.getAsDouble()));
     }
 
-    //do not use, only for testing
-    // public Command basicShootCommand(double speed)
-    // {
-    //     return runOnce(() -> leadMotor.set(speed));
-    // }
-
     /**
      * Shoot the flywheel at the appropriate speed for the given distance
      * @param distance Distance in feet
      * @return Shoot from distance command
      */
-    // public Command shootFromDistanceCommand(DoubleSupplier distance)
-    // {
-    //     return shootCommand(() -> getShotSpeed(distance.getAsDouble()));
-    // }
+    public Command shootFromDistanceCommand(DoubleSupplier distance)
+    {
+        return shootCommand(() -> getShotSpeed(distance.getAsDouble()))
+                            .until(isAtSetSpeed(getShotSpeed(distance.getAsDouble())));
+    }
 
     // *** OVERRIDEN METHODS ***
     // Put all methods that are Overridden here
@@ -228,7 +197,6 @@ public class Flywheel extends SubsystemBase
     @Override
     public void periodic()
     {
-        // System.out.println(getVelocity());
         // This method will be called once per scheduler run
         // Use this for sensors that need to be read periodically.
         // Use this for data that needs to be logged.

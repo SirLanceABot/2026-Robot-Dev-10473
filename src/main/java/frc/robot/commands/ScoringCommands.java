@@ -122,16 +122,16 @@ public class ScoringCommands
     {
         if(flywheel != null && pivot != null && agitator != null && drivetrain != null && poseEstimator != null)
         {
-            DoubleSupplier distance = () -> (poseEstimator.getDistanceToTarget(drivetrain.getState().Pose, poseEstimator.getAllianceHubPose()).getAsDouble());
-            DoubleSupplier shotSpeed = () -> (flywheel.getShotSpeed(distance.getAsDouble()));
+            DoubleSupplier distance = () -> (poseEstimator.getDistanceToAllianceHub(drivetrain.getState().Pose).getAsDouble());
+            DoubleSupplier angle = () -> poseEstimator.getAngleToAllianceHub().getAsDouble();
+            // DoubleSupplier shotSpeed = () -> (flywheel.getShotSpeed(distance.getAsDouble()));
 
             return drivetrain.lockWheelsCommand().withTimeout(0.1)
                     .andThen(Commands.parallel(
                         viewController.setRainbowCommand().withTimeout(0.01),
-                        drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, () -> poseEstimator.getAngleToAllianceHub().getAsDouble()).withTimeout(0.75),
-                        // shroud.setAngleFromDistanceCommand(distance),
-                        flywheel.shootCommand(() -> (shotSpeed.getAsDouble())).withTimeout(0.3),
-                        pivot.shootPositionCommand()))   
+                        drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, angle).withTimeout(0.75),
+                        flywheel.shootFromDistanceCommand(distance)),
+                        pivot.shootPositionCommand())  
                     .andThen(Commands.parallel(
                                 agitator.forwardCommand(), 
                                 pivot.shimmyCommand())).withTimeout(10.0);

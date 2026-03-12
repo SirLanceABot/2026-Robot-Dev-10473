@@ -74,29 +74,22 @@ public class Agitator extends SubsystemBase
         motor.setupPIDController(0, kP, kI, kD, kS, kV, kA);
     }
 
-    /**
-     *  Stops the agitator
-     */
     private void stop()
     {
         motor.setVoltage(0.0);
     }
 
     /**
-     * This is the command to rotate the motor forward
-     * @return {@link Command}
+     * Rotates the agitator forward
      */
-
     public Command forwardCommand()
     {
         return run(() -> motor.setControlVelocity(70));
     }
 
     /**
-     * This command rotates the motor backwards
-     * @return {@link Command}
+     * Reverses the agitator
      */
-
     public Command reverseCommand()
     {
         //TODO: Fine-tune value
@@ -104,9 +97,8 @@ public class Agitator extends SubsystemBase
     }
 
     /**
-     * This command jitters the motor
-     * NOT TESTED (!!!!!!!!!!!!)
-     * @return {@link Command}
+     * Jitters the agitator back and forth, in order to unjam it
+     * NOT TESTED
      */
 
     public Command jitterCommand()
@@ -115,18 +107,9 @@ public class Agitator extends SubsystemBase
         .andThen(Commands.race(reverseCommand(), Commands.waitSeconds(0.1)));
     }
 
-    //only for testing
-    public Command basicSetCommand(double speed)
-    {
-        return Commands.runOnce(() -> motor.set(speed));
-    }
-
-
     /**
-     * This command stops the motor
-     * @return {@link Command}
+     *  Stops the agitator
      */
-
     public Command stopCommand()
     {
         return run(this::stop);

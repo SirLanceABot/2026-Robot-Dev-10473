@@ -37,7 +37,6 @@ public class Pivot extends SubsystemBase
     private final TalonFXLance leadMotor = new TalonFXLance(LEADMOTOR, MOTOR_CAN_BUS, "Pivot Lead Motor");
     private final TalonFXLance followMotor = new TalonFXLance(FOLLOWMOTOR, MOTOR_CAN_BUS, "Pivot Follow Motor");
 
-    //TODO: fine-tune these values
     private static final double RETRACTED = 0.0;
     private static final double SHOOT = 4.09;
     private static final double EXTENDED = 9.97;
@@ -93,10 +92,6 @@ public class Pivot extends SubsystemBase
         leadMotor.setupReverseSoftLimit(0.2, true);
     }
 
-    /**
-     * This sets the speed of the motors.
-     * @param speed The motor speed (-1.0 to 1.0)
-     */
     private void set(double speed)
     {
         leadMotor.set(speed);
@@ -124,6 +119,9 @@ public class Pivot extends SubsystemBase
         return () -> (getPosition() - TOLERANCE) < RETRACTED;
     } 
 
+    /**
+     * @return Pivot is at shooting position
+     */
     public BooleanSupplier isAtShootPosition()
     {
         return () -> ((getPosition() + TOLERANCE) > SHOOT) && ((getPosition() - TOLERANCE) < SHOOT);
@@ -159,7 +157,6 @@ public class Pivot extends SubsystemBase
 
     /**
      * Retract the pivot arm
-     * @return Retract command
      */
     public Command retractCommand()
     {
@@ -167,6 +164,9 @@ public class Pivot extends SubsystemBase
                 .andThen(stopCommand());
     }
 
+    /**
+     * Set pivot arm to the shooting position
+     */
     public Command shootPositionCommand()
     {
         return run(() -> shootPosition()).until(isAtShootPosition())
@@ -174,8 +174,7 @@ public class Pivot extends SubsystemBase
     }
 
     /**
-     * Shiimies the pivot in order to feed fuel into the agitator
-     * @return Shimmy Command
+     * Shimmies the pivot in order to feed fuel into the agitator
      * @author Jackson D.
      */
     public Command shimmyCommand()
@@ -187,7 +186,6 @@ public class Pivot extends SubsystemBase
 
     /**
      * Extend the pivot arm
-     * @return Extend command
      */
     public Command extendCommand()
     {
