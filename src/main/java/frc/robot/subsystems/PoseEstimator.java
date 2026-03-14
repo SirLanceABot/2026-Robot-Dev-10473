@@ -184,12 +184,12 @@ public class PoseEstimator extends SubsystemBase
 
     /**
      * Returns the location of an AprilTag with a given ID.
-     * NOT TESTED
      * @param ID AprilTag ID
      * @return AprilTag 2D location
      */
     public Pose2d getAprilTagLocation(int ID)
     {
+        //TODO: Test method
         return aprilTagFieldLayout.getTagPose(ID).get().toPose2d();
     }
 
@@ -339,7 +339,6 @@ public class PoseEstimator extends SubsystemBase
                         rejectUpdate = true;
                     }
 
-                    //not sure on this value
                     if(robotRotation > 360.0)
                     {
                         rejectUpdate = true;

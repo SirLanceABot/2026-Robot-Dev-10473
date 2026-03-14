@@ -154,7 +154,6 @@ public class Flywheel extends SubsystemBase
 
     /**
      * Stops the flywheel
-     * @return Stop command
      */
     public Command stopCommand()
     {
@@ -162,8 +161,7 @@ public class Flywheel extends SubsystemBase
     }
 
     /**
-     * Reverses the flywheel at a speed 15.0
-     * @return Reverse flywheel command
+     * Reverses the flywheel at a speed of 60 RPS
      */
     public Command reverseCommand()
     {
@@ -172,8 +170,7 @@ public class Flywheel extends SubsystemBase
 
     /**
      * Shoot the flywheel at a given speed (RPS)
-     * @param speed
-     * @return Shoot command
+     * @param speed (RPS)
      */
     public Command shootCommand(DoubleSupplier speed)
     {
@@ -182,8 +179,7 @@ public class Flywheel extends SubsystemBase
 
     /**
      * Shoot the flywheel at the appropriate speed for the given distance
-     * @param distance Distance in feet
-     * @return Shoot from distance command
+     * @param distance Distance in meters
      */
     public Command shootFromDistanceCommand(DoubleSupplier distance)
     {

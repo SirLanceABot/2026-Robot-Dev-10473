@@ -125,27 +125,20 @@ public class Shroud extends SubsystemBase
     /**
      * Returns the appropriate angle to shoot from a given distance.
      * @param distance {@link Double} The distance from the target in meters
-     * @return {@link Double} The shot angle
+     * @return {@link Double} Shot angle in rotations
      * @author Jackson D.
-     * @implNote PLACEHOLDER VALUES (!!!!!!!!!!)
      */
     public double getShotAngle(double distance)
     {
-        distance = Math.max(1.0, Math.min(20.0, distance));
+        distance = Math.max(2.0, Math.min(4.0, distance));
         // TODO: Tune later
-        if(distance < 5.0)
+        if(distance <= 2.0)
             return Position.kCLOSE.value;
-        else if(distance < 10.0)
+        else if(distance < 3.0)
             return Position.kMID.value;
         else
             return Position.kFAR.value;
     }
-
-    // public BooleanSupplier getLimitSwitchState()
-    // {
-    //     return () -> forwardHardLimit.get();
-    // }
-
 
     /**
      * Stops the shroud from moving

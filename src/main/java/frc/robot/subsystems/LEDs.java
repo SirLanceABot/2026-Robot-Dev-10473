@@ -32,7 +32,7 @@ public final class LEDs implements Subsystem, AutoCloseable
     // *** STATIC INITIALIZATION BLOCK ***
 
     /**
-     * Run whe the class is first loaded
+     * Run when the class is first loaded
      */
     static
     {

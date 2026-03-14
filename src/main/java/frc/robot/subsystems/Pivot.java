@@ -175,10 +175,10 @@ public class Pivot extends SubsystemBase
 
     /**
      * Shimmies the pivot in order to feed fuel into the agitator
-     * @author Jackson D.
      */
     public Command shimmyCommand()
     {
+        //TODO: Test command
         return run(() -> leadMotor.setControlPosition(SHOOT))
                     .andThen(Commands.waitSeconds(0.2))
                     .andThen(() -> leadMotor.setControlPosition(SHOOT - 0.5));

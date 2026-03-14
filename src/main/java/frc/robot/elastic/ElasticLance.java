@@ -131,7 +131,7 @@ public class ElasticLance
     {
         if(poseEstimator != null && drivetrain != null)
         {
-            DoubleSupplier distance = () -> (poseEstimator.getDistanceToTarget(drivetrain.getState().Pose, poseEstimator.getAllianceHubPose()).getAsDouble());
+            DoubleSupplier distance = () -> (poseEstimator.getDistanceToAllianceHub(drivetrain.getState().Pose).getAsDouble());
 
             if(distance.getAsDouble() <= 4.0 && distance.getAsDouble() >= 2.0)
             {

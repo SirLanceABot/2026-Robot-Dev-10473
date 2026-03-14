@@ -98,11 +98,11 @@ public class Agitator extends SubsystemBase
 
     /**
      * Jitters the agitator back and forth, in order to unjam it
-     * NOT TESTED
      */
 
     public Command jitterCommand()
     {
+        //TODO: Test command
         return Commands.race(forwardCommand(), Commands.waitSeconds(0.1))
         .andThen(Commands.race(reverseCommand(), Commands.waitSeconds(0.1)));
     }
@@ -112,7 +112,7 @@ public class Agitator extends SubsystemBase
      */
     public Command stopCommand()
     {
-        return run(this::stop);
+        return runOnce(() -> stop());
     }
 
 

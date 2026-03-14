@@ -82,7 +82,7 @@ public class Roller extends SubsystemBase
      */
     public Command stopCommand()
     {
-        return runOnce( () -> stop() );
+        return runOnce(() -> stop());
     }
 
     /**
@@ -90,7 +90,7 @@ public class Roller extends SubsystemBase
      */
     public Command forwardCommand()
     {
-        //TODO: fine-tune these values
+        //TODO: fine-tune speed
         return runOnce(() -> motor.setControlVelocity(60));
     }
 
@@ -99,7 +99,7 @@ public class Roller extends SubsystemBase
      */
     public Command reverseCommand()
     {
-        //TODO: fine-tune
+        //TODO: fine-tune speed
         return runOnce(() -> motor.setControlVelocity(-60));
     }
 
