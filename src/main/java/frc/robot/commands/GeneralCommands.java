@@ -119,4 +119,24 @@ public class GeneralCommands
             return Commands.none();
         }
     }
+
+    /**
+     * This command move the pivot in and out in order to feed fuel
+     * from the intake into the shooter
+     */
+    public static Command agitateIntakeCommand()
+    {
+        if(pivot != null)
+        {
+            return Commands.either(
+                pivot.shootPositionCommand(),
+                pivot.agitatePositionCommand(),
+                pivot.isAtAgitatePosition()).withTimeout(3.0);
+                
+        }
+        else
+        {
+            return Commands.none();
+        }
+    }
 }

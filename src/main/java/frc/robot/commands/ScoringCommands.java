@@ -87,8 +87,7 @@ public class ScoringCommands
                     flywheel.shootCommand(() -> 80).withTimeout(0.3), 
                     pivot.shootPositionCommand())
                     .andThen(Commands.parallel(
-                                agitator.forwardCommand(), 
-                                pivot.shimmyCommand()));
+                                agitator.forwardCommand()));
         } else
             return Commands.none();
     }
@@ -133,8 +132,7 @@ public class ScoringCommands
                         flywheel.shootFromDistanceCommand(distance)),
                         pivot.shootPositionCommand())  
                     .andThen(Commands.parallel(
-                                agitator.forwardCommand(), 
-                                pivot.shimmyCommand())).withTimeout(10.0);
+                                agitator.forwardCommand())).withTimeout(10.0);
         }
         else
             return Commands.none();

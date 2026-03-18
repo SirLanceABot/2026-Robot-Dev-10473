@@ -57,6 +57,7 @@ public final class CommandsManager
         //GeneralCommands
         NamedCommands.registerCommand("Stop All Command", GeneralCommands.stopAllCommand());
         NamedCommands.registerCommand("Eject Fuel Command", GeneralCommands.ejectFuelCommand());
+        NamedCommands.registerCommand("Agitate Intake Command", GeneralCommands.agitateIntakeCommand());
 
         //IntakingCommands
         NamedCommands.registerCommand("Intake Roller Command", IntakingCommands.intakeCommand());

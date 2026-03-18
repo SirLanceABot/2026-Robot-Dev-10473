@@ -7,7 +7,6 @@ import java.lang.invoke.MethodHandles;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.motors.TalonFXLance;
 
@@ -39,12 +38,23 @@ public class Pivot extends SubsystemBase
 
     private static final double RETRACTED = 0.0;
     private static final double SHOOT = 4.09;
+    private static final double AGITATE = 6.08;
     private static final double EXTENDED = 9.97;
+
     private static final double TOLERANCE = 0.2;
+
+    //PID slots for moving forward/backwards
+    private static final int FORWARD = 0;
+    private static final int REVERSE = 1;
 
     private static final double kP = 0.45;
     private static final double kI = 0.0;
     private static final double kD = 0.0;
+
+    //TODO: Tune kF values
+    private static final double kFForward = 0.0;
+    private static final double kFReverse = 0.5;
+
 
 
     // *** CLASS CONSTRUCTORS ***
@@ -81,7 +91,9 @@ public class Pivot extends SubsystemBase
         leadMotor.setSafetyEnabled(false);
         followMotor.setSafetyEnabled(false);
 
-        leadMotor.setupPIDController(0, kP, kI, kD);
+        //Two PID controllers to account for the effect of gravity when moving inward
+        leadMotor.setupPIDController(FORWARD, kP, kI, kD, kFForward);
+        leadMotor.setupPIDController(REVERSE, kP, kI, kD, kFReverse);
 
         followMotor.setupFollower(LEADMOTOR, false);
 
@@ -90,11 +102,6 @@ public class Pivot extends SubsystemBase
 
         leadMotor.setupForwardSoftLimit(9.5, true);
         leadMotor.setupReverseSoftLimit(0.2, true);
-    }
-
-    private void set(double speed)
-    {
-        leadMotor.set(speed);
     }
 
     public void stop()
@@ -128,6 +135,14 @@ public class Pivot extends SubsystemBase
     }
 
     /**
+     * @return Pivot is at agitating position
+     */
+    public BooleanSupplier isAtAgitatePosition()
+    {
+        return () -> ((getPosition() + TOLERANCE) > AGITATE) && ((getPosition() - TOLERANCE) < AGITATE);
+    }
+
+    /**
      * @return Pivot is extended
      */
     public BooleanSupplier isExtended()
@@ -137,12 +152,18 @@ public class Pivot extends SubsystemBase
 
     private void retract()
     {
-        leadMotor.setControlPosition(RETRACTED);
+        //always use reverse PID when retracting
+        leadMotor.setControlPosition(RETRACTED, REVERSE);
     }
 
-    private void shootPosition()
+    private void shootPosition(int slot)
     {
-        leadMotor.setControlPosition(SHOOT);
+        leadMotor.setControlPosition(SHOOT, slot);
+    }
+
+    private void agitatePosition(int slot)
+    {
+        leadMotor.setControlPosition(AGITATE, slot);
     }
 
     private void extend()
@@ -150,9 +171,14 @@ public class Pivot extends SubsystemBase
         leadMotor.setControlPosition(EXTENDED);
     }
 
-    public Command setCommand(double speed)
+    private int getPIDSlot(double targetPosition)
     {
-        return run(() -> set(speed));
+        //If the encoder position is past the target position,
+        //then use the reverse PID
+        if(targetPosition > getPosition())
+            return REVERSE;
+        else 
+            return FORWARD;
     }
 
     /**
@@ -169,19 +195,17 @@ public class Pivot extends SubsystemBase
      */
     public Command shootPositionCommand()
     {
-        return run(() -> shootPosition()).until(isAtShootPosition())
+        return run(() -> shootPosition(getPIDSlot(SHOOT))).until(isAtShootPosition())
                 .andThen(stopCommand());
     }
 
-    /**
-     * Shimmies the pivot in order to feed fuel into the agitator
+     /**
+     * Set pivot arm to the agitating position
      */
-    public Command shimmyCommand()
+    public Command agitatePositionCommand()
     {
-        //TODO: Test command
-        return run(() -> leadMotor.setControlPosition(SHOOT))
-                    .andThen(Commands.waitSeconds(0.2))
-                    .andThen(() -> leadMotor.setControlPosition(SHOOT - 0.5));
+        return run(() -> agitatePosition(getPIDSlot(AGITATE))).until(isAtAgitatePosition())
+                .andThen(stopCommand());
     }
 
     /**

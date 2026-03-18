@@ -69,7 +69,7 @@ public final class OperatorBindings
             // configRightStick();
             configDpadUp();
             configDpadDown(); 
-            // configDpadLeft();
+            configDpadLeft();
             // configDpadRight();
         }
     }
@@ -195,10 +195,12 @@ public final class OperatorBindings
             .onTrue(IntakingCommands.extendIntakeCommand());
     }
 
-    // private static void configDpadLeft()
-    // {
-    //     Trigger dpadLeft = controller.povLeft();        
-    // }
+    private static void configDpadLeft()
+    {
+        Trigger dpadLeft = controller.povLeft();
+        dpadLeft
+            .whileTrue(GeneralCommands.agitateIntakeCommand().repeatedly());       
+    }
 
     // private static void configDpadRight()
     // {

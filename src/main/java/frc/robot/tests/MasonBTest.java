@@ -84,14 +84,14 @@ public class MasonBTest implements Test
         // controller.a().onTrue(pivot.extendCommand());
         // controller.b().onTrue(pivot.retractCommand());
         // controller.x().onTrue(pivot.stopCommand());
-        aButton
+        // aButton
             // .whileTrue(roller.basicSetCommand(0.1))
             // .onFalse(roller.basicSetCommand(0.0));
-            .whileTrue(pivot.setCommand(0.05))
-            .onFalse(pivot.setCommand(0.0));
-        bButton
-            .whileTrue(pivot.setCommand(-0.05))
-            .onFalse(pivot.setCommand(0.0));
+            // .whileTrue(pivot.setCommand(0.05))
+            // .onFalse(pivot.setCommand(0.0));
+        // bButton
+        //     .whileTrue(pivot.setCommand(-0.05))
+        //     .onFalse(pivot.setCommand(0.0));
 
         // drivetrain.setDefaultCommand(drivetrain.driveCommand(() -> -joystick.getRawAxis(1), () -> -joystick.getRawAxis(0), () -> joystick.getRawAxis(4), () -> 0.5));
     }

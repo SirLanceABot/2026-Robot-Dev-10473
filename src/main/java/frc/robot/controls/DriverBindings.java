@@ -31,7 +31,7 @@ public final class DriverBindings
 
     private static CommandSwerveDrivetrain drivetrain;
 
-    private static final double CRAWL_SPEED = 2.0;
+    private static final double CRAWL_SPEED = 0.8;
     private static final double WALK_SPEED = 4.0;
     private static final double RUN_SPEED = 6.0;
     private static DoubleSupplier leftYAxis;
