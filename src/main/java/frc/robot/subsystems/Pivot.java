@@ -36,10 +36,11 @@ public class Pivot extends SubsystemBase
     private final TalonFXLance leadMotor = new TalonFXLance(LEADMOTOR, MOTOR_CAN_BUS, "Pivot Lead Motor");
     private final TalonFXLance followMotor = new TalonFXLance(FOLLOWMOTOR, MOTOR_CAN_BUS, "Pivot Follow Motor");
 
+    //TODO: Tune these
     private static final double RETRACTED = 0.0;
-    private static final double SHOOT = 4.09;
-    private static final double AGITATE = 6.08;
-    private static final double EXTENDED = 9.97;
+    private static final double SHOOT = 12.36;
+    private static final double AGITATE = 24.32;
+    private static final double EXTENDED = 36.93;
 
     private static final double TOLERANCE = 0.2;
 
@@ -100,7 +101,7 @@ public class Pivot extends SubsystemBase
         leadMotor.setupForwardHardLimitSwitch(true, true);
         leadMotor.setupReverseHardLimitSwitch(true, true);
 
-        leadMotor.setupForwardSoftLimit(9.5, true);
+        leadMotor.setupForwardSoftLimit(36, true);
         leadMotor.setupReverseSoftLimit(0.2, true);
     }
 

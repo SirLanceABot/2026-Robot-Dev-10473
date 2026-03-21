@@ -376,6 +376,7 @@ public class PoseEstimator extends SubsystemBase
             poseEstimatorEntry.set(estimatedPose);
         }
 
+        System.out.println(getDistanceToAllianceHub(estimatedPose).getAsDouble());
     }
 
     @Override

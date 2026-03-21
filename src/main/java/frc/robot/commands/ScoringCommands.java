@@ -105,7 +105,7 @@ public class ScoringCommands
             return viewController.setSolidCommand(Color.kRed)
                     .andThen(flywheel.stopCommand())
                     .andThen(Commands.parallel(agitator.stopCommand()), 
-                                pivot.extendCommand());
+                                pivot.retractCommand());
         } else
             return Commands.none();
     }
@@ -129,8 +129,8 @@ public class ScoringCommands
                     .andThen(Commands.parallel(
                         viewController.setRainbowCommand().withTimeout(0.01),
                         drivetrain.angleLockDriveCommand(() -> 0, () -> 0, () -> 0.5, angle).withTimeout(0.75),
-                        flywheel.shootFromDistanceCommand(distance)),
-                        pivot.shootPositionCommand())  
+                        flywheel.shootFromDistanceCommand(distance)).withTimeout(0.5),
+                        pivot.shootPositionCommand().withTimeout(0.2))  
                     .andThen(Commands.parallel(
                                 agitator.forwardCommand())).withTimeout(10.0);
         }
