@@ -94,12 +94,11 @@ public class Flywheel extends SubsystemBase
         //for distance in meters
         //this is only with the shroud all the way down 
 
-        //TODO: Re-tune
-        distanceToSpeedMap.put(2.0, 78.0);
-        distanceToSpeedMap.put(2.5, 84.5);
-        distanceToSpeedMap.put(3.0, 91.0);
-        distanceToSpeedMap.put(3.5, 97.5);
-        distanceToSpeedMap.put(4.0, 106.0);
+        distanceToSpeedMap.put(2.0, 77.0);
+        distanceToSpeedMap.put(2.5, 83.5);
+        distanceToSpeedMap.put(3.0, 90.0);
+        distanceToSpeedMap.put(3.5, 95.5);
+        distanceToSpeedMap.put(4.0, 107.0);
     }
 
     private void set(double speed)

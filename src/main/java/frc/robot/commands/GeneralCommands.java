@@ -131,7 +131,7 @@ public class GeneralCommands
             return Commands.either(
                 pivot.shootPositionCommand(),
                 pivot.agitatePositionCommand(),
-                pivot.isAtAgitatePosition()).withTimeout(3.0);
+                pivot.isAtAgitatePosition()).withTimeout(0.2);
                 
         }
         else

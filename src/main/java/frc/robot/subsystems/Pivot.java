@@ -39,7 +39,7 @@ public class Pivot extends SubsystemBase
     //TODO: Tune these
     private static final double RETRACTED = 0.0;
     private static final double SHOOT = 12.36;
-    private static final double AGITATE = 24.32;
+    private static final double AGITATE = 26.32;
     private static final double EXTENDED = 36.93;
 
     private static final double TOLERANCE = 0.2;
@@ -83,8 +83,8 @@ public class Pivot extends SubsystemBase
         leadMotor.setupFactoryDefaults();
         followMotor.setupFactoryDefaults();
 
-        leadMotor.setupBrakeMode();
-        followMotor.setupBrakeMode();
+        leadMotor.setupCoastMode();
+        followMotor.setupCoastMode();
 
         leadMotor.setPosition(0.0);
         followMotor.setPosition(0.0);

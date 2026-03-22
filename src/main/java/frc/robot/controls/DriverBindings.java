@@ -31,14 +31,22 @@ public final class DriverBindings
 
     private static CommandSwerveDrivetrain drivetrain;
 
-    private static final double CRAWL_SPEED = 0.8;
-    private static final double WALK_SPEED = 4.0;
-    private static final double RUN_SPEED = 6.0;
+    //Max drive speed in m/s
+    private static final double CRAWL_SPEED = 2.5;
+    private static final double WALK_SPEED = 3.0;
+    private static final double RUN_SPEED = 4.0;
+
     private static DoubleSupplier leftYAxis;
     private static DoubleSupplier leftXAxis;
     private static DoubleSupplier rightXAxis;
     private static DoubleSupplier scaleFactorSupplier;
     private static double scaleFactor = 1;
+
+    //Limits acceleration/deceleration rate in m/s
+    // private static AdaptiveSlewRateLimiter forwardRateLimiter = new AdaptiveSlewRateLimiter(1.0, 4.0);
+    // private static AdaptiveSlewRateLimiter strafeRateLimiter = new AdaptiveSlewRateLimiter(1.0, 4.0);
+    // private static AdaptiveSlewRateLimiter rotationRateLimiter = new AdaptiveSlewRateLimiter(1.0, 4.0);
+
 
     // *** CLASS CONSTRUCTORS ***
     // Put all class constructors here
@@ -94,7 +102,10 @@ public final class DriverBindings
     {
         if(drivetrain != null)
         {
-            drivetrain.setDefaultCommand(drivetrain.driveCommand(leftYAxis, leftXAxis, rightXAxis, scaleFactorSupplier));     
+            drivetrain.setDefaultCommand(drivetrain.driveCommand(leftYAxis,
+                                                                 leftXAxis,
+                                                                 rightXAxis, 
+                                                                 scaleFactorSupplier));     
         }
         System.out.println("Config Default Commands Driver Controller");
     }

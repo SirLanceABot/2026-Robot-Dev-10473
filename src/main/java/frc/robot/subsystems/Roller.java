@@ -90,7 +90,7 @@ public class Roller extends SubsystemBase
      */
     public Command forwardCommand()
     {
-        return runOnce(() -> motor.setControlVelocity(35));
+        return runOnce(() -> motor.setControlVelocity(40));
     }
 
     /**
@@ -98,7 +98,7 @@ public class Roller extends SubsystemBase
      */
     public Command reverseCommand()
     {
-        return runOnce(() -> motor.setControlVelocity(-35));
+        return runOnce(() -> motor.setControlVelocity(-40));
     }
 
 
